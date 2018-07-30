@@ -1,0 +1,25 @@
+.factorial-demo {
+    display: flex;
+    flex-direction: column;
+}
+
+.factorial-block {
+    height: 150px;
+    width: 300px;
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+}
+
+.factorial-block__value-container {
+    height: 100px;
+    width: 100px;
+    background-color: white;
+    color: black;
+    margin: auto 0;
+}
+
+.factorial-block__text {
+    font-size: 30px;
+}
