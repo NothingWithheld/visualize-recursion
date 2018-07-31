@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono');
+
 .factorial-demo {
     display: flex;
     flex-direction: column;
@@ -27,34 +29,59 @@
 .factorial-block--new {
     display: grid;
     grid-template-columns: 3fr 3fr 2fr;
-    grid-template-rows: 1fr 2fr;
+    grid-template-rows: 2fr 3fr;
     grid-template-areas:
         "call-type equivalent return-header"
         "function-name equivalent-value return-value";
-    height: 200px;
+    height: 100px;
     width: 500px;
+    font-family: 'Ubuntu Mono', monospace;
 }
 
 .factorial-block__call-type {
     grid-area: call-type;
+    background-color: #dfe4ea;
 }
 
 .factorial-block__function-name {
     grid-area: function-name;
+    background-color: #f1f2f6;
 }
 
 .factorial-block__equivalent {
     grid-area: equivalent;
+    background-color: #a4b0be;
 }
 
 .factorial-block__equivalent-value {
     grid-area: equivalent-value;
+    background-color: #ced6e0;
 }
 
 .factorial-block__return-header {
     grid-area: return-header;
+    background-color: #2ed573;
 }
 
 .factorial-block__return-value {
     grid-area: return-value;
+    background-color: #000000;
+    color: #eccc68;
+}
+
+.factorial-block__top-row {
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.factorial-block__bottom-row {
+    font-size: 18px;
+    font-weight: normal;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
