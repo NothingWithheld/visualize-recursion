@@ -23,3 +23,38 @@
 .factorial-block__text {
     font-size: 30px;
 }
+
+.factorial-block--new {
+    display: grid;
+    grid-template-columns: 3fr 3fr 2fr;
+    grid-template-rows: 1fr 2fr;
+    grid-template-areas:
+        "call-type equivalent return-header"
+        "function-name equivalent-value return-value";
+    height: 200px;
+    width: 500px;
+}
+
+.factorial-block__call-type {
+    grid-area: call-type;
+}
+
+.factorial-block__function-name {
+    grid-area: function-name;
+}
+
+.factorial-block__equivalent {
+    grid-area: equivalent;
+}
+
+.factorial-block__equivalent-value {
+    grid-area: equivalent-value;
+}
+
+.factorial-block__return-header {
+    grid-area: return-header;
+}
+
+.factorial-block__return-value {
+    grid-area: return-value;
+}
