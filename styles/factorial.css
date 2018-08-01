@@ -2,7 +2,14 @@
 
 .factorial-demo {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
+    height: 600px;
+    width: 600px;
+    align-items: center;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    border: solid #000000;
 }
 
 .factorial-block {
@@ -36,6 +43,12 @@
     height: 100px;
     width: 500px;
     font-family: 'Ubuntu Mono', monospace;
+    margin: 5px 0;
+}
+
+.factorial-block__initial-call {
+    height: 110px;
+    width: 550px;
 }
 
 .factorial-block__call-type {
@@ -67,6 +80,10 @@
     grid-area: return-value;
     background-color: #000000;
     color: #eccc68;
+}
+
+.factorial-block__return-value--returned {
+    color: #2ed573;
 }
 
 .factorial-block__top-row {
