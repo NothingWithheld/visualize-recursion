@@ -1,0 +1,73 @@
+.fibonacci-demo {
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    width: 600px;
+    align-items: center;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    border: solid #000000;
+}
+
+.fibonacci-block {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows: 2fr 3fr;
+    grid-template-areas:
+        "call-type return-header"
+        "function-name return-value";
+    height: 80px;
+    width: 250px;
+    font-family: 'Ubuntu Mono', monospace;
+    margin: 5px 0;
+}
+
+.fibonacci-block__call-type {
+    grid-area: call-type;
+    background-color: #dfe4ea;
+}
+
+.fibonacci-block__function-name {
+    grid-area: function-name;
+    background-color: #f1f2f6;
+}
+
+.fibonacci-block__return-header {
+    grid-area: return-header;
+    background-color: #2ed573;
+}
+
+.fibonacci-block__return-value {
+    grid-area: return-value;
+    background-color: #000000;
+    color: #eccc68;
+}
+
+.fibonacci-block__top-row {
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fibonacci-block__bottom-row {
+    font-size: 18px;
+    font-weight: normal;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fibonacci-block__child:nth-child(2) {
+    position: relative;
+    right: 200px;
+}
+
+.fibonacci-block__child:nth-child(3) {
+    position: relative;
+    left: 200px;
+    top: -80px;
+}
