@@ -37,7 +37,9 @@ fibonacciWrapper.scroll(4400, 0);
 function fibonacci(n, parentDOMRef) {
     return new Promise((resolve) => {
         setTimeout(() => {
-            let fibonacciBlock = fibonacciBlockMaker(n);
+            let fibonacciBlock;
+            if (!fibonacciDemoContainer.hasChildNodes()) fibonacciBlock = fibonacciBlockMaker(n, true);
+            else fibonacciBlock = fibonacciBlockMaker(n, false);
             let functionValueText = fibonacciBlock.querySelector('.fibonacci-block__return-value');
             parentDOMRef.append(fibonacciBlock);
             resolve([fibonacciBlock, functionValueText]);
