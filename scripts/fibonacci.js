@@ -35,18 +35,34 @@ const fibonacciWrapper = document.querySelector('.fibonacci-wrapper');
 fibonacciWrapper.scroll(4400, 0);
 
 function fibonacci(n, parentDOMRef) {
-    let fibonacciBlock = fibonacciBlockMaker(n);
-    let functionValueText = fibonacciBlock.querySelector('.fibonacci-block__return-value');
-    parentDOMRef.append(fibonacciBlock);
-    if (n == 1 || n == 2) {
-        return 1;
-    } else {
-        let value = fibonacci(n - 1, fibonacciBlock) + fibonacci(n - 2, fibonacciBlock);
-        functionValueText.innerHTML = value.toString();
-        functionValueText.classList.add('fibonacci-block__return-value--returned');
-        return value;
-    }
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            let fibonacciBlock = fibonacciBlockMaker(n);
+            let functionValueText = fibonacciBlock.querySelector('.fibonacci-block__return-value');
+            parentDOMRef.append(fibonacciBlock);
+            resolve([fibonacciBlock, functionValueText]);
+        }, 500);
+    }).then(([fibonacciBlock, functionValueText]) => {
+        if (n == 1 || n == 2) {
+            return Promise.resolve(1);
+        } else {
+            return new Promise((resolve) => {
+                let value = Promise.all([fibonacci(n - 1, fibonacciBlock), fibonacci(n - 2, fibonacciBlock)]).then(([val1, val2]) => val1 + val2);
+                console.log(value);
+                resolve(value);
+            }).then((value) => {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        functionValueText.innerHTML = value.toString();
+                        functionValueText.classList.add('fibonacci-block__return-value--returned');
+                        resolve(value);
+                    }, 500);
+                })
+            })
+        }
+    })
 }
 
-
 fibonacci(6, fibonacciDemoContainer)
+
+
