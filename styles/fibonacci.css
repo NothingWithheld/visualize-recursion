@@ -51,6 +51,10 @@
     color: #eccc68;
 }
 
+.fibonacci-block__return-value--returned {
+    color: #2ed573;
+}
+
 .fibonacci-block__top-row {
     font-size: 18px;
     font-weight: bold;

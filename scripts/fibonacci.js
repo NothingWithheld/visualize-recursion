@@ -36,12 +36,17 @@ fibonacciWrapper.scroll(4400, 0);
 
 function fibonacci(n, parentDOMRef) {
     let fibonacciBlock = fibonacciBlockMaker(n);
+    let functionValueText = fibonacciBlock.querySelector('.fibonacci-block__return-value');
     parentDOMRef.append(fibonacciBlock);
     if (n == 1 || n == 2) {
         return 1;
     } else {
-        return fibonacci(n - 1, fibonacciBlock) + fibonacci(n - 2, fibonacciBlock);
+        let value = fibonacci(n - 1, fibonacciBlock) + fibonacci(n - 2, fibonacciBlock);
+        functionValueText.innerHTML = value.toString();
+        functionValueText.classList.add('fibonacci-block__return-value--returned');
+        return value;
     }
 }
+
 
 fibonacci(6, fibonacciDemoContainer)
