@@ -24,8 +24,8 @@
     grid-template-areas:
         "call-type return-header"
         "function-name return-value";
-    height: 80px;
-    width: 250px;
+    height: 50px;
+    width: 150px;
     font-family: 'Ubuntu Mono', monospace;
     margin: 5px auto;
 }
@@ -56,7 +56,7 @@
 }
 
 .fibonacci-block__top-row {
-    font-size: 18px;
+    font-size: 11px;
     font-weight: bold;
     display: flex;
     justify-content: center;
@@ -64,7 +64,7 @@
 }
 
 .fibonacci-block__bottom-row {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: normal;
     margin: 0;
     display: flex;
@@ -75,4 +75,5 @@
 .fibonacci-block__child {
     display: inline-block;
     vertical-align: top;
+    margin: 0 5px;
 }

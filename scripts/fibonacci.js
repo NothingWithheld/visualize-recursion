@@ -7,21 +7,21 @@ function fibonacciBlockMaker(n, isFirstCall = false) {
     if (isFirstCall) {
         fibonacciBlock.innerHTML = `<dl class="fibonacci-block">
                                         <dt class="fibonacci-block__call-type fibonacci-block__top-row">Initial Call</dt>
-                                        <dd class="fibonacci-block__function-name fibonacci-block__bottom-row">fibonacci(${n})</dd>
+                                        <dd class="fibonacci-block__function-name fibonacci-block__bottom-row">fib(${n})</dd>
                                         <dt class="fibonacci-block__return-header fibonacci-block__top-row">return</dt>
                                         <dd class="fibonacci-block__return-value fibonacci-block__bottom-row">waiting</dd>
                                     </dl>`;
     } else if (n == 1 || n == 2) {
         fibonacciBlock.innerHTML = `<dl class="fibonacci-block">
                                         <dt class="fibonacci-block__call-type fibonacci-block__top-row">Base Case</dt>
-                                        <dd class="fibonacci-block__function-name fibonacci-block__bottom-row">fibonacci(${n})</dd>
+                                        <dd class="fibonacci-block__function-name fibonacci-block__bottom-row">fib(${n})</dd>
                                         <dt class="fibonacci-block__return-header fibonacci-block__top-row">return</dt>
                                         <dd class="fibonacci-block__return-value fibonacci-block__return-value--returned fibonacci-block__bottom-row">1</dd>
                                     </dl>`;
     } else {
         fibonacciBlock.innerHTML = `<dl class="fibonacci-block">
                                         <dt class="fibonacci-block__call-type fibonacci-block__top-row">Recursive Call</dt>
-                                        <dd class="fibonacci-block__function-name fibonacci-block__bottom-row">fibonacci(${n})</dd>
+                                        <dd class="fibonacci-block__function-name fibonacci-block__bottom-row">fib(${n})</dd>
                                         <dt class="fibonacci-block__return-header fibonacci-block__top-row">return</dt>
                                         <dd class="fibonacci-block__return-value fibonacci-block__bottom-row">waiting</dd>
                                     </dl>`;
