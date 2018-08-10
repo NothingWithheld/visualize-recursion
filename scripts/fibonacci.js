@@ -1,48 +1,18 @@
 'use strict';
 
-function fibonacciBlockMaker1(n, isFirstCall = false) {
-    let fibonacciBlock = document.createElement('div');
-    fibonacciBlock.classList.add('fibonacci-block__child');
-
-    if (isFirstCall) {
-        fibonacciBlock.innerHTML = `<dl class="fibonacci-block">
-                                        <dt class="fibonacci-block__call-type fibonacci-block__top-row">Initial Call</dt>
-                                        <dd class="fibonacci-block__function-name fibonacci-block__bottom-row">fib(${n})</dd>
-                                        <dt class="fibonacci-block__return-header fibonacci-block__top-row">return</dt>
-                                        <dd class="fibonacci-block__return-value fibonacci-block__bottom-row">waiting</dd>
-                                    </dl>`;
-    } else if (n == 1 || n == 2) {
-        fibonacciBlock.innerHTML = `<dl class="fibonacci-block">
-                                        <dt class="fibonacci-block__call-type fibonacci-block__top-row">Base Case</dt>
-                                        <dd class="fibonacci-block__function-name fibonacci-block__bottom-row">fib(${n})</dd>
-                                        <dt class="fibonacci-block__return-header fibonacci-block__top-row">return</dt>
-                                        <dd class="fibonacci-block__return-value fibonacci-block__return-value--returned fibonacci-block__bottom-row">1</dd>
-                                    </dl>`;
-    } else {
-        fibonacciBlock.innerHTML = `<dl class="fibonacci-block">
-                                        <dt class="fibonacci-block__call-type fibonacci-block__top-row">Recursive Call</dt>
-                                        <dd class="fibonacci-block__function-name fibonacci-block__bottom-row">fib(${n})</dd>
-                                        <dt class="fibonacci-block__return-header fibonacci-block__top-row">return</dt>
-                                        <dd class="fibonacci-block__return-value fibonacci-block__bottom-row">waiting</dd>
-                                    </dl>`;
-    }
-
-    return fibonacciBlock;
-}
-
 function fibonacciBlockMaker(n) {
     let fibonacciBlock = document.createElement('div');
     fibonacciBlock.classList.add('fibonacci-block__child');
 
     if (n == 1 || n == 2) {
-        fibonacciBlock.innerHTML = `<div class="fibonacci-block--new">
-                                        <p class="fibonacci-block__function-name--new fibonacci-block__top-row">fib(${n})</p>
-                                        <p class="fibonacci-block__return-value--new fibonacci-block__return-value--returned fibonacci-block__bottom-row">1</p>
+        fibonacciBlock.innerHTML = `<div class="fibonacci-block">
+                                        <p class="fibonacci-block__function-name fibonacci-block__function-name--resolved fibonacci-block__top-row">fib(${n})</p>
+                                        <p class="fibonacci-block__return-value fibonacci-block__return-value--returned fibonacci-block__bottom-row">1</p>
                                     </div>`
     } else {
-        fibonacciBlock.innerHTML = `<div class="fibonacci-block--new">
-                                        <p class="fibonacci-block__function-name--new fibonacci-block__top-row">fib(${n})</p>
-                                        <p class="fibonacci-block__return-value--new fibonacci-block__bottom-row">waiting</p>
+        fibonacciBlock.innerHTML = `<div class="fibonacci-block">
+                                        <p class="fibonacci-block__function-name fibonacci-block__top-row">fib(${n})</p>
+                                        <p class="fibonacci-block__return-value fibonacci-block__bottom-row">waiting</p>
                                     </div>`
     }
 
@@ -59,11 +29,12 @@ function fibonacci(n, parentDOMRef) {
             let fibonacciBlock;
             if (!fibonacciDemoContainer.hasChildNodes()) fibonacciBlock = fibonacciBlockMaker(n, true);
             else fibonacciBlock = fibonacciBlockMaker(n, false);
-            let functionValueText = fibonacciBlock.querySelector('.fibonacci-block__return-value--new');
+            let functionValueText = fibonacciBlock.querySelector('.fibonacci-block__return-value');
+            let functionNameBlock = fibonacciBlock.querySelector('.fibonacci-block__function-name');
             parentDOMRef.append(fibonacciBlock);
-            resolve([fibonacciBlock, functionValueText]);
+            resolve([fibonacciBlock, functionValueText, functionNameBlock]);
         }, 500);
-    }).then(([fibonacciBlock, functionValueText]) => {
+    }).then(([fibonacciBlock, functionValueText, functionNameBlock]) => {
         if (n == 1 || n == 2) {
             return new Promise((resolve) => {
                 setTimeout(() => {
@@ -81,6 +52,7 @@ function fibonacci(n, parentDOMRef) {
                     setTimeout(() => {
                         functionValueText.innerHTML = value.toString();
                         functionValueText.classList.add('fibonacci-block__return-value--returned');
+                        functionNameBlock.classList.add('fibonacci-block__function-name--resolved');
                         resolve(value);
                     }, 500);
                 })
@@ -89,4 +61,4 @@ function fibonacci(n, parentDOMRef) {
     })
 }
 
-fibonacci(6, fibonacciDemoContainer)
+fibonacci(7, fibonacciDemoContainer)

@@ -18,19 +18,6 @@
 }
 
 .fibonacci-block {
-    display: grid;
-    grid-template-columns: 3fr 2fr;
-    grid-template-rows: 2fr 3fr;
-    grid-template-areas:
-        "call-type return-header"
-        "function-name return-value";
-    height: 50px;
-    width: 150px;
-    font-family: 'Ubuntu Mono', monospace;
-    margin: 5px auto;
-}
-
-.fibonacci-block--new {
     height: 60px;
     width: 60px;
     margin: 0 auto;
@@ -38,34 +25,17 @@
     overflow: hidden;
 }
 
-.fibonacci-block__call-type {
-    grid-area: call-type;
-    background-color: #dfe4ea;
-}
-
 .fibonacci-block__function-name {
-    grid-area: function-name;
-    background-color: #f1f2f6;
-}
-
-.fibonacci-block__function-name--new {
     background-color: #eccc68;
     margin: 0;
     padding: 8px 0 3px;
 }
 
-.fibonacci-block__return-header {
-    grid-area: return-header;
+.fibonacci-block__function-name--resolved {
     background-color: #2ed573;
 }
 
 .fibonacci-block__return-value {
-    grid-area: return-value;
-    background-color: #000000;
-    color: #eccc68;
-}
-
-.fibonacci-block__return-value--new {
     background-color: #000000;
     color: #eccc68;
     height: 30px;
