@@ -30,6 +30,14 @@
     margin: 5px auto;
 }
 
+.fibonacci-block--new {
+    height: 60px;
+    width: 60px;
+    margin: 0 auto;
+    border-radius: 100%;
+    overflow: hidden;
+}
+
 .fibonacci-block__call-type {
     grid-area: call-type;
     background-color: #dfe4ea;
@@ -38,6 +46,12 @@
 .fibonacci-block__function-name {
     grid-area: function-name;
     background-color: #f1f2f6;
+}
+
+.fibonacci-block__function-name--new {
+    background-color: #eccc68;
+    margin: 0;
+    height: 30px;
 }
 
 .fibonacci-block__return-header {
@@ -51,12 +65,18 @@
     color: #eccc68;
 }
 
+.fibonacci-block__return-value--new {
+    background-color: #000000;
+    color: #eccc68;
+    height: 30px;
+}
+
 .fibonacci-block__return-value--returned {
     color: #2ed573;
 }
 
 .fibonacci-block__top-row {
-    font-size: 11px;
+    font-size: 14px;
     font-weight: bold;
     display: flex;
     justify-content: center;
@@ -75,5 +95,5 @@
 .fibonacci-block__child {
     display: inline-block;
     vertical-align: top;
-    margin: 0 5px;
+    margin: 5px;
 }

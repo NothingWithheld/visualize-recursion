@@ -1,6 +1,6 @@
 'use strict';
 
-function fibonacciBlockMaker(n, isFirstCall = false) {
+function fibonacciBlockMaker1(n, isFirstCall = false) {
     let fibonacciBlock = document.createElement('div');
     fibonacciBlock.classList.add('fibonacci-block__child');
 
@@ -30,6 +30,25 @@ function fibonacciBlockMaker(n, isFirstCall = false) {
     return fibonacciBlock;
 }
 
+function fibonacciBlockMaker(n) {
+    let fibonacciBlock = document.createElement('div');
+    fibonacciBlock.classList.add('fibonacci-block__child');
+
+    if (n == 1 || n == 2) {
+        fibonacciBlock.innerHTML = `<div class="fibonacci-block--new">
+                                        <p class="fibonacci-block__function-name--new fibonacci-block__top-row">fib(${n})</p>
+                                        <p class="fibonacci-block__return-value--new fibonacci-block__return-value--returned fibonacci-block__bottom-row">1</p>
+                                    </div>`
+    } else {
+        fibonacciBlock.innerHTML = `<div class="fibonacci-block--new">
+                                        <p class="fibonacci-block__function-name--new fibonacci-block__top-row">fib(${n})</p>
+                                        <p class="fibonacci-block__return-value--new fibonacci-block__bottom-row">waiting</p>
+                                    </div>`
+    }
+
+    return fibonacciBlock;
+}
+
 const fibonacciDemoContainer = document.querySelector('.fibonacci-demo');
 const fibonacciWrapper = document.querySelector('.fibonacci-wrapper');
 fibonacciWrapper.scroll(4400, 0);
@@ -40,7 +59,7 @@ function fibonacci(n, parentDOMRef) {
             let fibonacciBlock;
             if (!fibonacciDemoContainer.hasChildNodes()) fibonacciBlock = fibonacciBlockMaker(n, true);
             else fibonacciBlock = fibonacciBlockMaker(n, false);
-            let functionValueText = fibonacciBlock.querySelector('.fibonacci-block__return-value');
+            let functionValueText = fibonacciBlock.querySelector('.fibonacci-block__return-value--new');
             parentDOMRef.append(fibonacciBlock);
             resolve([fibonacciBlock, functionValueText]);
         }, 500);
