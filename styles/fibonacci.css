@@ -51,7 +51,7 @@
 .fibonacci-block__function-name--new {
     background-color: #eccc68;
     margin: 0;
-    height: 30px;
+    padding: 8px 0 3px;
 }
 
 .fibonacci-block__return-header {
@@ -69,6 +69,7 @@
     background-color: #000000;
     color: #eccc68;
     height: 30px;
+    padding-top: 3px;
 }
 
 .fibonacci-block__return-value--returned {
@@ -80,7 +81,6 @@
     font-weight: bold;
     display: flex;
     justify-content: center;
-    align-items: center;
 }
 
 .fibonacci-block__bottom-row {
@@ -89,7 +89,6 @@
     margin: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
 }
 
 .fibonacci-block__child {
