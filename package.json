@@ -1,0 +1,19 @@
+{
+  "name": "visualize_recursion",
+  "version": "1.0.0",
+  "description": "\u001b[DRecursive calls demonstrated with browser elements",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NothingWithheld/visualize-recursion.git"
+  },
+  "author": "Andrew Hsu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NothingWithheld/visualize-recursion/issues"
+  },
+  "homepage": "https://github.com/NothingWithheld/visualize-recursion#readme"
+}
