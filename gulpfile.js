@@ -1,10 +1,15 @@
 'use strict';
 
-import gulp from 'gulp';
-import * as sass from 'gulp-sass';
+const del = require('del');
+const gulp = require('gulp');
+const sass = require('gulp-sass');
 
-gulp.task('sass', function(done) {
+gulp.task('sass', function() {
     gulp.src('./src/styles/main.scss')
         .pipe(sass())
-        .pipe(gulp.dest('./dist/main'));
+        .pipe(gulp.dest('./dist/styles'));
+});
+
+gulp.task('clean', function() {
+    del('./dist/**/*');
 });
