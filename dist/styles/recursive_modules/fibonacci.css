@@ -1,0 +1,58 @@
+.fibonacci-demo {
+  display: flex;
+  flex-direction: column;
+  height: 1000px;
+  width: 10000px;
+  overflow: scroll;
+  align-items: center; }
+
+.fibonacci-wrapper {
+  overflow: scroll;
+  border: solid #000000;
+  height: 600px;
+  width: 1200px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%); }
+
+.fibonacci-block {
+  height: 60px;
+  width: 60px;
+  margin: 0 auto;
+  border-radius: 100%;
+  overflow: hidden; }
+
+.fibonacci-block__function-name {
+  background-color: #eccc68;
+  margin: 0;
+  padding: 8px 0 3px; }
+
+.fibonacci-block__function-name--resolved {
+  background-color: #2ed573; }
+
+.fibonacci-block__return-value {
+  background-color: #000000;
+  color: #eccc68;
+  height: 30px;
+  padding-top: 3px; }
+
+.fibonacci-block__return-value--returned {
+  color: #2ed573; }
+
+.fibonacci-block__top-row {
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center; }
+
+.fibonacci-block__bottom-row {
+  font-size: 14px;
+  font-weight: normal;
+  margin: 0;
+  display: flex;
+  justify-content: center; }
+
+.fibonacci-block__child {
+  display: inline-block;
+  vertical-align: top;
+  margin: 5px; }
