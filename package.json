@@ -17,8 +17,12 @@
   },
   "homepage": "https://github.com/NothingWithheld/visualize-recursion#readme",
   "devDependencies": {
+    "autoprefixer": "^9.1.1",
+    "cssnano": "^4.0.5",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
-    "gulp-sass": "^4.0.1"
+    "gulp-postcss": "^8.0.0",
+    "gulp-sass": "^4.0.1",
+    "gulp-sourcemaps": "^2.6.4"
   }
 }
