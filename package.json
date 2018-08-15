@@ -1,7 +1,7 @@
 {
   "name": "visualize_recursion",
   "version": "1.0.0",
-  "description": "\u001b[DRecursive calls demonstrated with browser elements",
+  "description": "Recursive calls demonstrated with asynchronously created browser elements",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -18,11 +18,20 @@
   "homepage": "https://github.com/NothingWithheld/visualize-recursion#readme",
   "devDependencies": {
     "autoprefixer": "^9.1.1",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
     "cssnano": "^4.0.5",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1",
     "gulp-postcss": "^8.0.0",
     "gulp-sass": "^4.0.1",
-    "gulp-sourcemaps": "^2.6.4"
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.1"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
   }
 }

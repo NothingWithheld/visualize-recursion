@@ -1,15 +1,26 @@
 'use strict';
 
 const autoprefixer = require('autoprefixer');
+const babel = require('gulp-babel');
 const cssnano = require('cssnano');
 const del = require('del');
 const gulp = require('gulp');
 const postcss = require('gulp-postcss');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
+const uglify = require('gulp-uglify');
+
+gulp.task('js-modules', function() {
+    return gulp.src('./src/scripts/recursive_modules/*')
+        .pipe(sourcemaps.init())
+        .pipe(babel())
+        .pipe(uglify())
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('./dist/scripts/recursive_modules'));
+});
 
 gulp.task('sass-main', function() {
-    gulp.src('./src/styles/main.scss')
+    return gulp.src('./src/styles/main.scss')
         .pipe(sourcemaps.init())
         .pipe(sass())
         .pipe(postcss([
@@ -21,7 +32,7 @@ gulp.task('sass-main', function() {
 });
 
 gulp.task('sass-modules', function() {
-    gulp.src('./src/styles/recursive_modules/*')
+    return gulp.src('./src/styles/recursive_modules/*')
         .pipe(sourcemaps.init())
         .pipe(sass())
         .pipe(postcss([
@@ -35,5 +46,5 @@ gulp.task('sass-modules', function() {
 gulp.task('sass', ['sass-main', 'sass-modules']);
 
 gulp.task('clean', function() {
-    del('./dist/**/*');
+    return del('./dist/**/*');
 });
