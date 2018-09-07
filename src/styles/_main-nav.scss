@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono');
+
+.main-nav {
+    background-color: #2f3542;
+}
+
+.main-nav__page {
+    list-style-type: none;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-nav__page-link {
+    font-family: 'Ubuntu Mono', monospace;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 24px;
+}
