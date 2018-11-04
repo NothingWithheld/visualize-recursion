@@ -1,3 +1,4 @@
+/// <reference path="../code_player/code-player.js" />
 'use strict';
 
 class FibonacciGeneratorMaker {
@@ -17,9 +18,9 @@ class FibonacciGeneratorMaker {
         if (number == 1 || number == 2) {
             value = 1;
         } else {
-            yield *this.generateFibonacci(number - 1, fibonacciBlock);
+            yield* this.generateFibonacci(number - 1, fibonacciBlock);
             value += this.returnValue;
-            yield *this.generateFibonacci(number - 2, fibonacciBlock);
+            yield* this.generateFibonacci(number - 2, fibonacciBlock);
             value += this.returnValue;
         }
         
@@ -88,7 +89,7 @@ function fibonacciBlockMaker(n) {
 
 const fibonacciDemoContainer = document.querySelector('.fibonacci-demo');
 const fibonacciWrapper = document.querySelector('.fibonacci-wrapper');
-fibonacciWrapper.scroll(4400, 0);
+
 
 function fibonacci(n, parentDOMRef) {
     return new Promise((resolve) => {
@@ -174,18 +175,33 @@ function* fib(number, parentDOMRef) {
     yield value;    
 }
 
-function trial(generator, generatedObj) {
-    let codeStepper = setTimeout(function step(generator, generatedObj) {
-        if (generatedObj && generatedObj.done) {
+function trial(generator, generatorYield) {
+    let codeStepper = setTimeout(function step(generator, generatorYield) {
+        if (generatorYield && generatorYield.done) {
             return;
         } else {
-            generatedObj = generator.next();
-            codeStepper = setTimeout(step, 300, generator, generatedObj);
+            generatorYield = generator.next();
+            codeStepper = setTimeout(step, 300, generator, generatorYield);
         }
-    }, 300, generator, generatedObj);
+    }, 300, generator, generatorYield);
 }
 
 // trial(fib(10, fibonacciDemoContainer), null);
 
 const fibGeneratorMaker = new FibonacciGeneratorMaker();
-trial(fibGeneratorMaker.fibonacci(7, fibonacciDemoContainer), null);
+// trial(fibGeneratorMaker.fibonacci(7, fibonacciDemoContainer), null);
+
+const simulationController = document.querySelector('.simulation-controller');
+const startButton = document.querySelector('.simulation-controller__start-button');
+const simulationFunctionParameter = document.querySelector('.simulation-controller__function-parameter');
+const simulationDelay = document.querySelector('.simulation-controller__delay');
+
+const codePlayer = new CodePlayer(fibGeneratorMaker.fibonacci.bind(fibGeneratorMaker), simulationController, 'fibonacci-demo');
+codePlayer.placeCodePlayerAtLocation(fibonacciWrapper);
+
+codePlayer.simluationStartButton.addEventListener('click', codePlayer.startFunction);
+codePlayer.simulationPlayPause.addEventListener('click', codePlayer.togglePlayPause);
+codePlayer.simulationPlayPause.addEventListener('click', codePlayer.playFunction);
+codePlayer.simulationStepper.addEventListener('click', codePlayer.step);
+
+fibonacciWrapper.scroll(4400, 0);
