@@ -24,6 +24,7 @@ class CodePlayer {
         this.getFunctionParameter = this.getFunctionParameter.bind(this);
         this.togglePlayPause = this.togglePlayPause.bind(this);
         this.startFunction = this.startFunction.bind(this);
+        this.clearCodePlayer = this.clearCodePlayer.bind(this);
     }
 
     createCodePlayer(classNames) {
@@ -43,6 +44,8 @@ class CodePlayer {
         this.delay = delay;
 
         this.generator = this.generatorFunction(functionParameter, this.codePlayer);
+        this.clearCodePlayer();
+        this.paused = false;
         this.playFunction();
     }
 
@@ -82,5 +85,9 @@ class CodePlayer {
 
     togglePlayPause() {
         this.paused = !this.paused;
+    }
+
+    clearCodePlayer() {
+        this.codePlayer.innerHTML = '';
     }
 }
