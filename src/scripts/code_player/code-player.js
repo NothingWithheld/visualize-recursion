@@ -44,12 +44,14 @@ class CodePlayer {
         this.delay = delay;
 
         this.generator = this.generatorFunction(functionParameter, this.codePlayer);
+        console.log(this.generator);
         this.clearCodePlayer();
         this.paused = false;
         this.playFunction();
     }
 
     playFunction() {
+        console.log(this.paused);
         if (this.paused) {
             return;
         } else {
