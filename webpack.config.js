@@ -2,7 +2,7 @@ var glob = require('glob');
 
 module.exports = {
     output: {
-        filename: 'bundle.js'
+        filename: 'main.js'
     },
     mode: 'development',
     devtool: 'source-map',

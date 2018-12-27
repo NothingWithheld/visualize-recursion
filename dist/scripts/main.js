@@ -143,7 +143,7 @@ function factorial(n) {
   });
 }
 
-factorial(5);
+factorialDemoContainer ? factorial(5) : null;
 
 /***/ }),
 
@@ -502,4 +502,4 @@ module.exports = __webpack_require__(/*! C:\Users\Andrew\Desktop\visualize_recur
 /***/ })
 
 /******/ });
-//# sourceMappingURL=bundle.js.map
+//# sourceMappingURL=main.js.map

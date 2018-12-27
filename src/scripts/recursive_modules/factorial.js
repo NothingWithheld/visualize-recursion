@@ -61,5 +61,5 @@ function factorial(n) {
     })
 }
 
-factorial(5);
+factorialDemoContainer ? factorial(5) : null;
 
