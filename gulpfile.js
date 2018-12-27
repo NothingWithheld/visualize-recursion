@@ -11,6 +11,15 @@ const runSequence = require('run-sequence');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
+const webpack = require('webpack');
+const webpackConfig = require('./webpack.config.js');
+const webpackStream = require('webpack-stream');
+
+gulp.task('webpack-task', function(done) {
+    return gulp.src('./src/scripts/recursive_modules/*.js')
+        .pipe(webpackStream(webpackConfig), webpack)
+        .pipe(gulp.dest('./dist/scripts'))
+});
 
 gulp.task('js-modules', function() {
     return gulp.src('./src/scripts/recursive_modules/*')
@@ -22,7 +31,7 @@ gulp.task('js-modules', function() {
         .pipe(gulp.dest('./dist/scripts/recursive_modules'));
 });
 
-gulp.task('js', ['js-modules']);
+gulp.task('js', [ /* 'js-modules' */ 'webpack-task']);
 
 gulp.task('sass-main', function() {
     return gulp.src('./src/styles/main.scss')
