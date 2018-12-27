@@ -1,3 +1,5 @@
+'use strict';
+
 import React from 'react';
 
 class PlayPauseButton extends React.Component {
@@ -41,7 +43,6 @@ class PlayPauseButton extends React.Component {
         const grayedOutPlayButton = (
             <button
                 className="code-player__button code-player__button--unclickable"
-                onClick={this.handleClick}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="icon-play">
                     <circle cx="12" cy="12" r="10" className="icon--gray"/>
