@@ -5,7 +5,7 @@ import ResetButton from './CodeControllerComponents/ResetButton';
 import SingleInput from './CodeControllerComponents/SingleInput';
 
 function CodeController(props) {
-    const {delayLabel, delayName, delayValue} = props.delayObj;
+    const { delayLabel, delayName, delayValue } = props.delayObj;
 
     return (
         <div
@@ -15,16 +15,17 @@ function CodeController(props) {
                 className="code-controller__button-controlls"
             >
                 <PlayPauseButton
-                    handleClick={props.handlePlayPause}
+                    handlePlayPause={props.handlePlayPause}
                     isCompleted={props.isCompleted}
                     isPlaying={props.isPlaying}
                 />
                 <StepButton 
-                    handleClick={props.handleStep}
+                    handleStep={props.handleStep}
                     isCompleted={props.isCompleted}
+                    isPlaying={props.isPlaying}
                 />
                 <ResetButton 
-                    handleClick={props.handleReset}
+                    handleReset={props.handleReset}
                     isPlaying={props.isPlaying}
                 />
             </div>
@@ -32,15 +33,16 @@ function CodeController(props) {
                 className="code-controller__inputs"
             >
                 {
-                    props.functionInputObjs.map((inputObj) => {
-                        const {inputLabel, inputName, inputValue} = inputObj;
+                    props.functionInputObjs.map((inputObj, i) => {
+                        const { inputLabel, inputName, inputValue } = inputObj;
                         
                         return (
                             <SingleInput 
                                 key={inputName}
                                 handleChange={props.handleChange}
                                 label={inputLabel}
-                                name={inputName}
+                                name="functionInputObjs"
+                                index={i}
                                 value={inputValue}
                             />
                         )
@@ -49,7 +51,7 @@ function CodeController(props) {
                 <SingleInput 
                     handleChange={props.handleChange}
                     label={delayLabel}
-                    name={delayName}
+                    name="delayObj"
                     value={delayValue}
                 />
             </div>

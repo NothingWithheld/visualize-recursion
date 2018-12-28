@@ -39,7 +39,7 @@ class ResetButton extends React.Component {
             </button>
         );
 
-        return this.isPlaying ? resetButton : grayedOutResetButton;
+        return this.props.isPlaying ? grayedOutResetButton : resetButton;
     }
 }
 

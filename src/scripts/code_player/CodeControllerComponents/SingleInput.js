@@ -20,6 +20,7 @@ class SingleInput extends React.Component {
                 <input 
                     onChange={this.handleChange} 
                     name={this.props.name}
+                    index={this.props.index}
                     value={this.props.value}
                 />
             </label>

@@ -39,7 +39,7 @@ class StepButton extends React.Component {
             </button>
         );
 
-        return this.isCompleted ? grayedOutStepButton : stepButton;
+        return this.props.isCompleted || this.props.isPlaying ? grayedOutStepButton : stepButton;
     }
 }
 
