@@ -70,7 +70,7 @@ gulp.task('build', function() {
 })
 
 gulp.task('default', ['build'], function() {
-    gulp.watch('./src/scripts/recursive_modules/*', ['js-modules'])
+    gulp.watch('./src/scripts/**/*.js', ['js'])
     gulp.watch(['./src/styles/**/*.scss', '!./src/styles/recursive_modules/*'], ['sass-main'])
     gulp.watch('./src/styles/recursive_modules/*', ['sass-modules'])
 })
