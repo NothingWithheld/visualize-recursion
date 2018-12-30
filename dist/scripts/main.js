@@ -23709,10 +23709,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function CodeController(props) {
+  // object destructuring assignment, and assign to different variable name
   var _props$delayObj = props.delayObj,
-      delayLabel = _props$delayObj.delayLabel,
-      delayName = _props$delayObj.delayName,
-      delayValue = _props$delayObj.delayValue;
+      delayLabel = _props$delayObj.label,
+      delayName = _props$delayObj.name,
+      delayValue = _props$delayObj.value;
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "code-controller"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -23731,15 +23732,15 @@ function CodeController(props) {
   })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "code-controller__inputs"
   }, props.functionInputObjs.map(function (inputObj, i) {
-    var inputLabel = inputObj.inputLabel,
-        inputName = inputObj.inputName,
-        inputValue = inputObj.inputValue;
+    var inputLabel = inputObj.label,
+        inputName = inputObj.name,
+        inputValue = inputObj.value;
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodeControllerComponents_SingleInput__WEBPACK_IMPORTED_MODULE_4__["default"], {
       key: inputName,
       handleChange: props.handleChange,
       label: inputLabel,
       name: "functionInputObjs",
-      index: i,
+      dataIndex: i,
       value: inputValue
     });
   }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodeControllerComponents_SingleInput__WEBPACK_IMPORTED_MODULE_4__["default"], {
@@ -24025,7 +24026,7 @@ function (_React$Component) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, this.props.label, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         onChange: this.handleChange,
         name: this.props.name,
-        index: this.props.index,
+        "data-index": this.props.dataIndex,
         value: this.props.value
       }));
     }
@@ -24182,7 +24183,19 @@ function (_React$Component) {
     _classCallCheck(this, RecursionVisualizer);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(RecursionVisualizer).call(this, props));
+    var functionInputObjs = [];
+
+    for (var i = 1; i <= props.defaultArgs.length; i++) {
+      var defaultFunctionArg = props.defaultArgs[i - 1];
+      functionInputObjs.push({
+        label: "Argument ".concat(i),
+        name: "Argument ".concat(i),
+        value: defaultFunctionArg
+      });
+    }
+
     _this.state = {
+      functionInputObjs: functionInputObjs,
       isReset: true,
       isCompleted: false,
       isPlaying: false,
@@ -24192,8 +24205,7 @@ function (_React$Component) {
         label: 'Delay in Seconds',
         name: 'delay',
         value: '0.5'
-      },
-      functionInputObjs: []
+      }
     };
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handlePlayPause = _this.handlePlayPause.bind(_assertThisInitialized(_assertThisInitialized(_this)));
@@ -24207,8 +24219,9 @@ function (_React$Component) {
     value: function handleChange(event) {
       var _event$target = event.target,
           name = _event$target.name,
-          index = _event$target.index,
+          dataset = _event$target.dataset,
           value = _event$target.value;
+      var index = dataset.index;
       this.setState(function (prevState) {
         var newInputState = prevState[name];
 
@@ -24278,7 +24291,7 @@ function (_React$Component) {
         isPlaying: this.state.isPlaying,
         delayObj: this.state.delayObj,
         functionInputObjs: this.state.functionInputObjs
-      }), "isReset: ".concat(this.state.isReset), "isCompleted: ".concat(this.state.isCompleted), "isPlaying: ".concat(this.state.isPlaying));
+      }));
     }
   }]);
 
@@ -24384,7 +24397,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_code_player_RecursionVisualizer__WEBPACK_IMPORTED_MODULE_2__["default"], null), document.getElementById('test'));
+react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_code_player_RecursionVisualizer__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  defaultArgs: [7]
+}), document.getElementById('test'));
 
 function factorialBlockMaker(n) {
   var isFirstCall = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;

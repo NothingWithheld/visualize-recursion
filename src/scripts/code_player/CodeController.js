@@ -5,7 +5,8 @@ import ResetButton from './CodeControllerComponents/ResetButton';
 import SingleInput from './CodeControllerComponents/SingleInput';
 
 function CodeController(props) {
-    const { delayLabel, delayName, delayValue } = props.delayObj;
+    // object destructuring assignment, and assign to different variable name
+    const { label: delayLabel, name: delayName, value: delayValue } = props.delayObj;
 
     return (
         <div
@@ -34,7 +35,7 @@ function CodeController(props) {
             >
                 {
                     props.functionInputObjs.map((inputObj, i) => {
-                        const { inputLabel, inputName, inputValue } = inputObj;
+                        const { label: inputLabel, name: inputName, value: inputValue } = inputObj;
                         
                         return (
                             <SingleInput 
@@ -42,7 +43,7 @@ function CodeController(props) {
                                 handleChange={props.handleChange}
                                 label={inputLabel}
                                 name="functionInputObjs"
-                                index={i}
+                                dataIndex={i}
                                 value={inputValue}
                             />
                         )

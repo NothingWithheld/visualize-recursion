@@ -7,7 +7,18 @@ class RecursionVisualizer extends React.Component {
     constructor(props) {
         super(props);
 
+        let functionInputObjs = [];
+        for (let i = 1; i <= props.defaultArgs.length; i++) {
+            const defaultFunctionArg = props.defaultArgs[i - 1];
+            functionInputObjs.push({
+                label: `Argument ${i}`,
+                name: `Argument ${i}`,
+                value: defaultFunctionArg
+            });
+        }
+
         this.state = {
+            functionInputObjs,
             isReset: true,
             isCompleted: false,
             isPlaying: false,
@@ -17,8 +28,7 @@ class RecursionVisualizer extends React.Component {
                 label: 'Delay in Seconds',
                 name: 'delay',
                 value: '0.5'
-            },
-            functionInputObjs: []
+            }
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -28,7 +38,8 @@ class RecursionVisualizer extends React.Component {
     }
 
     handleChange(event) {
-        const { name, index, value } = event.target;
+        const { name, dataset, value } = event.target;
+        const { index } = dataset;
 
         this.setState((prevState) => {
             let newInputState = prevState[name];
