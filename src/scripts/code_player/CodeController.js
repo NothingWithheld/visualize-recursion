@@ -1,3 +1,5 @@
+'use strict';
+
 import React from 'react';
 import PlayPauseButton from './CodeControllerComponents/PlayPauseButton';
 import StepButton from './CodeControllerComponents/StepButton';

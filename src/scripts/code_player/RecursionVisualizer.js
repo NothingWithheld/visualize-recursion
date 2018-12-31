@@ -23,7 +23,7 @@ class RecursionVisualizer extends React.Component {
             isCompleted: false,
             isPlaying: false,
             generator: null,
-            generatorYield: null, 
+            iteratorRes: null, 
             delayObj: {
                 label: 'Delay in Seconds',
                 name: 'delay',
