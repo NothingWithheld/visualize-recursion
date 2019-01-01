@@ -1,7 +1,6 @@
 'use strict';
 
 import React from 'react';
-import FibonacciBlock from '../recursive_modules/fibonacci/FibonacciBlock';
 
 class TreeNode extends React.Component {
     constructor(props) {

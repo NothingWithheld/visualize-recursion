@@ -41,7 +41,7 @@ class RecursionVisualizer extends React.Component {
         const { name, dataset, value } = event.target;
         const { index } = dataset;
 
-        this.setState((prevState) => {
+        this.setState(prevState => {
             let newInputState = prevState[name];
 
             if (Array.isArray(newInputState)) {

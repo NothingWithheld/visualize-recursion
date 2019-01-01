@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/scripts/recursive_modules/factorial.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -23708,6 +23708,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
 function CodeController(props) {
   // object destructuring assignment, and assign to different variable name
   var _props$delayObj = props.delayObj,
@@ -24200,7 +24202,7 @@ function (_React$Component) {
       isCompleted: false,
       isPlaying: false,
       generator: null,
-      generatorYield: null,
+      iteratorRes: null,
       delayObj: {
         label: 'Delay in Seconds',
         name: 'delay',
@@ -24380,6 +24382,214 @@ function (_React$Component) {
 
 /***/ }),
 
+/***/ "./src/scripts/node_tree/NodeTree.js":
+/*!*******************************************!*\
+  !*** ./src/scripts/node_tree/NodeTree.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+
+
+var NodeTree =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(NodeTree, _React$Component);
+
+  function NodeTree(props) {
+    var _this;
+
+    _classCallCheck(this, NodeTree);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(NodeTree).call(this, props));
+    _this.state = {
+      root: null
+    };
+    _this.addChildComponent = _this.addChildComponent.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    return _this;
+  }
+
+  _createClass(NodeTree, [{
+    key: "addChildComponent",
+    value: function addChildComponent(rootNode) {
+      this.setState({
+        root: rootNode
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var RootNode = this.state.root;
+      var containerClassNames = this.props.containerClassNames;
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: containerClassNames
+      }, RootNode);
+    }
+  }]);
+
+  return NodeTree;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+/* harmony default export */ __webpack_exports__["default"] = (NodeTree);
+
+/***/ }),
+
+/***/ "./src/scripts/node_tree/TreeNode.js":
+/*!*******************************************!*\
+  !*** ./src/scripts/node_tree/TreeNode.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+
+
+var TreeNode =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(TreeNode, _React$Component);
+
+  function TreeNode(props) {
+    var _this;
+
+    _classCallCheck(this, TreeNode);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(TreeNode).call(this, props));
+    _this.state = {
+      childNodes: [],
+      additionalProps: {}
+    };
+    _this.addChildComponent = _this.addChildComponent.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.addProps = _this.addProps.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    return _this;
+  }
+
+  _createClass(TreeNode, [{
+    key: "addChildComponent",
+    value: function addChildComponent(childNode) {
+      this.setState(function (prevState) {
+        return {
+          childNodes: prevState.childNodes.concat(childNode)
+        };
+      });
+    }
+  }, {
+    key: "addProps",
+    value: function addProps(newProps) {
+      this.setState(function (prevState) {
+        var newAdditionalProps = prevState.additionalProps;
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = newProps[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var _step$value = _slicedToArray(_step.value, 2),
+                propName = _step$value[0],
+                propValue = _step$value[1];
+
+            newAdditionalProps[propName] = propValue;
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return != null) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+
+        return newAdditionalProps;
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this$props = this.props,
+          nodeClassNames = _this$props.nodeClassNames,
+          ChildComponent = _this$props.ChildComponent,
+          passThroughProps = _objectWithoutProperties(_this$props, ["nodeClassNames", "ChildComponent"]);
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "tree-node ".concat(nodeClassNames)
+      }, ChildComponent && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ChildComponent, _extends({}, passThroughProps, this.state.additionalProps)), this.state.childNodes);
+    }
+  }]);
+
+  return TreeNode;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+/* harmony default export */ __webpack_exports__["default"] = (TreeNode);
+
+/***/ }),
+
 /***/ "./src/scripts/recursive_modules/factorial.js":
 /*!****************************************************!*\
   !*** ./src/scripts/recursive_modules/factorial.js ***!
@@ -24394,12 +24604,56 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _code_player_RecursionVisualizer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../code_player/RecursionVisualizer */ "./src/scripts/code_player/RecursionVisualizer.js");
+/* harmony import */ var _node_tree_TreeNode__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../node_tree/TreeNode */ "./src/scripts/node_tree/TreeNode.js");
+/* harmony import */ var _node_tree_NodeTree__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../node_tree/NodeTree */ "./src/scripts/node_tree/NodeTree.js");
+/* harmony import */ var _recursive_modules_fibonacci_fibonacci_generator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../recursive_modules/fibonacci/fibonacci-generator */ "./src/scripts/recursive_modules/fibonacci/fibonacci-generator.js");
+
+
+
 
 
 
 react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_code_player_RecursionVisualizer__WEBPACK_IMPORTED_MODULE_2__["default"], {
   defaultArgs: [7]
 }), document.getElementById('test'));
+var nodeTreeRef;
+var nodeTree = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_node_tree_NodeTree__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  ref: function ref(thisComponent) {
+    return nodeTreeRef = thisComponent;
+  },
+  containerClassNames: 'fibonacci-demo'
+});
+react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(nodeTree, document.querySelector('.fibonacci-wrapper'));
+var fibGen = Object(_recursive_modules_fibonacci_fibonacci_generator__WEBPACK_IMPORTED_MODULE_5__["default"])(7, nodeTreeRef);
+var iteratorRes = fibGen.next();
+
+while (!iteratorRes.done) {
+  iteratorRes = fibGen.next();
+} // let treeNodeRef;
+// let treeNode = <TreeNode ref={(thisComponent) => {treeNodeRef = thisComponent}} />;
+// ReactDOM.render(treeNode, document.getElementById('recursion-test'));
+// console.log({treeNodeRef});
+// console.log(treeNodeRef.addChildComponent);
+// console.log(treeNodeRef.addProps);
+// function* fibonacci(n) {
+//     if (n <= 2) {
+//         yield 1
+//         return 1;
+//     } else {
+//         const fibNMinusOne = yield* fibonacci(n - 1);
+//         const fibNMinusTwo = yield* fibonacci(n - 2);
+//         yield fibNMinusOne + fibNMinusTwo;
+//         return fibNMinusOne + fibNMinusTwo;
+//     }
+// }
+// let fibGen = fibonacci(7);
+// let iteratorReturn = fibGen.next();
+// console.log(iteratorReturn);
+// while (!iteratorReturn.done) {
+//     console.log(iteratorReturn);
+//     iteratorReturn = fibGen.next();
+// }
+
 
 function factorialBlockMaker(n) {
   var isFirstCall = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -24455,197 +24709,114 @@ factorialDemoContainer ? factorial(5) : null;
 
 /***/ }),
 
-/***/ "./src/scripts/recursive_modules/fibonacci.js":
-/*!****************************************************!*\
-  !*** ./src/scripts/recursive_modules/fibonacci.js ***!
-  \****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/***/ "./src/scripts/recursive_modules/fibonacci/FibonacciBlock.js":
+/*!*******************************************************************!*\
+  !*** ./src/scripts/recursive_modules/fibonacci/FibonacciBlock.js ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-// /// <reference path="../code_player/RecursionVisualizer.js" />
-// 'use strict';
-// class FibonacciGeneratorMaker {
-//     constructor() {
-//         this.returnValue;
-//     }
-//     *fibonacci(number, parentDOMRef) {
-//         const fibonacciBlock = this.makeFibonnaciBlock(number);
-//         this.placeFibonacciBlockOnPage(fibonacciBlock, parentDOMRef);
-//         if (number > 2) {
-//             yield;
-//         }
-//         let value = 0;
-//         if (number == 1 || number == 2) {
-//             value = 1;
-//         } else {
-//             yield* this.generateFibonacci(number - 1, fibonacciBlock);
-//             value += this.returnValue;
-//             yield* this.generateFibonacci(number - 2, fibonacciBlock);
-//             value += this.returnValue;
-//         }
-//         this.showFunctionHasResolved(value, fibonacciBlock);
-//         yield value;    
-//     }
-//     *generateFibonacci(number, parentDOMRef) {
-//         let generator = this.fibonacci(number, parentDOMRef);
-//         let next = generator.next();
-//         let returnValue;
-//         while (!next.done) {
-//             returnValue = next.value;
-//             yield;
-//             next = generator.next();
-//         }
-//         this.returnValue = returnValue;
-//     }
-//     makeFibonnaciBlock(number) {
-//         let fibonacciBlock = document.createElement('div');
-//         fibonacciBlock.classList.add('fibonacci-block__child');
-//         fibonacciBlock.innerHTML = `<div class="fibonacci-block">
-//                                         <p class="fibonacci-block__function-name fibonacci-block__top-row">fib(${number})</p>
-//                                         <p class="fibonacci-block__return-value fibonacci-block__bottom-row">waiting</p>
-//                                     </div>`
-//         return fibonacciBlock;
-//     }
-//     showFunctionHasResolved(returnValue, fibonacciBlock) {
-//         const functionValueText = fibonacciBlock.querySelector('.fibonacci-block__return-value');
-//         const functionNameBlock = fibonacciBlock.querySelector('.fibonacci-block__function-name');
-//         functionValueText.innerHTML = returnValue.toString();
-//         functionValueText.classList.add('fibonacci-block__return-value--returned');
-//         functionNameBlock.classList.add('fibonacci-block__function-name--resolved');
-//     }
-//     placeFibonacciBlockOnPage(fibonacciBlock, DOMLocation) {
-//         DOMLocation.appendChild(fibonacciBlock);
-//     }
-// }
-// function fibonacciBlockMaker(n) {
-//     let fibonacciBlock = document.createElement('div');
-//     fibonacciBlock.classList.add('fibonacci-block__child');
-//     if (n == 1 || n == 2) {
-//         fibonacciBlock.innerHTML = `<div class="fibonacci-block">
-//                                         <p class="fibonacci-block__function-name fibonacci-block__function-name--resolved fibonacci-block__top-row">fib(${n})</p>
-//                                         <p class="fibonacci-block__return-value fibonacci-block__return-value--returned fibonacci-block__bottom-row">1</p>
-//                                     </div>`
-//     } else {
-//         fibonacciBlock.innerHTML = `<div class="fibonacci-block">
-//                                         <p class="fibonacci-block__function-name fibonacci-block__top-row">fib(${n})</p>
-//                                         <p class="fibonacci-block__return-value fibonacci-block__bottom-row">waiting</p>
-//                                     </div>`
-//     }
-//     return fibonacciBlock;
-// }
-// const fibonacciDemoContainer = document.querySelector('.fibonacci-demo');
-// const fibonacciWrapper = document.querySelector('.fibonacci-wrapper');
-// function fibonacci(n, parentDOMRef) {
-//     return new Promise((resolve) => {
-//         setTimeout(() => {
-//             let fibonacciBlock;
-//             if (!fibonacciDemoContainer.hasChildNodes()) fibonacciBlock = fibonacciBlockMaker(n, true);
-//             else fibonacciBlock = fibonacciBlockMaker(n, false);
-//             let functionValueText = fibonacciBlock.querySelector('.fibonacci-block__return-value');
-//             let functionNameBlock = fibonacciBlock.querySelector('.fibonacci-block__function-name');
-//             parentDOMRef.append(fibonacciBlock);
-//             resolve([fibonacciBlock, functionValueText, functionNameBlock]);
-//         }, 500);
-//     }).then(([fibonacciBlock, functionValueText, functionNameBlock]) => {
-//         if (n == 1 || n == 2) {
-//             return new Promise((resolve) => {
-//                 setTimeout(() => {
-//                     resolve(1);
-//                 }, 500);
-//             });
-//         } else {
-//             return new Promise((resolve) => {
-//                 let value = fibonacci(n - 1, fibonacciBlock).then((val1) => {
-//                     return fibonacci(n - 2, fibonacciBlock).then((val2) => [val1, val2]);
-//                 }).then(([val1, val2]) => val1 + val2);
-//                 resolve(value);
-//             }).then((value) => {
-//                 return new Promise((resolve) => {
-//                     setTimeout(() => {
-//                         functionValueText.innerHTML = value.toString();
-//                         functionValueText.classList.add('fibonacci-block__return-value--returned');
-//                         functionNameBlock.classList.add('fibonacci-block__function-name--resolved');
-//                         resolve(value);
-//                     }, 500);
-//                 })
-//             })
-//         }
-//     })
-// }
-// // fibonacci(7, fibonacciDemoContainer)
-// function* fib(number, parentDOMRef) {
-//     const fibonacciBlock = fibonacciBlockMaker(number);
-//     const functionValueText = fibonacciBlock.querySelector('.fibonacci-block__return-value');
-//     const functionNameBlock = fibonacciBlock.querySelector('.fibonacci-block__function-name');
-//     parentDOMRef.appendChild(fibonacciBlock);
-//     if (number > 2) {
-//         yield;
-//     }
-//     let value = 0;
-//     if (number == 1 || number == 2) {
-//         value = 1;
-//     } else {
-//         let generator1 = fib(number - 1, fibonacciBlock);
-//         let next1 = generator1.next();
-//         let yieldedValue1;
-//         while (!next1.done) {
-//             yieldedValue1 = next1.value;
-//             yield;
-//             next1 = generator1.next();
-//         }
-//         value += yieldedValue1;
-//         let generator2 = fib(number - 2, fibonacciBlock);
-//         let next2 = generator2.next();
-//         let yieldedValue2;
-//         while (!next2.done) {
-//             yieldedValue2 = next2.value;
-//             yield;
-//             next2 = generator2.next();
-//         }
-//         value += yieldedValue2;
-//     }
-//     functionValueText.innerHTML = value.toString();
-//     functionValueText.classList.add('fibonacci-block__return-value--returned');
-//     functionNameBlock.classList.add('fibonacci-block__function-name--resolved');
-//     yield value;    
-// }
-// function trial(generator, generatorYield) {
-//     let codeStepper = setTimeout(function step(generator, generatorYield) {
-//         if (generatorYield && generatorYield.done) {
-//             return;
-//         } else {
-//             generatorYield = generator.next();
-//             codeStepper = setTimeout(step, 300, generator, generatorYield);
-//         }
-//     }, 300, generator, generatorYield);
-// }
-// // trial(fib(10, fibonacciDemoContainer), null);
-// const fibGeneratorMaker = new FibonacciGeneratorMaker();
-// // trial(fibGeneratorMaker.fibonacci(7, fibonacciDemoContainer), null);
-// const simulationController = document.querySelector('.simulation-controller');
-// const startButton = document.querySelector('.simulation-controller__start-button');
-// const simulationFunctionParameter = document.querySelector('.simulation-controller__function-parameter');
-// const simulationDelay = document.querySelector('.simulation-controller__delay');
-// const codePlayer = new CodePlayer(fibGeneratorMaker.fibonacci.bind(fibGeneratorMaker), simulationController, 'fibonacci-demo');
-// codePlayer.placeCodePlayerAtLocation(fibonacciWrapper);
-// codePlayer.simluationStartButton.addEventListener('click', codePlayer.startFunction);
-// codePlayer.simulationPlayPause.addEventListener('click', codePlayer.togglePlayPause);
-// codePlayer.simulationPlayPause.addEventListener('click', codePlayer.playFunction);
-// codePlayer.simulationStepper.addEventListener('click', codePlayer.step);
-// fibonacciWrapper.scroll(4400, 0);
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+
+
+function FibonacciBlock(props) {
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "fibonacci-block"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+    className: "fibonacci-block__function-name fibonacci-block__top-row ".concat(props.returned ? 'fibonacci-block__function-name--resolved' : null)
+  }, "fib(", props.argValue, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+    className: "fibonacci-block__return-value fibonacci-block__bottom-row ".concat(props.returned ? 'fibonacci-block__return-value--returned' : null)
+  }, props.returned ? props.returnValue : 'waiting'));
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (FibonacciBlock);
 
 /***/ }),
 
-/***/ 0:
-/*!*******************************************************************************************************!*\
-  !*** multi ./src/scripts/recursive_modules/factorial.js ./src/scripts/recursive_modules/fibonacci.js ***!
-  \*******************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ "./src/scripts/recursive_modules/fibonacci/fibonacci-generator.js":
+/*!************************************************************************!*\
+  !*** ./src/scripts/recursive_modules/fibonacci/fibonacci-generator.js ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Andrew\Desktop\visualize_recursion\src\scripts\recursive_modules\factorial.js */"./src/scripts/recursive_modules/factorial.js");
-module.exports = __webpack_require__(/*! C:\Users\Andrew\Desktop\visualize_recursion\src\scripts\recursive_modules\fibonacci.js */"./src/scripts/recursive_modules/fibonacci.js");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_tree_TreeNode__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_tree/TreeNode */ "./src/scripts/node_tree/TreeNode.js");
+/* harmony import */ var _FibonacciBlock__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FibonacciBlock */ "./src/scripts/recursive_modules/fibonacci/FibonacciBlock.js");
 
+
+var _marked =
+/*#__PURE__*/
+regeneratorRuntime.mark(fibonacciGenerator);
+
+
+
+
+
+function fibonacciGenerator(argValue, parentComponent) {
+  var fibBlockRef, fibBlock, returnValue, fibOfArgValueMinusOne, fibOfArgValueMinusTwo;
+  return regeneratorRuntime.wrap(function fibonacciGenerator$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          fibBlock = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_node_tree_TreeNode__WEBPACK_IMPORTED_MODULE_1__["default"], {
+            ref: function ref(fibBlock) {
+              return fibBlockRef = fibBlock;
+            },
+            ChildComponent: _FibonacciBlock__WEBPACK_IMPORTED_MODULE_2__["default"],
+            nodeClassNames: "fibonacci-block__child",
+            argValue: argValue,
+            returned: false,
+            key: argValue
+          });
+          parentComponent.addChildComponent(fibBlock);
+
+          if (!(argValue === 1 || argValue === 2)) {
+            _context.next = 6;
+            break;
+          }
+
+          returnValue = 1;
+          _context.next = 11;
+          break;
+
+        case 6:
+          return _context.delegateYield(fibonacciGenerator(argValue - 1, fibBlockRef), "t0", 7);
+
+        case 7:
+          fibOfArgValueMinusOne = _context.t0;
+          return _context.delegateYield(fibonacciGenerator(argValue - 2, fibBlockRef), "t1", 9);
+
+        case 9:
+          fibOfArgValueMinusTwo = _context.t1;
+          returnValue = fibOfArgValueMinusOne + fibOfArgValueMinusTwo;
+
+        case 11:
+          // update node return value
+          fibBlockRef.addProps([['returned', true], ['returnValue', returnValue]]);
+          _context.next = 14;
+          return returnValue;
+
+        case 14:
+          return _context.abrupt("return", returnValue);
+
+        case 15:
+        case "end":
+          return _context.stop();
+      }
+    }
+  }, _marked, this);
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (fibonacciGenerator);
 
 /***/ })
 

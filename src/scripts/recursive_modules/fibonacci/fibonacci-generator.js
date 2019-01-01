@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import TreeNode from '../../dom_tree/TreeNode';
+import TreeNode from '../../node_tree/TreeNode';
 import FibonacciBlock from './FibonacciBlock';
 
 function* fibonacciGenerator(argValue, parentComponent) {
@@ -9,7 +9,7 @@ function* fibonacciGenerator(argValue, parentComponent) {
     const fibBlock = <TreeNode 
         ref={fibBlock => fibBlockRef = fibBlock}
         ChildComponent={FibonacciBlock}
-        nodeClassName="fibonacci-block__child"
+        nodeClassNames="fibonacci-block__child"
         argValue={argValue}
         returned={false}
         key={argValue}
