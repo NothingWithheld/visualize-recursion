@@ -21,6 +21,8 @@ class TreeNode extends React.Component {
                 childNodes: prevState.childNodes.concat(childNode)
             }
         ));
+
+        this.forceUpdate();
     }
 
     addProps(newProps) {

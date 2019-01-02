@@ -24151,9 +24151,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _CodeController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CodeController */ "./src/scripts/code_player/CodeController.js");
+/* harmony import */ var _RecursionWindow__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./RecursionWindow */ "./src/scripts/code_player/RecursionWindow.js");
 
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -24170,6 +24179,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 
 
 
@@ -24207,8 +24217,12 @@ function (_React$Component) {
         label: 'Delay in Seconds',
         name: 'delay',
         value: '0.5'
-      }
+      },
+      calledContainerComponent: null,
+      calledDelayValue: null,
+      calledFunctionArgs: []
     };
+    _this.containerComponentRef;
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handlePlayPause = _this.handlePlayPause.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleStep = _this.handleStep.bind(_assertThisInitialized(_assertThisInitialized(_this)));
@@ -24217,6 +24231,15 @@ function (_React$Component) {
   }
 
   _createClass(RecursionVisualizer, [{
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (this.state.calledContainerComponent != prevState.calledContainerComponent) {
+        console.log(this.containerComponentRef);
+        this.initializeGenerator();
+        this.savedFunction();
+      }
+    }
+  }, {
     key: "handleChange",
     value: function handleChange(event) {
       var _event$target = event.target,
@@ -24241,26 +24264,14 @@ function (_React$Component) {
     key: "handlePlayPause",
     value: function handlePlayPause() {
       if (this.state.isReset) {
-        // check if the user inputs are valid
-        var delayInputIsValid = !isNaN(this.state.delayObj.value);
-        var functionInputsAreValid = this.state.functionInputObjs.reduce(function (acc, inputObj) {
-          var curInputIsValid = !isNaN(inputObj.value);
-          return acc && curInputIsValid;
-        }, true);
+        if (!this.areInputsValid()) return;
+        this.updateContainer();
+        this.savedFunction = this.handlePlayPause;
+        return;
+      }
 
-        if (delayInputIsValid && functionInputsAreValid) {
-          // if user inputs are valid
-          // make a new generator with these inputs
-          // start it
-          this.setState({
-            isReset: false,
-            isPlaying: true
-          });
-        } else {// if user inputs are NOT valid
-          // show an error message
-        }
-      } else if (this.state.isPlaying) {
-        // pause 
+      if (this.state.isPlaying) {
+        // pause
         this.setState({
           isPlaying: false
         });
@@ -24269,16 +24280,101 @@ function (_React$Component) {
         this.setState({
           isPlaying: true
         });
+        this.startPlaying();
       }
     }
   }, {
     key: "handleStep",
-    value: function handleStep() {}
+    value: function handleStep() {
+      if (this.state.isReset) {
+        if (!this.areInputsValid()) return;
+        this.updateContainer();
+        this.savedFunction = this.handleStep;
+        return;
+      }
+
+      this.stepOnce();
+    }
   }, {
     key: "handleReset",
     value: function handleReset() {
       this.setState({
         isReset: true
+      });
+    }
+  }, {
+    key: "areInputsValid",
+    value: function areInputsValid() {
+      var delayInputIsValid = !isNaN(this.state.delayObj.value);
+      var functionInputsAreValid = this.state.functionInputObjs.reduce(function (acc, inputObj) {
+        var curInputIsValid = !isNaN(inputObj.value);
+        return acc && curInputIsValid;
+      }, true);
+      return delayInputIsValid && functionInputsAreValid;
+    }
+  }, {
+    key: "initializeGenerator",
+    value: function initializeGenerator() {
+      var _this$props;
+
+      var calledDelayValue = Number(this.state.delayObj.value) * 1000;
+      var calledFunctionArgs = this.state.functionInputObjs.map(function (inputObj) {
+        return Number(inputObj.value);
+      });
+
+      var generator = (_this$props = this.props).generatorFunction.apply(_this$props, _toConsumableArray(calledFunctionArgs).concat([this.containerComponentRef]));
+
+      this.setState({
+        generator: generator,
+        calledDelayValue: calledDelayValue,
+        calledFunctionArgs: calledFunctionArgs
+      });
+    }
+  }, {
+    key: "updateContainer",
+    value: function updateContainer() {
+      var _this2 = this;
+
+      var Container = this.props.outputContainer;
+      var calledContainerComponent = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Container, {
+        ref: function ref(thisComponent) {
+          return _this2.containerComponentRef = thisComponent;
+        },
+        containerClassNames: this.props.containerClassNames
+      });
+      this.setState({
+        calledContainerComponent: calledContainerComponent,
+        isReset: false
+      });
+    }
+  }, {
+    key: "startPlaying",
+    value: function startPlaying() {
+      var codeStepper = setTimeout(function stepFunc(self) {
+        if (!self.state.isPlaying) return;
+        console.log(self.state.calledDelayValue);
+        self.stepOnce();
+        codeStepper = setTimeout(stepFunc, self.state.calledDelayValue, self);
+      }, this.state.calledDelayValue, this);
+    }
+  }, {
+    key: "stepOnce",
+    value: function stepOnce() {
+      this.setState(function (prevState) {
+        var generator = prevState.generator;
+        var iteratorRes = generator.next();
+        var newState = {
+          iteratorRes: iteratorRes
+        };
+
+        if (iteratorRes.done) {
+          newState.isCompleted = true;
+          newState.isPlaying = false;
+          newState.generator = null;
+          newState.iteratorRes = null;
+        }
+
+        return newState;
       });
     }
   }, {
@@ -24293,7 +24389,11 @@ function (_React$Component) {
         isPlaying: this.state.isPlaying,
         delayObj: this.state.delayObj,
         functionInputObjs: this.state.functionInputObjs
-      }));
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_RecursionWindow__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        calledContainerComponent: this.state.calledContainerComponent,
+        calledDelayValue: this.state.calledDelayValue,
+        calledFunctionArgs: this.state.calledFunctionArgs
+      }, this.state.calledContainerComponent));
     }
   }]);
 
@@ -24379,6 +24479,66 @@ function (_React$Component) {
 
 
 /* harmony default export */ __webpack_exports__["default"] = (RecursionVisualizer);
+
+/***/ }),
+
+/***/ "./src/scripts/code_player/RecursionWindow.js":
+/*!****************************************************!*\
+  !*** ./src/scripts/code_player/RecursionWindow.js ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+var RecursionWindow =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(RecursionWindow, _React$Component);
+
+  function RecursionWindow(props) {
+    _classCallCheck(this, RecursionWindow);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(RecursionWindow).call(this, props));
+  }
+
+  _createClass(RecursionWindow, [{
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "fibonacci-wrapper"
+      }, this.props.children);
+    }
+  }]);
+
+  return RecursionWindow;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+/* harmony default export */ __webpack_exports__["default"] = (RecursionWindow);
 
 /***/ }),
 
@@ -24533,6 +24693,7 @@ function (_React$Component) {
           childNodes: prevState.childNodes.concat(childNode)
         };
       });
+      this.forceUpdate();
     }
   }, {
     key: "addProps",
@@ -24614,22 +24775,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_code_player_RecursionVisualizer__WEBPACK_IMPORTED_MODULE_2__["default"], {
-  defaultArgs: [7]
-}), document.getElementById('test'));
-var nodeTreeRef;
-var nodeTree = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_node_tree_NodeTree__WEBPACK_IMPORTED_MODULE_4__["default"], {
-  ref: function ref(thisComponent) {
-    return nodeTreeRef = thisComponent;
-  },
-  containerClassNames: 'fibonacci-demo'
-});
-react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(nodeTree, document.querySelector('.fibonacci-wrapper'));
-var fibGen = Object(_recursive_modules_fibonacci_fibonacci_generator__WEBPACK_IMPORTED_MODULE_5__["default"])(7, nodeTreeRef);
-var iteratorRes = fibGen.next();
-
-while (!iteratorRes.done) {
-  iteratorRes = fibGen.next();
-} // let treeNodeRef;
+  defaultArgs: [7],
+  generatorFunction: _recursive_modules_fibonacci_fibonacci_generator__WEBPACK_IMPORTED_MODULE_5__["default"],
+  outputContainer: _node_tree_NodeTree__WEBPACK_IMPORTED_MODULE_4__["default"],
+  containerClassNames: "fibonacci-demo"
+}), document.getElementById('test')); // let nodeTreeRef;
+// let nodeTree = <NodeTree ref={thisComponent => nodeTreeRef = thisComponent} containerClassNames={'fibonacci-demo'} />;
+// ReactDOM.render(nodeTree, document.querySelector('.fibonacci-wrapper'));
+// let fibGen = fibonacciGenerator(7, nodeTreeRef);
+// let iteratorRes = fibGen.next();
+// while (!iteratorRes.done) {
+//     iteratorRes = fibGen.next();
+// }
+// let treeNodeRef;
 // let treeNode = <TreeNode ref={(thisComponent) => {treeNodeRef = thisComponent}} />;
 // ReactDOM.render(treeNode, document.getElementById('recursion-test'));
 // console.log({treeNodeRef});
@@ -24653,7 +24811,6 @@ while (!iteratorRes.done) {
 //     console.log(iteratorReturn);
 //     iteratorReturn = fibGen.next();
 // }
-
 
 function factorialBlockMaker(n) {
   var isFirstCall = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -24778,37 +24935,40 @@ function fibonacciGenerator(argValue, parentComponent) {
             key: argValue
           });
           parentComponent.addChildComponent(fibBlock);
+          _context.next = 4;
+          return;
 
+        case 4:
           if (!(argValue === 1 || argValue === 2)) {
-            _context.next = 6;
+            _context.next = 8;
             break;
           }
 
           returnValue = 1;
-          _context.next = 11;
+          _context.next = 13;
           break;
 
-        case 6:
-          return _context.delegateYield(fibonacciGenerator(argValue - 1, fibBlockRef), "t0", 7);
-
-        case 7:
-          fibOfArgValueMinusOne = _context.t0;
-          return _context.delegateYield(fibonacciGenerator(argValue - 2, fibBlockRef), "t1", 9);
+        case 8:
+          return _context.delegateYield(fibonacciGenerator(argValue - 1, fibBlockRef), "t0", 9);
 
         case 9:
+          fibOfArgValueMinusOne = _context.t0;
+          return _context.delegateYield(fibonacciGenerator(argValue - 2, fibBlockRef), "t1", 11);
+
+        case 11:
           fibOfArgValueMinusTwo = _context.t1;
           returnValue = fibOfArgValueMinusOne + fibOfArgValueMinusTwo;
 
-        case 11:
+        case 13:
           // update node return value
           fibBlockRef.addProps([['returned', true], ['returnValue', returnValue]]);
-          _context.next = 14;
+          _context.next = 16;
           return returnValue;
 
-        case 14:
+        case 16:
           return _context.abrupt("return", returnValue);
 
-        case 15:
+        case 17:
         case "end":
           return _context.stop();
       }

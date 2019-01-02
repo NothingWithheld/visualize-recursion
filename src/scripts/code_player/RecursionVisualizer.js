@@ -2,6 +2,7 @@
 
 import React from 'react';
 import CodeController from './CodeController';
+import RecursionWindow from './RecursionWindow';
 
 class RecursionVisualizer extends React.Component {
     constructor(props) {
@@ -28,13 +29,26 @@ class RecursionVisualizer extends React.Component {
                 label: 'Delay in Seconds',
                 name: 'delay',
                 value: '0.5'
-            }
+            },
+            calledContainerComponent: null,
+            calledDelayValue: null,
+            calledFunctionArgs: []
         };
+
+        this.containerComponentRef;
 
         this.handleChange = this.handleChange.bind(this);
         this.handlePlayPause = this.handlePlayPause.bind(this);
         this.handleStep = this.handleStep.bind(this);
         this.handleReset = this.handleReset.bind(this);
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.calledContainerComponent != prevState.calledContainerComponent) {
+            console.log(this.containerComponentRef)
+            this.initializeGenerator();
+            this.savedFunction();
+        }
     }
 
     handleChange(event) {
@@ -57,28 +71,15 @@ class RecursionVisualizer extends React.Component {
 
     handlePlayPause() {
         if (this.state.isReset) {
-            // check if the user inputs are valid
-            const delayInputIsValid = !isNaN(this.state.delayObj.value);
-            const functionInputsAreValid = this.state.functionInputObjs.reduce((acc, inputObj) => {
-                const curInputIsValid = !isNaN(inputObj.value);
-                return acc && curInputIsValid; 
-            }, true);
+            if (!this.areInputsValid()) return;
 
-            if (delayInputIsValid && functionInputsAreValid) {
-                // if user inputs are valid
-                // make a new generator with these inputs
-                // start it
+            this.updateContainer();
+            this.savedFunction = this.handlePlayPause;
+            return;
+        }
 
-                this.setState({
-                    isReset: false,
-                    isPlaying: true
-                });
-            } else {
-                // if user inputs are NOT valid
-                // show an error message
-            }
-        } else if (this.state.isPlaying) {
-            // pause 
+        if (this.state.isPlaying) {
+            // pause
             this.setState({
                 isPlaying: false
             });
@@ -86,17 +87,90 @@ class RecursionVisualizer extends React.Component {
             // play
             this.setState({
                 isPlaying: true
-            })
+            });
+
+            this.startPlaying();
         }
     }
 
     handleStep() {
+        if (this.state.isReset) {
+            if (!this.areInputsValid()) return;
 
+            this.updateContainer();
+            this.savedFunction = this.handleStep;
+            return;
+        }
+
+        this.stepOnce();
     }
 
     handleReset() {
         this.setState({
             isReset: true
+        });
+    }
+
+    areInputsValid() {
+        const delayInputIsValid = !isNaN(this.state.delayObj.value);
+        const functionInputsAreValid = this.state.functionInputObjs.reduce((acc, inputObj) => {
+            const curInputIsValid = !isNaN(inputObj.value);
+            return acc && curInputIsValid; 
+        }, true);
+
+        return delayInputIsValid && functionInputsAreValid;
+    }
+
+    initializeGenerator() {
+        const calledDelayValue = Number(this.state.delayObj.value) * 1000;
+        const calledFunctionArgs = this.state.functionInputObjs.map(inputObj => Number(inputObj.value));
+
+        const generator = this.props.generatorFunction(...calledFunctionArgs, this.containerComponentRef);
+
+        this.setState({
+            generator,
+            calledDelayValue,
+            calledFunctionArgs
+        });
+    }
+
+    updateContainer() {
+        const Container = this.props.outputContainer;
+        const calledContainerComponent = <Container ref={thisComponent => this.containerComponentRef = thisComponent} containerClassNames={this.props.containerClassNames} />;
+
+        this.setState({
+            calledContainerComponent,
+            isReset: false
+        });
+    }
+
+    startPlaying() {
+        let codeStepper = setTimeout(function stepFunc(self) {
+            if (!self.state.isPlaying) return;
+            console.log(self.state.calledDelayValue)
+            self.stepOnce();
+            codeStepper = setTimeout(stepFunc, self.state.calledDelayValue, self);
+
+        }, this.state.calledDelayValue, this);
+    }
+
+    stepOnce() {
+        this.setState(prevState => {
+            const { generator } = prevState;
+            const iteratorRes = generator.next();
+
+            let newState = {
+                iteratorRes
+            };
+
+            if (iteratorRes.done) {
+                newState.isCompleted = true;
+                newState.isPlaying = false;
+                newState.generator = null;
+                newState.iteratorRes = null;
+            }
+
+            return newState;
         });
     }
 
@@ -115,8 +189,14 @@ class RecursionVisualizer extends React.Component {
                     delayObj={this.state.delayObj}
                     functionInputObjs={this.state.functionInputObjs}
                 />
+                <RecursionWindow 
+                    calledContainerComponent={this.state.calledContainerComponent}
+                    calledDelayValue={this.state.calledDelayValue}
+                    calledFunctionArgs={this.state.calledFunctionArgs}
+                >
+                    {this.state.calledContainerComponent}
+                </RecursionWindow>
             </div>
-            
         );
     }
 }

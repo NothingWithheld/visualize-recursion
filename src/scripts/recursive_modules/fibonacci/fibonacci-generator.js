@@ -14,7 +14,10 @@ function* fibonacciGenerator(argValue, parentComponent) {
         returned={false}
         key={argValue}
     />;
+
     parentComponent.addChildComponent(fibBlock);
+    
+    yield;
 
     let returnValue;
     if (argValue === 1 || argValue === 2) {
