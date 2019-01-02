@@ -24206,8 +24206,16 @@ function (_React$Component) {
       });
     }
 
+    var Container = _this.props.outputContainer;
+    var ContainerComponent = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Container, {
+      ref: function ref(thisComponent) {
+        return _this.containerComponentRef = thisComponent;
+      },
+      containerClassNames: _this.props.containerClassNames
+    });
     _this.state = {
       functionInputObjs: functionInputObjs,
+      ContainerComponent: ContainerComponent,
       isReset: true,
       isCompleted: false,
       isPlaying: false,
@@ -24218,11 +24226,9 @@ function (_React$Component) {
         name: 'delay',
         value: '0.5'
       },
-      calledContainerComponent: null,
       calledDelayValue: null,
       calledFunctionArgs: []
     };
-    _this.containerComponentRef;
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handlePlayPause = _this.handlePlayPause.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleStep = _this.handleStep.bind(_assertThisInitialized(_assertThisInitialized(_this)));
@@ -24231,15 +24237,6 @@ function (_React$Component) {
   }
 
   _createClass(RecursionVisualizer, [{
-    key: "componentDidUpdate",
-    value: function componentDidUpdate(prevProps, prevState) {
-      if (this.state.calledContainerComponent != prevState.calledContainerComponent) {
-        console.log(this.containerComponentRef);
-        this.initializeGenerator();
-        this.savedFunction();
-      }
-    }
-  }, {
     key: "handleChange",
     value: function handleChange(event) {
       var _event$target = event.target,
@@ -24265,9 +24262,7 @@ function (_React$Component) {
     value: function handlePlayPause() {
       if (this.state.isReset) {
         if (!this.areInputsValid()) return;
-        this.updateContainer();
-        this.savedFunction = this.handlePlayPause;
-        return;
+        this.initializeGenerator();
       }
 
       if (this.state.isPlaying) {
@@ -24288,9 +24283,7 @@ function (_React$Component) {
     value: function handleStep() {
       if (this.state.isReset) {
         if (!this.areInputsValid()) return;
-        this.updateContainer();
-        this.savedFunction = this.handleStep;
-        return;
+        this.initializeGenerator();
       }
 
       this.stepOnce();
@@ -24298,6 +24291,7 @@ function (_React$Component) {
   }, {
     key: "handleReset",
     value: function handleReset() {
+      this.updateContainer();
       this.setState({
         isReset: true
       });
@@ -24336,15 +24330,14 @@ function (_React$Component) {
       var _this2 = this;
 
       var Container = this.props.outputContainer;
-      var calledContainerComponent = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Container, {
+      var ContainerComponent = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Container, {
         ref: function ref(thisComponent) {
           return _this2.containerComponentRef = thisComponent;
         },
         containerClassNames: this.props.containerClassNames
       });
       this.setState({
-        calledContainerComponent: calledContainerComponent,
-        isReset: false
+        ContainerComponent: ContainerComponent
       });
     }
   }, {
@@ -24352,7 +24345,6 @@ function (_React$Component) {
     value: function startPlaying() {
       var codeStepper = setTimeout(function stepFunc(self) {
         if (!self.state.isPlaying) return;
-        console.log(self.state.calledDelayValue);
         self.stepOnce();
         codeStepper = setTimeout(stepFunc, self.state.calledDelayValue, self);
       }, this.state.calledDelayValue, this);
@@ -24393,90 +24385,12 @@ function (_React$Component) {
         calledContainerComponent: this.state.calledContainerComponent,
         calledDelayValue: this.state.calledDelayValue,
         calledFunctionArgs: this.state.calledFunctionArgs
-      }, this.state.calledContainerComponent));
+      }, this.state.ContainerComponent));
     }
   }]);
 
   return RecursionVisualizer;
-}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component); // class CodePlayer {
-//     constructor(generatorFunction, simulationControllerDOMRef, ...codePlayerClassNames) {
-//         this.codePlayer = this.createCodePlayer(codePlayerClassNames);
-//         this.generatorFunction = generatorFunction;
-//         this.generator;
-//         this.generatorYield;
-//         this.simulationControllerDOMRef = simulationControllerDOMRef;
-//         this.simluationStartButton = simulationControllerDOMRef.querySelector('.simulation-controller__start-button');
-//         this.simluationFunctionParameterInput = simulationControllerDOMRef.querySelector('.simulation-controller__function-parameter');
-//         this.simulationPlayPause = simulationControllerDOMRef.querySelector('.simulation-controller__play-button');
-//         this.simulationDelayInput = simulationControllerDOMRef.querySelector('.simulation-controller__delay');
-//         this.simulationStepper = simulationControllerDOMRef.querySelector('.simulation-controller__step-next');
-//         this.delay;
-//         this.paused = false;
-//         this.playFunction = this.playFunction.bind(this);
-//         this.step = this.step.bind(this);
-//         this.getSimulationDelay = this.getSimulationDelay.bind(this);
-//         this.getFunctionParameter = this.getFunctionParameter.bind(this);
-//         this.togglePlayPause = this.togglePlayPause.bind(this);
-//         this.startFunction = this.startFunction.bind(this);
-//         this.clearCodePlayer = this.clearCodePlayer.bind(this);
-//     }
-//     createCodePlayer(classNames) {
-//         const codePlayer = document.createElement('div');
-//         codePlayer.classList.add('code-player', ...classNames);
-//         return codePlayer;
-//     }
-//     placeCodePlayerAtLocation(DOMLocation) {
-//         DOMLocation.appendChild(this.codePlayer);
-//     }
-//     startFunction() {
-//         const functionParameter = this.getFunctionParameter();
-//         const delay = this.getSimulationDelay();
-//         this.delay = delay;
-//         this.generator = this.generatorFunction(functionParameter, this.codePlayer);
-//         console.log(this.generator);
-//         this.clearCodePlayer();
-//         this.paused = false;
-//         this.playFunction();
-//     }
-//     playFunction() {
-//         console.log(this.paused);
-//         if (this.paused) {
-//             return;
-//         } else {
-//             let codeStepper = setTimeout(function step(self) {
-//                 if (self.paused) {
-//                     return;
-//                 }
-//                 self.step();
-//                 if (self.generatorYield && self.generatorYield.done) {
-//                     return;
-//                 } else {
-//                     codeStepper = setTimeout(step, self.delay, self);
-//                 }
-//             }, this.delay, this);
-//         }
-//     }
-//     step() {
-//         if (this.generatorYield && this.generatorYield.done) {
-//             return;
-//         } else {
-//             this.generatorYield = this.generator.next();
-//         }
-//     }
-//     getFunctionParameter() {
-//         return Number(this.simluationFunctionParameterInput.value);
-//     }
-//     getSimulationDelay() {
-//         return Number(this.simulationDelayInput.value) * 1000;
-//     }
-//     togglePlayPause() {
-//         this.paused = !this.paused;
-//     }
-//     clearCodePlayer() {
-//         this.codePlayer.innerHTML = '';
-//     }
-// }
-
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
 /* harmony default export */ __webpack_exports__["default"] = (RecursionVisualizer);
 
