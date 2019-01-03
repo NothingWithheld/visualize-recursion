@@ -118,7 +118,8 @@ class RecursionVisualizer extends React.Component {
         this.setState({
             generator,
             calledDelayValue,
-            calledFunctionArgs
+            calledFunctionArgs,
+            isReset: false
         });
     }
 

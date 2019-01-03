@@ -24314,7 +24314,8 @@ function (_React$Component) {
       this.setState({
         generator: generator,
         calledDelayValue: calledDelayValue,
-        calledFunctionArgs: calledFunctionArgs
+        calledFunctionArgs: calledFunctionArgs,
+        isReset: false
       });
     }
   }, {
