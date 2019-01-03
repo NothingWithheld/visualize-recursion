@@ -18,15 +18,10 @@ class RecursionVisualizer extends React.Component {
             });
         }
 
-        const Container = this.props.outputContainer;
-        const ContainerComponent = <Container 
-            ref={thisComponent => this.containerComponentRef = thisComponent} 
-            containerClassNames={this.props.containerClassNames} 
-        />;
+        this.outputContainer = React.createRef();
 
         this.state = {
             functionInputObjs,
-            ContainerComponent,
             isReset: true,
             isCompleted: false,
             isPlaying: false,
@@ -98,7 +93,7 @@ class RecursionVisualizer extends React.Component {
     }
 
     handleReset() {
-        this.updateContainer();
+        this.outputContainer.current.deleteChildComponents();
         this.setState({
             isReset: true
         });
@@ -118,7 +113,7 @@ class RecursionVisualizer extends React.Component {
         const calledDelayValue = Number(this.state.delayObj.value) * 1000;
         const calledFunctionArgs = this.state.functionInputObjs.map(inputObj => Number(inputObj.value));
 
-        const generator = this.props.generatorFunction(...calledFunctionArgs, this.containerComponentRef);
+        const generator = this.props.generatorFunction(...calledFunctionArgs, this.outputContainer.current);
 
         this.setState({
             generator,
@@ -127,24 +122,12 @@ class RecursionVisualizer extends React.Component {
         });
     }
 
-    updateContainer() {
-        const Container = this.props.outputContainer;
-        const ContainerComponent = <Container 
-            ref={thisComponent => this.containerComponentRef = thisComponent} 
-            containerClassNames={this.props.containerClassNames} 
-        />;
-
-        this.setState({
-            ContainerComponent
-        });
-    }
-
     startPlaying() {
-        let codeStepper = setTimeout(function stepFunc(self) {
+        setTimeout(function stepFunc(self) {
             if (!self.state.isPlaying) return;
 
             self.stepOnce();
-            codeStepper = setTimeout(stepFunc, self.state.calledDelayValue, self);
+            setTimeout(stepFunc, self.state.calledDelayValue, self);
 
         }, this.state.calledDelayValue, this);
     }
@@ -170,6 +153,8 @@ class RecursionVisualizer extends React.Component {
     }
 
     render() {
+        const OutputContainer = this.props.outputContainer;
+
         return (
             <div>
                 <CodeController 
@@ -189,7 +174,10 @@ class RecursionVisualizer extends React.Component {
                     calledDelayValue={this.state.calledDelayValue}
                     calledFunctionArgs={this.state.calledFunctionArgs}
                 >
-                    {this.state.ContainerComponent}
+                    <OutputContainer 
+                        ref={this.outputContainer} 
+                        containerClassNames={this.props.containerClassNames} 
+                    />
                 </RecursionWindow>
             </div>
         );

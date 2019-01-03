@@ -24206,16 +24206,9 @@ function (_React$Component) {
       });
     }
 
-    var Container = _this.props.outputContainer;
-    var ContainerComponent = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Container, {
-      ref: function ref(thisComponent) {
-        return _this.containerComponentRef = thisComponent;
-      },
-      containerClassNames: _this.props.containerClassNames
-    });
+    _this.outputContainer = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
     _this.state = {
       functionInputObjs: functionInputObjs,
-      ContainerComponent: ContainerComponent,
       isReset: true,
       isCompleted: false,
       isPlaying: false,
@@ -24291,7 +24284,7 @@ function (_React$Component) {
   }, {
     key: "handleReset",
     value: function handleReset() {
-      this.updateContainer();
+      this.outputContainer.current.deleteChildComponents();
       this.setState({
         isReset: true
       });
@@ -24316,7 +24309,7 @@ function (_React$Component) {
         return Number(inputObj.value);
       });
 
-      var generator = (_this$props = this.props).generatorFunction.apply(_this$props, _toConsumableArray(calledFunctionArgs).concat([this.containerComponentRef]));
+      var generator = (_this$props = this.props).generatorFunction.apply(_this$props, _toConsumableArray(calledFunctionArgs).concat([this.outputContainer.current]));
 
       this.setState({
         generator: generator,
@@ -24325,28 +24318,12 @@ function (_React$Component) {
       });
     }
   }, {
-    key: "updateContainer",
-    value: function updateContainer() {
-      var _this2 = this;
-
-      var Container = this.props.outputContainer;
-      var ContainerComponent = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Container, {
-        ref: function ref(thisComponent) {
-          return _this2.containerComponentRef = thisComponent;
-        },
-        containerClassNames: this.props.containerClassNames
-      });
-      this.setState({
-        ContainerComponent: ContainerComponent
-      });
-    }
-  }, {
     key: "startPlaying",
     value: function startPlaying() {
-      var codeStepper = setTimeout(function stepFunc(self) {
+      setTimeout(function stepFunc(self) {
         if (!self.state.isPlaying) return;
         self.stepOnce();
-        codeStepper = setTimeout(stepFunc, self.state.calledDelayValue, self);
+        setTimeout(stepFunc, self.state.calledDelayValue, self);
       }, this.state.calledDelayValue, this);
     }
   }, {
@@ -24372,6 +24349,7 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
+      var OutputContainer = this.props.outputContainer;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodeController__WEBPACK_IMPORTED_MODULE_1__["default"], {
         handlePlayPause: this.handlePlayPause,
         handleStep: this.handleStep,
@@ -24385,7 +24363,10 @@ function (_React$Component) {
         calledContainerComponent: this.state.calledContainerComponent,
         calledDelayValue: this.state.calledDelayValue,
         calledFunctionArgs: this.state.calledFunctionArgs
-      }, this.state.ContainerComponent));
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(OutputContainer, {
+        ref: this.outputContainer,
+        containerClassNames: this.props.containerClassNames
+      })));
     }
   }]);
 
@@ -24512,6 +24493,13 @@ function (_React$Component) {
     value: function addChildComponent(rootNode) {
       this.setState({
         root: rootNode
+      });
+    }
+  }, {
+    key: "deleteChildComponents",
+    value: function deleteChildComponents() {
+      this.setState({
+        root: null
       });
     }
   }, {

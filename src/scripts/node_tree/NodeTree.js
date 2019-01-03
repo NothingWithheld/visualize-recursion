@@ -19,6 +19,12 @@ class NodeTree extends React.Component {
         });
     }
 
+    deleteChildComponents() {
+        this.setState({
+            root: null
+        });
+    }
+
     render() {
         const RootNode = this.state.root;
         const { containerClassNames } = this.props;
