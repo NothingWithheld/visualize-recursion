@@ -23719,7 +23719,7 @@ function CodeController(props) {
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "code-controller"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "code-controller__button-controlls"
+    className: "code-controller__button-controls"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodeControllerComponents_PlayPauseButton__WEBPACK_IMPORTED_MODULE_1__["default"], {
     handlePlayPause: props.handlePlayPause,
     isCompleted: props.isCompleted,
@@ -23819,12 +23819,12 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
         xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24",
-        className: "icon-play"
+        className: "code-player__icon-play"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", {
         cx: "12",
         cy: "12",
         r: "10",
-        className: "icon-play--colored"
+        className: "code-player__icon-play--colored"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
         className: "icon--white",
         d: "M15.51 11.14a1 1 0 0 1 0 1.72l-5 3A1 1 0 0 1 9 15V9a1 1 0 0 1 1.51-.86l5 3z"
@@ -23835,12 +23835,12 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
         xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24",
-        className: "icon-pause"
+        className: "code-player__icon-pause"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", {
         cx: "12",
         cy: "12",
         r: "10",
-        className: "icon-pause--colored"
+        className: "code-player__icon-pause--colored"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
         className: "icon--white",
         d: "M9 8h1a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1zm5 0h1a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"
@@ -23850,7 +23850,7 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
         xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24",
-        className: "icon-play"
+        className: "code-player__icon-play"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", {
         cx: "12",
         cy: "12",
@@ -23933,12 +23933,12 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
         xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24",
-        className: "icon-refresh"
+        className: "code-player__icon-reset"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", {
         cx: "12",
         cy: "12",
         r: "10",
-        className: "icon-refresh--colored"
+        className: "code-player__icon-reset--colored"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
         className: "icon--white",
         d: "M8.52 7.11a5.98 5.98 0 0 1 8.98 2.5 1 1 0 1 1-1.83.8 4 4 0 0 0-5.7-1.86l.74.74A1 1 0 0 1 10 11H7a1 1 0 0 1-1-1V7a1 1 0 0 1 1.7-.7l.82.81zm5.51 8.34l-.74-.74A1 1 0 0 1 14 13h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1.7.7l-.82-.81A5.98 5.98 0 0 1 6.5 14.4a1 1 0 1 1 1.83-.8 4 4 0 0 0 5.7 1.85z"
@@ -23948,12 +23948,12 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
         xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24",
-        className: "icon-refresh"
+        className: "code-player__icon-reset"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", {
         cx: "12",
         cy: "12",
         r: "10",
-        className: "icon-refresh--gray"
+        className: "icon--gray"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
         className: "icon--white",
         d: "M8.52 7.11a5.98 5.98 0 0 1 8.98 2.5 1 1 0 1 1-1.83.8 4 4 0 0 0-5.7-1.86l.74.74A1 1 0 0 1 10 11H7a1 1 0 0 1-1-1V7a1 1 0 0 1 1.7-.7l.82.81zm5.51 8.34l-.74-.74A1 1 0 0 1 14 13h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1.7.7l-.82-.81A5.98 5.98 0 0 1 6.5 14.4a1 1 0 1 1 1.83-.8 4 4 0 0 0 5.7 1.85z"
@@ -24103,12 +24103,12 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
         xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24",
-        className: "icon-arrow-thin-right-circle"
+        className: "code-player__icon-step"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", {
         cx: "12",
         cy: "12",
         r: "10",
-        className: "icon-arrow-thin-right-circle--colored"
+        className: "code-player__icon-step--colored"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
         className: "icon--white",
         d: "M14.59 13H7a1 1 0 0 1 0-2h7.59l-2.3-2.3a1 1 0 1 1 1.42-1.4l4 4a1 1 0 0 1 0 1.4l-4 4a1 1 0 0 1-1.42-1.4l2.3-2.3z"
@@ -24118,7 +24118,7 @@ function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
         xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 24 24",
-        className: "icon-arrow-thin-right-circle"
+        className: "code-player__icon-step"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", {
         cx: "12",
         cy: "12",

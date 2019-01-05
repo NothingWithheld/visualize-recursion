@@ -1,0 +1,28 @@
+.code-player__button {
+    height: 50px;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 20px 0 0;
+    font-size: 25px;
+    text-transform: uppercase;
+}
+
+.code-player__icon-play, .code-player__icon-pause, .code-player__icon-step, .code-player__icon-reset {
+    height: 35px;
+}
+
+.code-player__icon-play--colored {
+    fill: #0c6b58;
+}
+
+.code-player__icon-pause--colored, .code-player__icon-reset--colored {
+    fill: #ab091e;
+}
+
+.code-player__icon-step--colored {
+    fill: #de911d;
+}
+
+

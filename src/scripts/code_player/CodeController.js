@@ -15,7 +15,7 @@ function CodeController(props) {
             className="code-controller"
         >
             <div
-                className="code-controller__button-controlls"
+                className="code-controller__button-controls"
             >
                 <PlayPauseButton
                     handlePlayPause={props.handlePlayPause}
