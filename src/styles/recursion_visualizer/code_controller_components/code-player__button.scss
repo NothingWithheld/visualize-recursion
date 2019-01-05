@@ -7,6 +7,31 @@
     margin: 0 20px 0 0;
     font-size: 25px;
     text-transform: uppercase;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    border-radius: 4px;
+    overflow: hidden;
+    background: white;
+    border: solid 2px;
+}
+
+.code-player__button--unclickable {
+    border-color: #bcccdc;
+}
+
+.code-player__play-button {
+    border-color: #0c6b58;
+}
+
+.code-player__pause-button, .code-player__reset-button {
+    border-color: #ab091e;
+}
+
+.code-player__step-button {
+    border-color: #de911d;
 }
 
 .code-player__icon-play, .code-player__icon-pause, .code-player__icon-step, .code-player__icon-reset {

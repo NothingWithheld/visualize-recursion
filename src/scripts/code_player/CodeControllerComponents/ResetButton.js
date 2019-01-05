@@ -29,7 +29,7 @@ class ResetButton extends React.Component {
 
         const grayedOutResetButton = (
             <button
-                className="code-player__button code-player__reset-button"
+                className="code-player__button code-player__button--unclickable"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="code-player__icon-reset">
                     <circle cx="12" cy="12" r="10" className="icon--gray"/>

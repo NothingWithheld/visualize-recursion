@@ -16,7 +16,7 @@ class PlayPauseButton extends React.Component {
     render() {
         const playButton = (
             <button
-                className="code-player__button code-play__play-button"
+                className="code-player__button code-player__play-button"
                 onClick={this.handleClick}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="code-player__icon-play">
