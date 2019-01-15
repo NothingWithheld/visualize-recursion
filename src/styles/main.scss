@@ -1,6 +1,15 @@
-@import 'base';
-@import 'main-nav';
-@import 'icons';
+// base folder
+@import './base/base';
 
-@import './recursion_visualizer/code-controller';
-@import './recursion_visualizer/code_controller_components/code-player__button';
+// layout folder
+@import './layout/main-nav';
+
+//components folder
+@import './components/icons';
+// -> recursion_visualizer subfolder
+@import './components/recursion_visualizer/code-controller';
+// -> -> code_controller subfolder
+@import './components/recursion_visualizer/code_controller/code-player__button';
+// -> recursive_modules subfolder
+@import './components/recursive_modules/factorial';
+@import './components/recursive_modules/fibonacci';
