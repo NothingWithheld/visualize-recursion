@@ -46,20 +46,7 @@ gulp.task('sass-main', function() {
         .pipe(gulp.dest('./dist/styles'));
 });
 
-gulp.task('sass-modules', function() {
-    return gulp.src('./src/styles/recursive_modules/*')
-        .pipe(sourcemaps.init())
-        .pipe(sass())
-        .pipe(postcss([
-            autoprefixer(),
-            cssnano()
-        ]))
-        .pipe(rename((path) => path.basename += '.min'))
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest('./dist/styles/recursive_modules'));
-});
-
-gulp.task('sass', ['sass-main', 'sass-modules']);
+gulp.task('sass', ['sass-main']);
 
 gulp.task('clean', function() {
     return del('./dist/**/*');
@@ -71,6 +58,5 @@ gulp.task('build', function() {
 
 gulp.task('default', ['build'], function() {
     gulp.watch('./src/scripts/**/*.js', ['js'])
-    gulp.watch(['./src/styles/**/*.scss', '!./src/styles/recursive_modules/*'], ['sass-main'])
-    gulp.watch('./src/styles/recursive_modules/*', ['sass-modules'])
+    gulp.watch(['./src/styles/**/*.scss'], ['sass-main'])
 })
