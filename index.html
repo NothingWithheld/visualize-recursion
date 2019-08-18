@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Visualize Recursion</title>
 <link href="dist/styles/main.min.css" rel="stylesheet">
-<link href="dist/styles/recursive_modules/factorial.min.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -20,7 +20,13 @@
     </nav>
     <div class="factorial-demo"></div>
 
-    <script src="dist/scripts/recursive_modules/factorial.min.js" type="text/javascript"></script>
+    <div id="test">
+    </div>
+    <!-- <div class="fibonacci-wrapper"></div> -->
+    <div style="height: 800px;"></div>
+
+    <script src="node_modules/babel-polyfill/dist/polyfill.min.js" type="text/javascript"></script>
+    <script src="dist/scripts/main.js" type="text/javascript"></script>
 </body>
 
 </html>

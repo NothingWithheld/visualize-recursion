@@ -1,3 +1,64 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import RecursionVisualizer from '../code_player/RecursionVisualizer';
+import TreeNode from '../node_tree/TreeNode';
+import NodeTree from '../node_tree/NodeTree';
+import fibonacciGenerator from '../recursive_modules/fibonacci/fibonacci-generator';
+
+ReactDOM.render(
+    <RecursionVisualizer 
+        defaultArgs={[7]} 
+        generatorFunction={fibonacciGenerator}
+        outputContainer={NodeTree}
+        containerClassNames="fibonacci-demo"
+    />,
+    document.getElementById('test')
+);
+
+// let nodeTreeRef;
+// let nodeTree = <NodeTree ref={thisComponent => nodeTreeRef = thisComponent} containerClassNames={'fibonacci-demo'} />;
+// ReactDOM.render(nodeTree, document.querySelector('.fibonacci-wrapper'));
+
+// let fibGen = fibonacciGenerator(7, nodeTreeRef);
+// let iteratorRes = fibGen.next();
+
+// while (!iteratorRes.done) {
+//     iteratorRes = fibGen.next();
+// }
+
+
+
+// let treeNodeRef;
+// let treeNode = <TreeNode ref={(thisComponent) => {treeNodeRef = thisComponent}} />;
+// ReactDOM.render(treeNode, document.getElementById('recursion-test'));
+// console.log({treeNodeRef});
+// console.log(treeNodeRef.addChildComponent);
+// console.log(treeNodeRef.addProps);
+
+
+// function* fibonacci(n) {
+//     if (n <= 2) {
+//         yield 1
+//         return 1;
+//     } else {
+//         const fibNMinusOne = yield* fibonacci(n - 1);
+//         const fibNMinusTwo = yield* fibonacci(n - 2);
+
+//         yield fibNMinusOne + fibNMinusTwo;
+//         return fibNMinusOne + fibNMinusTwo;
+//     }
+// }
+
+// let fibGen = fibonacci(7);
+// let iteratorReturn = fibGen.next();
+// console.log(iteratorReturn);
+
+// while (!iteratorReturn.done) {
+//     console.log(iteratorReturn);
+//     iteratorReturn = fibGen.next();
+// }
+
+
 function factorialBlockMaker(n, isFirstCall = false) {
     let factorialBlock = document.createElement('dl');
     factorialBlock.classList.add('factorial-block--new');
