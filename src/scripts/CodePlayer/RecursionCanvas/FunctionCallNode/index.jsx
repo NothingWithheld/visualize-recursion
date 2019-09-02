@@ -3,17 +3,30 @@ import { Group, Circle, Text } from 'react-konva'
 import { nodeRadius } from '../../../constants'
 import useKonvaTextWidth from '../useKonvaTextWidth'
 
-const FunctionCallNode = node => {
-	const { x, y, returnValue, funcName, args } = node
+const FunctionCallNode = ({
+	x,
+	y,
+	returnValue,
+	funcName,
+	args,
+	lastAction,
+	setLayerPosition,
+}) => {
 	const [funcNameWidth, funcNameWidthCallback] = useKonvaTextWidth()
 	const [returnValueWidth, returnValueWidthCallback] = useKonvaTextWidth()
+
+	if (lastAction) {
+		setLayerPosition(-x, -y)
+	}
 
 	return (
 		<Group x={x} y={y}>
 			<Circle
 				radius={nodeRadius}
 				fill="grey"
-				stroke={returnValue === null ? 'yellow' : 'green'}
+				stroke={
+					lastAction ? 'orange' : returnValue === null ? 'yellow' : 'green'
+				}
 				strokeWidth={7}
 			/>
 			<Text

@@ -23,15 +23,15 @@ const useNodes = () => {
 				],
 			}
 			const newNodeArray = [
-				...latestNodeArray.current.map((node, i) =>
-					i === parentNodeIndex ? newParentNode : node
-				),
-				{ ...child, childIndices: [] },
+				...latestNodeArray.current
+					.map((node, i) => (i === parentNodeIndex ? newParentNode : node))
+					.map(node => ({ ...node, lastAction: false })),
+				{ ...child, childIndices: [], lastAction: true },
 			]
 
 			setNodeArray(newNodeArray)
 		} else {
-			setNodeArray([{ ...child, childIndices: [] }])
+			setNodeArray([{ ...child, childIndices: [], lastAction: true }])
 		}
 	}
 
@@ -45,10 +45,14 @@ const useNodes = () => {
 			node => node.nodeID === nodeToUpdate.nodeID
 		)
 
-		const updatedNode = { ...latestNodeArray.current[nodeIndex], returnValue }
-		const newNodeArray = latestNodeArray.current.map((node, i) =>
-			i === nodeIndex ? updatedNode : node
-		)
+		const updatedNode = {
+			...latestNodeArray.current[nodeIndex],
+			returnValue,
+			lastAction: true,
+		}
+		const newNodeArray = latestNodeArray.current
+			.map(node => ({ ...node, lastAction: false }))
+			.map((node, i) => (i === nodeIndex ? updatedNode : node))
 
 		setNodeArray(newNodeArray)
 	}

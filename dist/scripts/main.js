@@ -78470,12 +78470,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-var FunctionCallNode = function FunctionCallNode(node) {
-  var x = node.x,
-      y = node.y,
-      returnValue = node.returnValue,
-      funcName = node.funcName,
-      args = node.args;
+var FunctionCallNode = function FunctionCallNode(_ref) {
+  var x = _ref.x,
+      y = _ref.y,
+      returnValue = _ref.returnValue,
+      funcName = _ref.funcName,
+      args = _ref.args,
+      lastAction = _ref.lastAction,
+      setLayerPosition = _ref.setLayerPosition;
 
   var _useKonvaTextWidth = Object(_useKonvaTextWidth__WEBPACK_IMPORTED_MODULE_3__["default"])(),
       _useKonvaTextWidth2 = _slicedToArray(_useKonvaTextWidth, 2),
@@ -78487,13 +78489,17 @@ var FunctionCallNode = function FunctionCallNode(node) {
       returnValueWidth = _useKonvaTextWidth4[0],
       returnValueWidthCallback = _useKonvaTextWidth4[1];
 
+  if (lastAction) {
+    setLayerPosition(-x, -y);
+  }
+
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Group"], {
     x: x,
     y: y
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Circle"], {
     radius: _constants__WEBPACK_IMPORTED_MODULE_2__["nodeRadius"],
     fill: "grey",
-    stroke: returnValue === null ? 'yellow' : 'green',
+    stroke: lastAction ? 'orange' : returnValue === null ? 'yellow' : 'green',
     strokeWidth: 7
   }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Text"], {
     text: "".concat(funcName, "(").concat(args.join(', '), ")"),
@@ -78538,6 +78544,14 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -78549,12 +78563,32 @@ var RecursionCanvas = function RecursionCanvas(_ref) {
   console.log({
     nodes: nodes
   });
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState2 = _slicedToArray(_useState, 2),
+      layerX = _useState2[0],
+      setLayerX = _useState2[1];
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState4 = _slicedToArray(_useState3, 2),
+      layerY = _useState4[0],
+      setLayerY = _useState4[1];
+
+  var setLayerPosition = function setLayerPosition(x, y) {
+    setLayerX(x);
+    setLayerY(y);
+  };
+
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Stage"], {
     width: window.innerWidth,
     height: 2 * window.innerHeight / 3,
     draggable: true
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Layer"], null, nodes.map(function (node, i) {
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Layer"], {
+    x: layerX + window.innerWidth / 2,
+    y: layerY + window.innerHeight / 3
+  }, nodes.map(function (node, i) {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_FunctionCallNode__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({}, node, {
+      setLayerPosition: setLayerPosition,
       key: i
     }));
   }), nodes.map(function (node) {
@@ -78730,13 +78764,19 @@ var useNodes = function useNodes() {
 
       var newNodeArray = [].concat(_toConsumableArray(latestNodeArray.current.map(function (node, i) {
         return i === parentNodeIndex ? newParentNode : node;
+      }).map(function (node) {
+        return _objectSpread({}, node, {
+          lastAction: false
+        });
       })), [_objectSpread({}, child, {
-        childIndices: []
+        childIndices: [],
+        lastAction: true
       })]);
       setNodeArray(newNodeArray);
     } else {
       setNodeArray([_objectSpread({}, child, {
-        childIndices: []
+        childIndices: [],
+        lastAction: true
       })]);
     }
   };
@@ -78752,10 +78792,15 @@ var useNodes = function useNodes() {
     });
 
     var updatedNode = _objectSpread({}, latestNodeArray.current[nodeIndex], {
-      returnValue: returnValue
+      returnValue: returnValue,
+      lastAction: true
     });
 
-    var newNodeArray = latestNodeArray.current.map(function (node, i) {
+    var newNodeArray = latestNodeArray.current.map(function (node) {
+      return _objectSpread({}, node, {
+        lastAction: false
+      });
+    }).map(function (node, i) {
       return i === nodeIndex ? updatedNode : node;
     });
     setNodeArray(newNodeArray);

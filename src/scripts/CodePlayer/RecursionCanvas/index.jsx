@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Stage, Layer, Circle } from 'react-konva'
 import { nodeRadius } from '../../constants'
 import FunctionCallNode from './FunctionCallNode'
@@ -6,6 +6,13 @@ import FunctionCallArrow from './FunctionCallArrow'
 
 const RecursionCanvas = ({ nodes }) => {
 	console.log({ nodes })
+	const [layerX, setLayerX] = useState(0)
+	const [layerY, setLayerY] = useState(0)
+
+	const setLayerPosition = (x, y) => {
+		setLayerX(x)
+		setLayerY(y)
+	}
 
 	return (
 		<Stage
@@ -13,9 +20,16 @@ const RecursionCanvas = ({ nodes }) => {
 			height={(2 * window.innerHeight) / 3}
 			draggable
 		>
-			<Layer>
+			<Layer
+				x={layerX + window.innerWidth / 2}
+				y={layerY + window.innerHeight / 3}
+			>
 				{nodes.map((node, i) => (
-					<FunctionCallNode {...node} key={i} />
+					<FunctionCallNode
+						{...node}
+						setLayerPosition={setLayerPosition}
+						key={i}
+					/>
 				))}
 				{nodes
 					.map(node =>
