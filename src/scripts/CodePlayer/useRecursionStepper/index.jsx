@@ -1,47 +1,53 @@
 import { useState, useEffect, useRef } from 'react'
 import useNodes from '../useNodes'
-import drawTree from '../../node_tree/tree_drawing/minimum_width'
 
 const useRecursionStepper = scopeGeneratorFunc => {
-	const {
-		nodeTree: treeRoot,
-		resetNodes,
-		addChild,
-		addReturnValue,
-	} = useNodes()
-	console.log({ treeRoot })
+	const { nodes, resetNodes, addChild, addReturnValue } = useNodes()
 	const generatorFunc = scopeGeneratorFunc(addChild, addReturnValue)
 	const [delayMilliseconds, setDelayMilliseconds] = useState(500)
 	const [generator, setGenerator] = useState(null)
 	const [isStepping, setIsStepping] = useState(false)
 	const [isCompleted, setIsCompleted] = useState(false)
+	const [stepFuncID, setStepFuncID] = useState(null)
 
-	const stepOnce = () => {
-		if (!generator) return
-
-		const iteratorRes = generator.next()
+	const stepOnce = generatorArg => {
+		const iteratorRes = generatorArg.next()
 		if (iteratorRes.done) {
 			setIsCompleted(true)
 			setIsStepping(false)
 		}
 	}
 
-	const startGenerator = (delay, ...args) => {
+	const handleStepOnce = () => {
+		if (isCompleted || !generator) return
+
+		stepOnce(generator)
+	}
+
+	const startGenerator = startAndStepOnce => (delay, ...args) => {
 		setDelayMilliseconds(delay)
-		setGenerator(generatorFunc(...args))
-		setIsStepping(true)
+		const createdGenerator = generatorFunc(...args)
+		setGenerator(createdGenerator)
+
+		if (startAndStepOnce) {
+			stepOnce(createdGenerator)
+		} else {
+			setIsStepping(true)
+		}
 	}
 
 	const latestIsStepping = useRef(isStepping)
 	useEffect(() => {
 		latestIsStepping.current = isStepping
 
-		setTimeout(function stepFunc() {
+		const initialClickTimerID = setTimeout(function stepFunc() {
 			if (!latestIsStepping.current) return
 
-			stepOnce()
-			setTimeout(stepFunc, delayMilliseconds)
+			handleStepOnce()
+			const recursiveTimerID = setTimeout(stepFunc, delayMilliseconds)
+			setStepFuncID(recursiveTimerID)
 		}, 0)
+		setStepFuncID(initialClickTimerID)
 	}, [isStepping])
 
 	const play = () => {
@@ -56,41 +62,25 @@ const useRecursionStepper = scopeGeneratorFunc => {
 
 	const reset = () => {
 		console.log('reset')
+		clearTimeout(stepFuncID)
+		setStepFuncID(null)
 		resetNodes()
 		setGenerator(null)
 		setIsStepping(false)
 		setIsCompleted(false)
 	}
 
-	const flattenTree = treeRoot => {
-		const flattenedTree = []
-
-		function flatten(nodeToFlatten) {
-			const { children, ...node } = nodeToFlatten
-			const childIndices = children.map(flatten)
-
-			const thisNodeIndex = flattenedTree.length
-			flattenedTree.push({ ...node, childIndices })
-
-			return thisNodeIndex
-		}
-
-		flatten(treeRoot)
-		return flattenedTree
-	}
-
-	const nodesWithPositions = treeRoot && drawTree(treeRoot)
-
 	return {
+		nodes,
 		play,
 		pause,
 		reset,
 		isStepping,
 		isCompleted,
 		isStarted: generator !== null,
-		start: startGenerator,
-		step: stepOnce,
-		nodes: nodesWithPositions ? flattenTree(nodesWithPositions) : [],
+		start: startGenerator(false),
+		startAndStepOnce: startGenerator(true),
+		step: handleStepOnce,
 	}
 }
 

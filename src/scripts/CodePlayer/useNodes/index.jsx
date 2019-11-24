@@ -1,4 +1,34 @@
 import { useState, useRef, useEffect } from 'react'
+import drawTree from '../../node_tree/tree_drawing/just_center_parent'
+
+const createNodeTree = nodeArray => {
+	const getNodeTree = nodeIndex => {
+		const { childIndices, ...node } = nodeArray[nodeIndex]
+		const children = childIndices.map(getNodeTree)
+
+		const nodeWithChildReferences = { ...node, children }
+		return nodeWithChildReferences
+	}
+
+	return getNodeTree(0)
+}
+
+const flattenTree = treeRoot => {
+	const flattenedTree = []
+
+	function flatten(nodeToFlatten) {
+		const { children, ...node } = nodeToFlatten
+		const childIndices = children.map(flatten)
+
+		const thisNodeIndex = flattenedTree.length
+		flattenedTree.push({ ...node, childIndices })
+
+		return thisNodeIndex
+	}
+
+	flatten(treeRoot)
+	return flattenedTree
+}
 
 const useNodes = () => {
 	const [nodeArray, setNodeArray] = useState([])
@@ -59,18 +89,13 @@ const useNodes = () => {
 
 	const resetNodes = () => setNodeArray([])
 
-	const getNodeTree = nodeIndex => {
-		const { childIndices, ...node } = nodeArray[nodeIndex]
-		const children = childIndices.map(getNodeTree)
-
-		const nodeWithChildReferences = { ...node, children }
-		return nodeWithChildReferences
-	}
-
 	return {
 		addReturnValue,
 		resetNodes,
-		nodeTree: nodeArray.length > 0 ? getNodeTree(0) : null,
+		nodes:
+			nodeArray.length > 0
+				? flattenTree(drawTree(createNodeTree(nodeArray)))
+				: [],
 		addChild: addChildToNodeArray,
 	}
 }

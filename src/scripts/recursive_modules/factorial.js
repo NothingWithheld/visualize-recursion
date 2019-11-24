@@ -6,6 +6,7 @@ import NodeTree from '../node_tree/NodeTree'
 import fibonacciGenerator from '../recursive_modules/fibonacci/fibonacci-generator'
 import CodePlayer from '../CodePlayer'
 import scopeFibonacciGenerator from './fibonacci-rewrite/fibonacci_generator'
+import scopeLCSGenerator from './longest_common_substring'
 
 ReactDOM.render(
 	<>
@@ -24,6 +25,21 @@ ReactDOM.render(
 					type: 'number',
 					toValue: val => val.toString(),
 					fromValue: val => parseInt(val, 10),
+				},
+			]}
+		/>
+		<CodePlayer
+			scopeGeneratorFunc={scopeLCSGenerator}
+			functionInputObjs={[
+				{
+					value: 'lemon',
+					label: 'First Word',
+					type: 'string',
+				},
+				{
+					value: 'lozenge',
+					label: 'Second Word',
+					type: 'string',
 				},
 			]}
 		/>

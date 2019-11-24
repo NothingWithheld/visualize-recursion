@@ -12,6 +12,7 @@ const CodePlayer = ({ scopeGeneratorFunc, functionInputObjs }) => {
 		isCompleted,
 		isStarted,
 		start,
+		startAndStepOnce,
 		step,
 		nodes,
 	} = useRecursionStepper(scopeGeneratorFunc)
@@ -26,12 +27,11 @@ const CodePlayer = ({ scopeGeneratorFunc, functionInputObjs }) => {
 				isCompleted={isCompleted}
 				isStarted={isStarted}
 				start={start}
+				startAndStepOnce={startAndStepOnce}
 				step={step}
 				functionInputObjs={functionInputObjs}
 			/>
-			<hr />
 			<RecursionCanvas nodes={nodes} />
-			<hr />
 		</>
 	)
 }

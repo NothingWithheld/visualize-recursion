@@ -1,5 +1,5 @@
 import React from 'react'
-import { Group, Circle, Text } from 'react-konva'
+import { Group, Circle, Text, Line } from 'react-konva'
 import { nodeRadius } from '../../../constants'
 import useKonvaTextWidth from '../useKonvaTextWidth'
 
@@ -23,22 +23,29 @@ const FunctionCallNode = ({
 		<Group x={x} y={y}>
 			<Circle
 				radius={nodeRadius}
-				fill="grey"
+				fill="#F0F4F8"
 				stroke={
-					lastAction ? 'orange' : returnValue === null ? 'yellow' : 'green'
+					lastAction ? '#B990FF' : returnValue === null ? '#FADB5F' : '#BCCCDC'
 				}
-				strokeWidth={7}
+				strokeWidth={5}
 			/>
 			<Text
-				text={`${funcName}(${args.join(', ')})`}
+				text={args.join(', ')}
 				x={-funcNameWidth / 2}
-				y={-20}
+				y={-24}
+				fontStyle="bold"
+				fontFamily="Roboto"
+				fontSize={18}
 				ref={funcNameWidthCallback}
 			/>
+			<Line points={[-10, 0, 10, 0]} stroke="#BCCCDC" width={1} />
 			<Text
-				text={returnValue || 'waiting'}
+				text={returnValue !== null ? returnValue.toString() : 'waiting'}
 				x={-returnValueWidth / 2}
-				y={20}
+				y={12}
+				fontStyle="bold"
+				fontFamily="Roboto"
+				fontSize={returnValue === null ? 14 : 18}
 				ref={returnValueWidthCallback}
 			/>
 		</Group>
