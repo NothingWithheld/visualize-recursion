@@ -61,7 +61,6 @@ const useRecursionStepper = scopeGeneratorFunc => {
 	}
 
 	const reset = () => {
-		console.log('reset')
 		clearTimeout(stepFuncID)
 		setStepFuncID(null)
 		resetNodes()

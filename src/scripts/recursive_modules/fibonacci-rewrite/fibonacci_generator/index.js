@@ -1,19 +1,10 @@
-function makeNode(args, nodeID) {
-	return {
-		nodeID,
-		args,
-		funcName: 'fibonacci',
-		returnValue: null,
-		children: [],
-	}
-}
+import { getMakeNodeFunc } from '../../../utils/node_utils'
 
 function scopeFibonacciGenerator(addChild, addReturnValue) {
-	let counter = 0
+	const makeNode = getMakeNodeFunc()
 
 	return function* fibonacciGenerator(argValue, parentNode = null) {
-		const node = makeNode([argValue], counter)
-		counter += 1
+		const node = makeNode([argValue])
 		addChild(parentNode, node)
 		yield
 

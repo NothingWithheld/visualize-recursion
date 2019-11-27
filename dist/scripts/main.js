@@ -79964,11 +79964,6 @@ var useNodes = function useNodes() {
   };
 
   var addReturnValue = function addReturnValue(nodeToUpdate, returnValue) {
-    console.log('addReturnValue', {
-      nodeArray: latestNodeArray.current,
-      nodeToUpdate: nodeToUpdate,
-      returnValue: returnValue
-    });
     var nodeIndex = latestNodeArray.current.findIndex(function (node) {
       return node.nodeID === nodeToUpdate.nodeID;
     });
@@ -80117,7 +80112,6 @@ var useRecursionStepper = function useRecursionStepper(scopeGeneratorFunc) {
   };
 
   var reset = function reset() {
-    console.log('reset');
     clearTimeout(stepFuncID);
     setStepFuncID(null);
     resetNodes();
@@ -81461,18 +81455,11 @@ factorialDemoContainer ? factorial(5) : null;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-function makeNode(args, nodeID) {
-  return {
-    nodeID: nodeID,
-    args: args,
-    funcName: 'fibonacci',
-    returnValue: null,
-    children: []
-  };
-}
+/* harmony import */ var _utils_node_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../utils/node_utils */ "./src/scripts/utils/node_utils/index.js");
+
 
 function scopeFibonacciGenerator(addChild, addReturnValue) {
-  var counter = 0;
+  var makeNode = Object(_utils_node_utils__WEBPACK_IMPORTED_MODULE_0__["getMakeNodeFunc"])();
   return (
     /*#__PURE__*/
     regeneratorRuntime.mark(function fibonacciGenerator(argValue) {
@@ -81487,42 +81474,41 @@ function scopeFibonacciGenerator(addChild, addReturnValue) {
           switch (_context.prev = _context.next) {
             case 0:
               parentNode = _args.length > 1 && _args[1] !== undefined ? _args[1] : null;
-              node = makeNode([argValue], counter);
-              counter += 1;
+              node = makeNode([argValue]);
               addChild(parentNode, node);
-              _context.next = 6;
+              _context.next = 5;
               return;
 
-            case 6:
+            case 5:
               if (!(argValue === 1 || argValue === 2)) {
-                _context.next = 10;
+                _context.next = 9;
                 break;
               }
 
               returnValue = 1;
-              _context.next = 15;
+              _context.next = 14;
               break;
 
+            case 9:
+              return _context.delegateYield(fibonacciGenerator(argValue - 1, node), "t0", 10);
+
             case 10:
-              return _context.delegateYield(fibonacciGenerator(argValue - 1, node), "t0", 11);
-
-            case 11:
               fibOfArgValueMinusOne = _context.t0;
-              return _context.delegateYield(fibonacciGenerator(argValue - 2, node), "t1", 13);
+              return _context.delegateYield(fibonacciGenerator(argValue - 2, node), "t1", 12);
 
-            case 13:
+            case 12:
               fibOfArgValueMinusTwo = _context.t1;
               returnValue = fibOfArgValueMinusOne + fibOfArgValueMinusTwo;
 
-            case 15:
+            case 14:
               addReturnValue(node, returnValue);
-              _context.next = 18;
+              _context.next = 17;
               return returnValue;
 
-            case 18:
+            case 17:
               return _context.abrupt("return", returnValue);
 
-            case 19:
+            case 18:
             case "end":
               return _context.stop();
           }
@@ -81659,18 +81645,11 @@ function fibonacciGenerator(argValue, parentComponent) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-function makeNode(args, nodeID) {
-  return {
-    nodeID: nodeID,
-    args: args,
-    funcName: 'lcs',
-    returnValue: null,
-    children: []
-  };
-}
+/* harmony import */ var _utils_node_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/node_utils */ "./src/scripts/utils/node_utils/index.js");
+
 
 function scopeLongestCommonSubstringGenerator(addChild, addReturnValue) {
-  var counter = 0;
+  var makeNode = Object(_utils_node_utils__WEBPACK_IMPORTED_MODULE_0__["getMakeNodeFunc"])();
   return (
     /*#__PURE__*/
     regeneratorRuntime.mark(function longestCommonSubstringGenerator(wordA, wordB) {
@@ -81697,58 +81676,55 @@ function scopeLongestCommonSubstringGenerator(addChild, addReturnValue) {
                         wordAInd = _args.length > 0 && _args[0] !== undefined ? _args[0] : 0;
                         wordBInd = _args.length > 1 && _args[1] !== undefined ? _args[1] : 0;
                         parentNode = _args.length > 2 && _args[2] !== undefined ? _args[2] : null;
-                        node = makeNode([wordAInd, wordBInd], counter);
-                        counter += 1;
+                        node = makeNode([wordAInd, wordBInd]);
                         addChild(parentNode, node);
-                        _context.next = 8;
+                        _context.next = 7;
                         return;
 
-                      case 8:
-                        console.log(node, wordA, wordB, wordAInd, wordBInd);
-
+                      case 7:
                         if (!(wordAInd === wordA.length || wordBInd === wordB.length)) {
-                          _context.next = 13;
+                          _context.next = 11;
                           break;
                         }
 
                         returnValue = 0;
-                        _context.next = 24;
+                        _context.next = 22;
                         break;
 
-                      case 13:
+                      case 11:
                         if (!(wordA[wordAInd] === wordB[wordBInd])) {
-                          _context.next = 19;
+                          _context.next = 17;
                           break;
                         }
 
-                        return _context.delegateYield(recursiveGenerator(wordAInd + 1, wordBInd + 1, node), "t0", 15);
+                        return _context.delegateYield(recursiveGenerator(wordAInd + 1, wordBInd + 1, node), "t0", 13);
 
-                      case 15:
+                      case 13:
                         lcsForRestOfWord = _context.t0;
                         returnValue = 1 + lcsForRestOfWord;
-                        _context.next = 24;
+                        _context.next = 22;
                         break;
 
-                      case 19:
-                        return _context.delegateYield(recursiveGenerator(wordAInd + 1, wordBInd, node), "t1", 20);
+                      case 17:
+                        return _context.delegateYield(recursiveGenerator(wordAInd + 1, wordBInd, node), "t1", 18);
+
+                      case 18:
+                        lcsStartIteratingDownWordA = _context.t1;
+                        return _context.delegateYield(recursiveGenerator(wordAInd, wordBInd + 1, node), "t2", 20);
 
                       case 20:
-                        lcsStartIteratingDownWordA = _context.t1;
-                        return _context.delegateYield(recursiveGenerator(wordAInd, wordBInd + 1, node), "t2", 22);
-
-                      case 22:
                         lcsStartIteratingDownWordB = _context.t2;
                         returnValue = Math.max(lcsStartIteratingDownWordA, lcsStartIteratingDownWordB);
 
-                      case 24:
+                      case 22:
                         addReturnValue(node, returnValue);
-                        _context.next = 27;
+                        _context.next = 25;
                         return returnValue;
 
-                      case 27:
+                      case 25:
                         return _context.abrupt("return", returnValue);
 
-                      case 28:
+                      case 26:
                       case "end":
                         return _context.stop();
                     }
@@ -81772,6 +81748,32 @@ function scopeLongestCommonSubstringGenerator(addChild, addReturnValue) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (scopeLongestCommonSubstringGenerator);
+
+/***/ }),
+
+/***/ "./src/scripts/utils/node_utils/index.js":
+/*!***********************************************!*\
+  !*** ./src/scripts/utils/node_utils/index.js ***!
+  \***********************************************/
+/*! exports provided: getMakeNodeFunc */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMakeNodeFunc", function() { return getMakeNodeFunc; });
+var getMakeNodeFunc = function getMakeNodeFunc() {
+  var counter = 0;
+  return function (args) {
+    var node = {
+      nodeID: counter,
+      args: args,
+      returnValue: null,
+      children: []
+    };
+    counter += 1;
+    return node;
+  };
+};
 
 /***/ })
 

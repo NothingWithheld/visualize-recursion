@@ -66,11 +66,6 @@ const useNodes = () => {
 	}
 
 	const addReturnValue = (nodeToUpdate, returnValue) => {
-		console.log('addReturnValue', {
-			nodeArray: latestNodeArray.current,
-			nodeToUpdate,
-			returnValue,
-		})
 		const nodeIndex = latestNodeArray.current.findIndex(
 			node => node.nodeID === nodeToUpdate.nodeID
 		)

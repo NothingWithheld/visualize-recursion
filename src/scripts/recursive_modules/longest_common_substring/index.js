@@ -1,15 +1,7 @@
-function makeNode(args, nodeID) {
-	return {
-		nodeID,
-		args,
-		funcName: 'lcs',
-		returnValue: null,
-		children: [],
-	}
-}
+import { getMakeNodeFunc } from '../../utils/node_utils'
 
 function scopeLongestCommonSubstringGenerator(addChild, addReturnValue) {
-	let counter = 0
+	const makeNode = getMakeNodeFunc()
 
 	return function* longestCommonSubstringGenerator(wordA, wordB) {
 		function* recursiveGenerator(
@@ -17,12 +9,10 @@ function scopeLongestCommonSubstringGenerator(addChild, addReturnValue) {
 			wordBInd = 0,
 			parentNode = null
 		) {
-			const node = makeNode([wordAInd, wordBInd], counter)
-			counter += 1
+			const node = makeNode([wordAInd, wordBInd])
 			addChild(parentNode, node)
 			yield
 
-			console.log(node, wordA, wordB, wordAInd, wordBInd)
 			let returnValue
 			if (wordAInd === wordA.length || wordBInd === wordB.length) {
 				returnValue = 0
