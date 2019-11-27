@@ -1,21 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import RecursionVisualizer from '../code_player/RecursionVisualizer'
-import TreeNode from '../node_tree/TreeNode'
-import NodeTree from '../node_tree/NodeTree'
-import fibonacciGenerator from '../recursive_modules/fibonacci/fibonacci-generator'
 import CodePlayer from '../CodePlayer'
-import scopeFibonacciGenerator from './fibonacci-rewrite/fibonacci_generator'
+import scopeFibonacciGenerator from './fibonacci'
 import scopeLCSGenerator from './longest_common_substring'
 
 ReactDOM.render(
 	<>
-		<RecursionVisualizer
-			defaultArgs={[7]}
-			generatorFunction={fibonacciGenerator}
-			outputContainer={NodeTree}
-			containerClassNames="fibonacci-demo"
-		/>
 		<CodePlayer
 			scopeGeneratorFunc={scopeFibonacciGenerator}
 			functionInputObjs={[

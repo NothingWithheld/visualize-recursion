@@ -79846,159 +79846,6 @@ var CodePlayer = function CodePlayer(_ref) {
 
 /***/ }),
 
-/***/ "./src/scripts/CodePlayer/useNodes/index.jsx":
-/*!***************************************************!*\
-  !*** ./src/scripts/CodePlayer/useNodes/index.jsx ***!
-  \***************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_tree_tree_drawing_reingold_tilford__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_tree/tree_drawing/reingold_tilford */ "./src/scripts/node_tree/tree_drawing/reingold_tilford/index.js");
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
-
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
-
-
-
-var createNodeTree = function createNodeTree(nodeArray) {
-  var getNodeTree = function getNodeTree(nodeIndex) {
-    var _nodeArray$nodeIndex = nodeArray[nodeIndex],
-        childIndices = _nodeArray$nodeIndex.childIndices,
-        node = _objectWithoutProperties(_nodeArray$nodeIndex, ["childIndices"]);
-
-    var children = childIndices.map(getNodeTree);
-
-    var nodeWithChildReferences = _objectSpread({}, node, {
-      children: children
-    });
-
-    return nodeWithChildReferences;
-  };
-
-  return getNodeTree(0);
-};
-
-var flattenTree = function flattenTree(treeRoot) {
-  var flattenedTree = [];
-
-  function flatten(nodeToFlatten) {
-    var children = nodeToFlatten.children,
-        node = _objectWithoutProperties(nodeToFlatten, ["children"]);
-
-    var childIndices = children.map(flatten);
-    var thisNodeIndex = flattenedTree.length;
-    flattenedTree.push(_objectSpread({}, node, {
-      childIndices: childIndices
-    }));
-    return thisNodeIndex;
-  }
-
-  flatten(treeRoot);
-  return flattenedTree;
-};
-
-var useNodes = function useNodes() {
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
-      _useState2 = _slicedToArray(_useState, 2),
-      nodeArray = _useState2[0],
-      setNodeArray = _useState2[1];
-
-  var latestNodeArray = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(nodeArray);
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    latestNodeArray.current = nodeArray;
-  }, [nodeArray]);
-
-  var addChildToNodeArray = function addChildToNodeArray(parent, child) {
-    if (latestNodeArray.current.length > 0) {
-      var parentNodeIndex = latestNodeArray.current.findIndex(function (node) {
-        return node.nodeID === parent.nodeID;
-      });
-      var parentNode = latestNodeArray.current[parentNodeIndex];
-
-      var newParentNode = _objectSpread({}, parentNode, {
-        childIndices: [].concat(_toConsumableArray(parentNode.childIndices), [latestNodeArray.current.length])
-      });
-
-      var newNodeArray = [].concat(_toConsumableArray(latestNodeArray.current.map(function (node, i) {
-        return i === parentNodeIndex ? newParentNode : node;
-      }).map(function (node) {
-        return _objectSpread({}, node, {
-          lastAction: false
-        });
-      })), [_objectSpread({}, child, {
-        childIndices: [],
-        lastAction: true
-      })]);
-      setNodeArray(newNodeArray);
-    } else {
-      setNodeArray([_objectSpread({}, child, {
-        childIndices: [],
-        lastAction: true
-      })]);
-    }
-  };
-
-  var addReturnValue = function addReturnValue(nodeToUpdate, returnValue) {
-    var nodeIndex = latestNodeArray.current.findIndex(function (node) {
-      return node.nodeID === nodeToUpdate.nodeID;
-    });
-
-    var updatedNode = _objectSpread({}, latestNodeArray.current[nodeIndex], {
-      returnValue: returnValue,
-      lastAction: true
-    });
-
-    var newNodeArray = latestNodeArray.current.map(function (node) {
-      return _objectSpread({}, node, {
-        lastAction: false
-      });
-    }).map(function (node, i) {
-      return i === nodeIndex ? updatedNode : node;
-    });
-    setNodeArray(newNodeArray);
-  };
-
-  var resetNodes = function resetNodes() {
-    return setNodeArray([]);
-  };
-
-  return {
-    addReturnValue: addReturnValue,
-    resetNodes: resetNodes,
-    nodes: nodeArray.length > 0 ? flattenTree(Object(_node_tree_tree_drawing_reingold_tilford__WEBPACK_IMPORTED_MODULE_1__["default"])(createNodeTree(nodeArray))) : [],
-    addChild: addChildToNodeArray
-  };
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (useNodes);
-
-/***/ }),
-
 /***/ "./src/scripts/CodePlayer/useRecursionStepper/index.jsx":
 /*!**************************************************************!*\
   !*** ./src/scripts/CodePlayer/useRecursionStepper/index.jsx ***!
@@ -80010,7 +79857,7 @@ var useNodes = function useNodes() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _useNodes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../useNodes */ "./src/scripts/CodePlayer/useNodes/index.jsx");
+/* harmony import */ var _nodes_useNodes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../nodes/useNodes */ "./src/scripts/nodes/useNodes/index.jsx");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
@@ -80023,7 +79870,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var useRecursionStepper = function useRecursionStepper(scopeGeneratorFunc) {
-  var _useNodes = Object(_useNodes__WEBPACK_IMPORTED_MODULE_1__["default"])(),
+  var _useNodes = Object(_nodes_useNodes__WEBPACK_IMPORTED_MODULE_1__["default"])(),
       nodes = _useNodes.nodes,
       resetNodes = _useNodes.resetNodes,
       addChild = _useNodes.addChild,
@@ -80138,757 +79985,6 @@ var useRecursionStepper = function useRecursionStepper(scopeGeneratorFunc) {
 
 /***/ }),
 
-/***/ "./src/scripts/code_player/CodeController.js":
-/*!***************************************************!*\
-  !*** ./src/scripts/code_player/CodeController.js ***!
-  \***************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _CodeControllerComponents_PlayPauseButton__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CodeControllerComponents/PlayPauseButton */ "./src/scripts/code_player/CodeControllerComponents/PlayPauseButton.js");
-/* harmony import */ var _CodeControllerComponents_StepButton__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CodeControllerComponents/StepButton */ "./src/scripts/code_player/CodeControllerComponents/StepButton.js");
-/* harmony import */ var _CodeControllerComponents_ResetButton__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CodeControllerComponents/ResetButton */ "./src/scripts/code_player/CodeControllerComponents/ResetButton.js");
-/* harmony import */ var _CodeControllerComponents_SingleInput__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CodeControllerComponents/SingleInput */ "./src/scripts/code_player/CodeControllerComponents/SingleInput.js");
-
-
-
-
-
-
-
-
-function CodeController(props) {
-  // object destructuring assignment, and assign to different variable name
-  var _props$delayObj = props.delayObj,
-      delayLabel = _props$delayObj.label,
-      delayName = _props$delayObj.name,
-      delayValue = _props$delayObj.value;
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "code-controller"
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "code-controller__button-controls"
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodeControllerComponents_PlayPauseButton__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    handlePlayPause: props.handlePlayPause,
-    isCompleted: props.isCompleted,
-    isPlaying: props.isPlaying
-  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodeControllerComponents_StepButton__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    handleStep: props.handleStep,
-    isCompleted: props.isCompleted,
-    isPlaying: props.isPlaying
-  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodeControllerComponents_ResetButton__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    handleReset: props.handleReset,
-    isPlaying: props.isPlaying
-  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "code-controller__inputs"
-  }, props.functionInputObjs.map(function (inputObj, i) {
-    var inputLabel = inputObj.label,
-        inputName = inputObj.name,
-        inputValue = inputObj.value;
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodeControllerComponents_SingleInput__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      key: inputName,
-      handleChange: props.handleChange,
-      label: inputLabel,
-      name: "functionInputObjs",
-      dataIndex: i,
-      value: inputValue
-    });
-  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodeControllerComponents_SingleInput__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    handleChange: props.handleChange,
-    label: delayLabel,
-    name: "delayObj",
-    value: delayValue
-  })));
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (CodeController);
-
-/***/ }),
-
-/***/ "./src/scripts/code_player/CodeControllerComponents/PlayPauseButton.js":
-/*!*****************************************************************************!*\
-  !*** ./src/scripts/code_player/CodeControllerComponents/PlayPauseButton.js ***!
-  \*****************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-
-
-var PlayPauseButton =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(PlayPauseButton, _React$Component);
-
-  function PlayPauseButton(props) {
-    var _this;
-
-    _classCallCheck(this, PlayPauseButton);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(PlayPauseButton).call(this, props));
-    _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    return _this;
-  }
-
-  _createClass(PlayPauseButton, [{
-    key: "handleClick",
-    value: function handleClick() {
-      this.props.handlePlayPause();
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var playButton = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "code-player__button code-player__play-button",
-        onClick: this.handleClick
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
-        xmlns: "http://www.w3.org/2000/svg",
-        viewBox: "0 0 24 24",
-        className: "code-player__icon-play"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", {
-        cx: "12",
-        cy: "12",
-        r: "10",
-        className: "code-player__icon-play--colored"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
-        className: "icon--white",
-        d: "M15.51 11.14a1 1 0 0 1 0 1.72l-5 3A1 1 0 0 1 9 15V9a1 1 0 0 1 1.51-.86l5 3z"
-      })), "Play");
-      var pauseButton = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "code-player__button code-player__pause-button",
-        onClick: this.handleClick
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
-        xmlns: "http://www.w3.org/2000/svg",
-        viewBox: "0 0 24 24",
-        className: "code-player__icon-pause"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", {
-        cx: "12",
-        cy: "12",
-        r: "10",
-        className: "code-player__icon-pause--colored"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
-        className: "icon--white",
-        d: "M9 8h1a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1zm5 0h1a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"
-      })), "Pause");
-      var grayedOutPlayButton = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "code-player__button code-player__button--unclickable"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
-        xmlns: "http://www.w3.org/2000/svg",
-        viewBox: "0 0 24 24",
-        className: "code-player__icon-play"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", {
-        cx: "12",
-        cy: "12",
-        r: "10",
-        className: "icon--gray"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
-        className: "icon--white",
-        d: "M15.51 11.14a1 1 0 0 1 0 1.72l-5 3A1 1 0 0 1 9 15V9a1 1 0 0 1 1.51-.86l5 3z"
-      })), "Play");
-      return this.props.isCompleted ? grayedOutPlayButton : this.props.isPlaying ? pauseButton : playButton;
-    }
-  }]);
-
-  return PlayPauseButton;
-}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
-
-/* harmony default export */ __webpack_exports__["default"] = (PlayPauseButton);
-
-/***/ }),
-
-/***/ "./src/scripts/code_player/CodeControllerComponents/ResetButton.js":
-/*!*************************************************************************!*\
-  !*** ./src/scripts/code_player/CodeControllerComponents/ResetButton.js ***!
-  \*************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-
-
-var ResetButton =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(ResetButton, _React$Component);
-
-  function ResetButton(props) {
-    var _this;
-
-    _classCallCheck(this, ResetButton);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(ResetButton).call(this, props));
-    _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    return _this;
-  }
-
-  _createClass(ResetButton, [{
-    key: "handleClick",
-    value: function handleClick() {
-      this.props.handleReset();
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var resetButton = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "code-player__button code-player__reset-button",
-        onClick: this.handleClick
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
-        xmlns: "http://www.w3.org/2000/svg",
-        viewBox: "0 0 24 24",
-        className: "code-player__icon-reset"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", {
-        cx: "12",
-        cy: "12",
-        r: "10",
-        className: "code-player__icon-reset--colored"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
-        className: "icon--white",
-        d: "M8.52 7.11a5.98 5.98 0 0 1 8.98 2.5 1 1 0 1 1-1.83.8 4 4 0 0 0-5.7-1.86l.74.74A1 1 0 0 1 10 11H7a1 1 0 0 1-1-1V7a1 1 0 0 1 1.7-.7l.82.81zm5.51 8.34l-.74-.74A1 1 0 0 1 14 13h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1.7.7l-.82-.81A5.98 5.98 0 0 1 6.5 14.4a1 1 0 1 1 1.83-.8 4 4 0 0 0 5.7 1.85z"
-      })), "Reset");
-      var grayedOutResetButton = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "code-player__button code-player__button--unclickable"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
-        xmlns: "http://www.w3.org/2000/svg",
-        viewBox: "0 0 24 24",
-        className: "code-player__icon-reset"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", {
-        cx: "12",
-        cy: "12",
-        r: "10",
-        className: "icon--gray"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
-        className: "icon--white",
-        d: "M8.52 7.11a5.98 5.98 0 0 1 8.98 2.5 1 1 0 1 1-1.83.8 4 4 0 0 0-5.7-1.86l.74.74A1 1 0 0 1 10 11H7a1 1 0 0 1-1-1V7a1 1 0 0 1 1.7-.7l.82.81zm5.51 8.34l-.74-.74A1 1 0 0 1 14 13h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1.7.7l-.82-.81A5.98 5.98 0 0 1 6.5 14.4a1 1 0 1 1 1.83-.8 4 4 0 0 0 5.7 1.85z"
-      })), "Reset");
-      return this.props.isPlaying ? grayedOutResetButton : resetButton;
-    }
-  }]);
-
-  return ResetButton;
-}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
-
-/* harmony default export */ __webpack_exports__["default"] = (ResetButton);
-
-/***/ }),
-
-/***/ "./src/scripts/code_player/CodeControllerComponents/SingleInput.js":
-/*!*************************************************************************!*\
-  !*** ./src/scripts/code_player/CodeControllerComponents/SingleInput.js ***!
-  \*************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-
-
-var SingleInput =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(SingleInput, _React$Component);
-
-  function SingleInput(props) {
-    var _this;
-
-    _classCallCheck(this, SingleInput);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(SingleInput).call(this, props));
-    _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    return _this;
-  }
-
-  _createClass(SingleInput, [{
-    key: "handleChange",
-    value: function handleChange(event) {
-      this.props.handleChange(event);
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, this.props.label, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        onChange: this.handleChange,
-        name: this.props.name,
-        "data-index": this.props.dataIndex,
-        value: this.props.value
-      }));
-    }
-  }]);
-
-  return SingleInput;
-}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
-
-/* harmony default export */ __webpack_exports__["default"] = (SingleInput);
-
-/***/ }),
-
-/***/ "./src/scripts/code_player/CodeControllerComponents/StepButton.js":
-/*!************************************************************************!*\
-  !*** ./src/scripts/code_player/CodeControllerComponents/StepButton.js ***!
-  \************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-
-
-var StepButton =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(StepButton, _React$Component);
-
-  function StepButton(props) {
-    var _this;
-
-    _classCallCheck(this, StepButton);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(StepButton).call(this, props));
-    _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    return _this;
-  }
-
-  _createClass(StepButton, [{
-    key: "handleClick",
-    value: function handleClick() {
-      this.props.handleStep();
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var stepButton = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "code-player__button code-player__step-button",
-        onClick: this.handleClick
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
-        xmlns: "http://www.w3.org/2000/svg",
-        viewBox: "0 0 24 24",
-        className: "code-player__icon-step"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", {
-        cx: "12",
-        cy: "12",
-        r: "10",
-        className: "code-player__icon-step--colored"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
-        className: "icon--white",
-        d: "M14.59 13H7a1 1 0 0 1 0-2h7.59l-2.3-2.3a1 1 0 1 1 1.42-1.4l4 4a1 1 0 0 1 0 1.4l-4 4a1 1 0 0 1-1.42-1.4l2.3-2.3z"
-      })), "Step");
-      var grayedOutStepButton = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "code-player__button code-player__button--unclickable"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
-        xmlns: "http://www.w3.org/2000/svg",
-        viewBox: "0 0 24 24",
-        className: "code-player__icon-step"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("circle", {
-        cx: "12",
-        cy: "12",
-        r: "10",
-        className: "icon--gray"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
-        className: "icon--white",
-        d: "M14.59 13H7a1 1 0 0 1 0-2h7.59l-2.3-2.3a1 1 0 1 1 1.42-1.4l4 4a1 1 0 0 1 0 1.4l-4 4a1 1 0 0 1-1.42-1.4l2.3-2.3z"
-      })), "Step");
-      return this.props.isCompleted || this.props.isPlaying ? grayedOutStepButton : stepButton;
-    }
-  }]);
-
-  return StepButton;
-}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
-
-/* harmony default export */ __webpack_exports__["default"] = (StepButton);
-
-/***/ }),
-
-/***/ "./src/scripts/code_player/RecursionVisualizer.js":
-/*!********************************************************!*\
-  !*** ./src/scripts/code_player/RecursionVisualizer.js ***!
-  \********************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _CodeController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CodeController */ "./src/scripts/code_player/CodeController.js");
-/* harmony import */ var _RecursionWindow__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./RecursionWindow */ "./src/scripts/code_player/RecursionWindow.js");
-
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-
-
-
-
-var RecursionVisualizer =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(RecursionVisualizer, _React$Component);
-
-  function RecursionVisualizer(props) {
-    var _this;
-
-    _classCallCheck(this, RecursionVisualizer);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(RecursionVisualizer).call(this, props));
-    var functionInputObjs = [];
-
-    for (var i = 1; i <= props.defaultArgs.length; i++) {
-      var defaultFunctionArg = props.defaultArgs[i - 1];
-      functionInputObjs.push({
-        label: "Argument ".concat(i),
-        name: "Argument ".concat(i),
-        value: defaultFunctionArg
-      });
-    }
-
-    _this.outputContainer = react__WEBPACK_IMPORTED_MODULE_0___default.a.createRef();
-    _this.state = {
-      functionInputObjs: functionInputObjs,
-      isReset: true,
-      isCompleted: false,
-      isPlaying: false,
-      generator: null,
-      iteratorRes: null,
-      delayObj: {
-        label: 'Delay in Seconds',
-        name: 'delay',
-        value: '0.5'
-      },
-      calledDelayValue: null,
-      calledFunctionArgs: []
-    };
-    _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.handlePlayPause = _this.handlePlayPause.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.handleStep = _this.handleStep.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.handleReset = _this.handleReset.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    return _this;
-  }
-
-  _createClass(RecursionVisualizer, [{
-    key: "handleChange",
-    value: function handleChange(event) {
-      var _event$target = event.target,
-          name = _event$target.name,
-          dataset = _event$target.dataset,
-          value = _event$target.value;
-      var index = dataset.index;
-      this.setState(function (prevState) {
-        var newInputState = prevState[name];
-
-        if (Array.isArray(newInputState)) {
-          var editedInputObj = newInputState[index];
-          editedInputObj.value = value;
-        } else {
-          newInputState.value = value;
-        }
-
-        return newInputState;
-      });
-    }
-  }, {
-    key: "handlePlayPause",
-    value: function handlePlayPause() {
-      if (this.state.isReset) {
-        if (!this.areInputsValid()) return;
-        this.initializeGenerator();
-      }
-
-      if (this.state.isPlaying) {
-        // pause
-        this.setState({
-          isPlaying: false
-        });
-      } else {
-        // play
-        this.setState({
-          isPlaying: true
-        });
-        this.startPlaying();
-      }
-    }
-  }, {
-    key: "handleStep",
-    value: function handleStep() {
-      if (this.state.isReset) {
-        if (!this.areInputsValid()) return;
-        this.initializeGenerator();
-      }
-
-      this.stepOnce();
-    }
-  }, {
-    key: "handleReset",
-    value: function handleReset() {
-      this.outputContainer.current.deleteChildComponents();
-      this.setState({
-        isReset: true
-      });
-    }
-  }, {
-    key: "areInputsValid",
-    value: function areInputsValid() {
-      var delayInputIsValid = !isNaN(this.state.delayObj.value);
-      var functionInputsAreValid = this.state.functionInputObjs.reduce(function (acc, inputObj) {
-        var curInputIsValid = !isNaN(inputObj.value);
-        return acc && curInputIsValid;
-      }, true);
-      return delayInputIsValid && functionInputsAreValid;
-    }
-  }, {
-    key: "initializeGenerator",
-    value: function initializeGenerator() {
-      var _this$props;
-
-      var calledDelayValue = Number(this.state.delayObj.value) * 1000;
-      var calledFunctionArgs = this.state.functionInputObjs.map(function (inputObj) {
-        return Number(inputObj.value);
-      });
-
-      var generator = (_this$props = this.props).generatorFunction.apply(_this$props, _toConsumableArray(calledFunctionArgs).concat([this.outputContainer.current]));
-
-      this.setState({
-        generator: generator,
-        calledDelayValue: calledDelayValue,
-        calledFunctionArgs: calledFunctionArgs,
-        isReset: false
-      });
-    }
-  }, {
-    key: "startPlaying",
-    value: function startPlaying() {
-      setTimeout(function stepFunc(self) {
-        if (!self.state.isPlaying) return;
-        self.stepOnce();
-        setTimeout(stepFunc, self.state.calledDelayValue, self);
-      }, this.state.calledDelayValue, this);
-    }
-  }, {
-    key: "stepOnce",
-    value: function stepOnce() {
-      this.setState(function (prevState) {
-        var generator = prevState.generator;
-        var iteratorRes = generator.next();
-        var newState = {
-          iteratorRes: iteratorRes
-        };
-
-        if (iteratorRes.done) {
-          newState.isCompleted = true;
-          newState.isPlaying = false;
-          newState.generator = null;
-          newState.iteratorRes = null;
-        }
-
-        return newState;
-      });
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var OutputContainer = this.props.outputContainer;
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodeController__WEBPACK_IMPORTED_MODULE_1__["default"], {
-        handlePlayPause: this.handlePlayPause,
-        handleStep: this.handleStep,
-        handleReset: this.handleReset,
-        handleChange: this.handleChange,
-        isCompleted: this.state.isCompleted,
-        isPlaying: this.state.isPlaying,
-        delayObj: this.state.delayObj,
-        functionInputObjs: this.state.functionInputObjs
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_RecursionWindow__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        calledContainerComponent: this.state.calledContainerComponent,
-        calledDelayValue: this.state.calledDelayValue,
-        calledFunctionArgs: this.state.calledFunctionArgs
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(OutputContainer, {
-        ref: this.outputContainer,
-        containerClassNames: this.props.containerClassNames
-      })));
-    }
-  }]);
-
-  return RecursionVisualizer;
-}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
-
-/* harmony default export */ __webpack_exports__["default"] = (RecursionVisualizer);
-
-/***/ }),
-
-/***/ "./src/scripts/code_player/RecursionWindow.js":
-/*!****************************************************!*\
-  !*** ./src/scripts/code_player/RecursionWindow.js ***!
-  \****************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-
-
-var RecursionWindow =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(RecursionWindow, _React$Component);
-
-  function RecursionWindow(props) {
-    _classCallCheck(this, RecursionWindow);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(RecursionWindow).call(this, props));
-  }
-
-  _createClass(RecursionWindow, [{
-    key: "render",
-    value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "fibonacci-wrapper"
-      }, this.props.children);
-    }
-  }]);
-
-  return RecursionWindow;
-}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
-
-/* harmony default export */ __webpack_exports__["default"] = (RecursionWindow);
-
-/***/ }),
-
 /***/ "./src/scripts/constants.js":
 /*!**********************************!*\
   !*** ./src/scripts/constants.js ***!
@@ -80903,226 +79999,10 @@ var nodeRadius = 50;
 
 /***/ }),
 
-/***/ "./src/scripts/node_tree/NodeTree.js":
-/*!*******************************************!*\
-  !*** ./src/scripts/node_tree/NodeTree.js ***!
-  \*******************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-
-
-var NodeTree =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(NodeTree, _React$Component);
-
-  function NodeTree(props) {
-    var _this;
-
-    _classCallCheck(this, NodeTree);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(NodeTree).call(this, props));
-    _this.state = {
-      root: null
-    };
-    _this.addChildComponent = _this.addChildComponent.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    return _this;
-  }
-
-  _createClass(NodeTree, [{
-    key: "addChildComponent",
-    value: function addChildComponent(rootNode) {
-      this.setState({
-        root: rootNode
-      });
-    }
-  }, {
-    key: "deleteChildComponents",
-    value: function deleteChildComponents() {
-      this.setState({
-        root: null
-      });
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var RootNode = this.state.root;
-      var containerClassNames = this.props.containerClassNames;
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: containerClassNames
-      }, RootNode);
-    }
-  }]);
-
-  return NodeTree;
-}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
-
-/* harmony default export */ __webpack_exports__["default"] = (NodeTree);
-
-/***/ }),
-
-/***/ "./src/scripts/node_tree/TreeNode.js":
-/*!*******************************************!*\
-  !*** ./src/scripts/node_tree/TreeNode.js ***!
-  \*******************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
-
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-
-
-var TreeNode =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(TreeNode, _React$Component);
-
-  function TreeNode(props) {
-    var _this;
-
-    _classCallCheck(this, TreeNode);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(TreeNode).call(this, props));
-    _this.state = {
-      childNodes: [],
-      additionalProps: {}
-    };
-    _this.addChildComponent = _this.addChildComponent.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.addProps = _this.addProps.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    return _this;
-  }
-
-  _createClass(TreeNode, [{
-    key: "addChildComponent",
-    value: function addChildComponent(childNode) {
-      this.setState(function (prevState) {
-        return {
-          childNodes: prevState.childNodes.concat(childNode)
-        };
-      });
-      this.forceUpdate();
-    }
-  }, {
-    key: "addProps",
-    value: function addProps(newProps) {
-      this.setState(function (prevState) {
-        var newAdditionalProps = prevState.additionalProps;
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-          for (var _iterator = newProps[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var _step$value = _slicedToArray(_step.value, 2),
-                propName = _step$value[0],
-                propValue = _step$value[1];
-
-            newAdditionalProps[propName] = propValue;
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return != null) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
-
-        return newAdditionalProps;
-      });
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this$props = this.props,
-          nodeClassNames = _this$props.nodeClassNames,
-          ChildComponent = _this$props.ChildComponent,
-          passThroughProps = _objectWithoutProperties(_this$props, ["nodeClassNames", "ChildComponent"]);
-
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "tree-node ".concat(nodeClassNames)
-      }, ChildComponent && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ChildComponent, _extends({}, passThroughProps, this.state.additionalProps)), this.state.childNodes);
-    }
-  }]);
-
-  return TreeNode;
-}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
-
-/* harmony default export */ __webpack_exports__["default"] = (TreeNode);
-
-/***/ }),
-
-/***/ "./src/scripts/node_tree/tree_drawing/helpers.js":
-/*!*******************************************************!*\
-  !*** ./src/scripts/node_tree/tree_drawing/helpers.js ***!
-  \*******************************************************/
+/***/ "./src/scripts/nodes/tree_drawing/helpers.js":
+/*!***************************************************!*\
+  !*** ./src/scripts/nodes/tree_drawing/helpers.js ***!
+  \***************************************************/
 /*! exports provided: hasChildren, hasSingleChild, getLeftChild, getRightChild, getRightmostChild */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -81151,17 +80031,17 @@ var getRightmostChild = function getRightmostChild(node) {
 
 /***/ }),
 
-/***/ "./src/scripts/node_tree/tree_drawing/reingold_tilford/index.js":
-/*!**********************************************************************!*\
-  !*** ./src/scripts/node_tree/tree_drawing/reingold_tilford/index.js ***!
-  \**********************************************************************/
+/***/ "./src/scripts/nodes/tree_drawing/reingold_tilford/index.js":
+/*!******************************************************************!*\
+  !*** ./src/scripts/nodes/tree_drawing/reingold_tilford/index.js ***!
+  \******************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../constants */ "./src/scripts/constants.js");
-/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helpers */ "./src/scripts/node_tree/tree_drawing/helpers.js");
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helpers */ "./src/scripts/nodes/tree_drawing/helpers.js");
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -81301,6 +80181,185 @@ function getNextRightInTree(node) {
 
 /***/ }),
 
+/***/ "./src/scripts/nodes/useNodes/index.jsx":
+/*!**********************************************!*\
+  !*** ./src/scripts/nodes/useNodes/index.jsx ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _tree_drawing_reingold_tilford__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../tree_drawing/reingold_tilford */ "./src/scripts/nodes/tree_drawing/reingold_tilford/index.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+
+
+
+var createNodeTree = function createNodeTree(nodeArray) {
+  var getNodeTree = function getNodeTree(nodeIndex) {
+    var _nodeArray$nodeIndex = nodeArray[nodeIndex],
+        childIndices = _nodeArray$nodeIndex.childIndices,
+        node = _objectWithoutProperties(_nodeArray$nodeIndex, ["childIndices"]);
+
+    var children = childIndices.map(getNodeTree);
+
+    var nodeWithChildReferences = _objectSpread({}, node, {
+      children: children
+    });
+
+    return nodeWithChildReferences;
+  };
+
+  return getNodeTree(0);
+};
+
+var flattenTree = function flattenTree(treeRoot) {
+  var flattenedTree = [];
+
+  function flatten(nodeToFlatten) {
+    var children = nodeToFlatten.children,
+        node = _objectWithoutProperties(nodeToFlatten, ["children"]);
+
+    var childIndices = children.map(flatten);
+    var thisNodeIndex = flattenedTree.length;
+    flattenedTree.push(_objectSpread({}, node, {
+      childIndices: childIndices
+    }));
+    return thisNodeIndex;
+  }
+
+  flatten(treeRoot);
+  return flattenedTree;
+};
+
+var useNodes = function useNodes() {
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState2 = _slicedToArray(_useState, 2),
+      nodeArray = _useState2[0],
+      setNodeArray = _useState2[1];
+
+  var latestNodeArray = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(nodeArray);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    latestNodeArray.current = nodeArray;
+  }, [nodeArray]);
+
+  var addChildToNodeArray = function addChildToNodeArray(parent, child) {
+    if (latestNodeArray.current.length > 0) {
+      var parentNodeIndex = latestNodeArray.current.findIndex(function (node) {
+        return node.nodeID === parent.nodeID;
+      });
+      var parentNode = latestNodeArray.current[parentNodeIndex];
+
+      var newParentNode = _objectSpread({}, parentNode, {
+        childIndices: [].concat(_toConsumableArray(parentNode.childIndices), [latestNodeArray.current.length])
+      });
+
+      var newNodeArray = [].concat(_toConsumableArray(latestNodeArray.current.map(function (node, i) {
+        return i === parentNodeIndex ? newParentNode : node;
+      }).map(function (node) {
+        return _objectSpread({}, node, {
+          lastAction: false
+        });
+      })), [_objectSpread({}, child, {
+        childIndices: [],
+        lastAction: true
+      })]);
+      setNodeArray(newNodeArray);
+    } else {
+      setNodeArray([_objectSpread({}, child, {
+        childIndices: [],
+        lastAction: true
+      })]);
+    }
+  };
+
+  var addReturnValue = function addReturnValue(nodeToUpdate, returnValue) {
+    var nodeIndex = latestNodeArray.current.findIndex(function (node) {
+      return node.nodeID === nodeToUpdate.nodeID;
+    });
+
+    var updatedNode = _objectSpread({}, latestNodeArray.current[nodeIndex], {
+      returnValue: returnValue,
+      lastAction: true
+    });
+
+    var newNodeArray = latestNodeArray.current.map(function (node) {
+      return _objectSpread({}, node, {
+        lastAction: false
+      });
+    }).map(function (node, i) {
+      return i === nodeIndex ? updatedNode : node;
+    });
+    setNodeArray(newNodeArray);
+  };
+
+  var resetNodes = function resetNodes() {
+    return setNodeArray([]);
+  };
+
+  return {
+    addReturnValue: addReturnValue,
+    resetNodes: resetNodes,
+    nodes: nodeArray.length > 0 ? flattenTree(Object(_tree_drawing_reingold_tilford__WEBPACK_IMPORTED_MODULE_1__["default"])(createNodeTree(nodeArray))) : [],
+    addChild: addChildToNodeArray
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (useNodes);
+
+/***/ }),
+
+/***/ "./src/scripts/nodes/useNodes/utils.js":
+/*!*********************************************!*\
+  !*** ./src/scripts/nodes/useNodes/utils.js ***!
+  \*********************************************/
+/*! exports provided: getMakeNodeFunc */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMakeNodeFunc", function() { return getMakeNodeFunc; });
+var getMakeNodeFunc = function getMakeNodeFunc() {
+  var counter = 0;
+  return function (args) {
+    var node = {
+      nodeID: counter,
+      args: args,
+      returnValue: null,
+      children: []
+    };
+    counter += 1;
+    return node;
+  };
+};
+
+/***/ }),
+
 /***/ "./src/scripts/recursive_modules/factorial.js":
 /*!****************************************************!*\
   !*** ./src/scripts/recursive_modules/factorial.js ***!
@@ -81314,29 +80373,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _code_player_RecursionVisualizer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../code_player/RecursionVisualizer */ "./src/scripts/code_player/RecursionVisualizer.js");
-/* harmony import */ var _node_tree_TreeNode__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../node_tree/TreeNode */ "./src/scripts/node_tree/TreeNode.js");
-/* harmony import */ var _node_tree_NodeTree__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../node_tree/NodeTree */ "./src/scripts/node_tree/NodeTree.js");
-/* harmony import */ var _recursive_modules_fibonacci_fibonacci_generator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../recursive_modules/fibonacci/fibonacci-generator */ "./src/scripts/recursive_modules/fibonacci/fibonacci-generator.js");
-/* harmony import */ var _CodePlayer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../CodePlayer */ "./src/scripts/CodePlayer/index.js");
-/* harmony import */ var _fibonacci_rewrite_fibonacci_generator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./fibonacci-rewrite/fibonacci_generator */ "./src/scripts/recursive_modules/fibonacci-rewrite/fibonacci_generator/index.js");
-/* harmony import */ var _longest_common_substring__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./longest_common_substring */ "./src/scripts/recursive_modules/longest_common_substring/index.js");
+/* harmony import */ var _CodePlayer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../CodePlayer */ "./src/scripts/CodePlayer/index.js");
+/* harmony import */ var _fibonacci__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./fibonacci */ "./src/scripts/recursive_modules/fibonacci/index.js");
+/* harmony import */ var _longest_common_substring__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./longest_common_substring */ "./src/scripts/recursive_modules/longest_common_substring/index.js");
 
 
 
 
 
-
-
-
-
-react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_code_player_RecursionVisualizer__WEBPACK_IMPORTED_MODULE_2__["default"], {
-  defaultArgs: [7],
-  generatorFunction: _recursive_modules_fibonacci_fibonacci_generator__WEBPACK_IMPORTED_MODULE_5__["default"],
-  outputContainer: _node_tree_NodeTree__WEBPACK_IMPORTED_MODULE_4__["default"],
-  containerClassNames: "fibonacci-demo"
-}), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodePlayer__WEBPACK_IMPORTED_MODULE_6__["default"], {
-  scopeGeneratorFunc: _fibonacci_rewrite_fibonacci_generator__WEBPACK_IMPORTED_MODULE_7__["default"],
+react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodePlayer__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  scopeGeneratorFunc: _fibonacci__WEBPACK_IMPORTED_MODULE_3__["default"],
   functionInputObjs: [{
     value: 7,
     label: 'Fibonacci Number of',
@@ -81348,8 +80394,8 @@ react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_
       return parseInt(val, 10);
     }
   }]
-}), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodePlayer__WEBPACK_IMPORTED_MODULE_6__["default"], {
-  scopeGeneratorFunc: _longest_common_substring__WEBPACK_IMPORTED_MODULE_8__["default"],
+}), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodePlayer__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  scopeGeneratorFunc: _longest_common_substring__WEBPACK_IMPORTED_MODULE_4__["default"],
   functionInputObjs: [{
     value: 'lemon',
     label: 'First Word',
@@ -81446,20 +80492,20 @@ factorialDemoContainer ? factorial(5) : null;
 
 /***/ }),
 
-/***/ "./src/scripts/recursive_modules/fibonacci-rewrite/fibonacci_generator/index.js":
-/*!**************************************************************************************!*\
-  !*** ./src/scripts/recursive_modules/fibonacci-rewrite/fibonacci_generator/index.js ***!
-  \**************************************************************************************/
+/***/ "./src/scripts/recursive_modules/fibonacci/index.js":
+/*!**********************************************************!*\
+  !*** ./src/scripts/recursive_modules/fibonacci/index.js ***!
+  \**********************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _utils_node_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../utils/node_utils */ "./src/scripts/utils/node_utils/index.js");
+/* harmony import */ var _nodes_useNodes_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../nodes/useNodes/utils */ "./src/scripts/nodes/useNodes/utils.js");
 
 
 function scopeFibonacciGenerator(addChild, addReturnValue) {
-  var makeNode = Object(_utils_node_utils__WEBPACK_IMPORTED_MODULE_0__["getMakeNodeFunc"])();
+  var makeNode = Object(_nodes_useNodes_utils__WEBPACK_IMPORTED_MODULE_0__["getMakeNodeFunc"])();
   return (
     /*#__PURE__*/
     regeneratorRuntime.mark(function fibonacciGenerator(argValue) {
@@ -81522,120 +80568,6 @@ function scopeFibonacciGenerator(addChild, addReturnValue) {
 
 /***/ }),
 
-/***/ "./src/scripts/recursive_modules/fibonacci/FibonacciBlock.js":
-/*!*******************************************************************!*\
-  !*** ./src/scripts/recursive_modules/fibonacci/FibonacciBlock.js ***!
-  \*******************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-
-
-
-function FibonacciBlock(props) {
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "fibonacci-block"
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
-    className: "fibonacci-block__function-name fibonacci-block__top-row ".concat(props.returned ? 'fibonacci-block__function-name--resolved' : null)
-  }, "fib(", props.argValue, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
-    className: "fibonacci-block__return-value fibonacci-block__bottom-row ".concat(props.returned ? 'fibonacci-block__return-value--returned' : null)
-  }, props.returned ? props.returnValue : 'waiting'));
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (FibonacciBlock);
-
-/***/ }),
-
-/***/ "./src/scripts/recursive_modules/fibonacci/fibonacci-generator.js":
-/*!************************************************************************!*\
-  !*** ./src/scripts/recursive_modules/fibonacci/fibonacci-generator.js ***!
-  \************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_tree_TreeNode__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_tree/TreeNode */ "./src/scripts/node_tree/TreeNode.js");
-/* harmony import */ var _FibonacciBlock__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FibonacciBlock */ "./src/scripts/recursive_modules/fibonacci/FibonacciBlock.js");
-
-
-var _marked =
-/*#__PURE__*/
-regeneratorRuntime.mark(fibonacciGenerator);
-
-
-
-
-
-function fibonacciGenerator(argValue, parentComponent) {
-  var fibBlockRef, fibBlock, returnValue, fibOfArgValueMinusOne, fibOfArgValueMinusTwo;
-  return regeneratorRuntime.wrap(function fibonacciGenerator$(_context) {
-    while (1) {
-      switch (_context.prev = _context.next) {
-        case 0:
-          fibBlock = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_node_tree_TreeNode__WEBPACK_IMPORTED_MODULE_1__["default"], {
-            ref: function ref(fibBlock) {
-              return fibBlockRef = fibBlock;
-            },
-            ChildComponent: _FibonacciBlock__WEBPACK_IMPORTED_MODULE_2__["default"],
-            nodeClassNames: "fibonacci-block__child",
-            argValue: argValue,
-            returned: false,
-            key: argValue
-          });
-          parentComponent.addChildComponent(fibBlock);
-          _context.next = 4;
-          return;
-
-        case 4:
-          if (!(argValue === 1 || argValue === 2)) {
-            _context.next = 8;
-            break;
-          }
-
-          returnValue = 1;
-          _context.next = 13;
-          break;
-
-        case 8:
-          return _context.delegateYield(fibonacciGenerator(argValue - 1, fibBlockRef), "t0", 9);
-
-        case 9:
-          fibOfArgValueMinusOne = _context.t0;
-          return _context.delegateYield(fibonacciGenerator(argValue - 2, fibBlockRef), "t1", 11);
-
-        case 11:
-          fibOfArgValueMinusTwo = _context.t1;
-          returnValue = fibOfArgValueMinusOne + fibOfArgValueMinusTwo;
-
-        case 13:
-          // update node return value
-          fibBlockRef.addProps([['returned', true], ['returnValue', returnValue]]);
-          _context.next = 16;
-          return returnValue;
-
-        case 16:
-          return _context.abrupt("return", returnValue);
-
-        case 17:
-        case "end":
-          return _context.stop();
-      }
-    }
-  }, _marked, this);
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (fibonacciGenerator);
-
-/***/ }),
-
 /***/ "./src/scripts/recursive_modules/longest_common_substring/index.js":
 /*!*************************************************************************!*\
   !*** ./src/scripts/recursive_modules/longest_common_substring/index.js ***!
@@ -81645,11 +80577,11 @@ function fibonacciGenerator(argValue, parentComponent) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _utils_node_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../utils/node_utils */ "./src/scripts/utils/node_utils/index.js");
+/* harmony import */ var _nodes_useNodes_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../nodes/useNodes/utils */ "./src/scripts/nodes/useNodes/utils.js");
 
 
 function scopeLongestCommonSubstringGenerator(addChild, addReturnValue) {
-  var makeNode = Object(_utils_node_utils__WEBPACK_IMPORTED_MODULE_0__["getMakeNodeFunc"])();
+  var makeNode = Object(_nodes_useNodes_utils__WEBPACK_IMPORTED_MODULE_0__["getMakeNodeFunc"])();
   return (
     /*#__PURE__*/
     regeneratorRuntime.mark(function longestCommonSubstringGenerator(wordA, wordB) {
@@ -81748,32 +80680,6 @@ function scopeLongestCommonSubstringGenerator(addChild, addReturnValue) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (scopeLongestCommonSubstringGenerator);
-
-/***/ }),
-
-/***/ "./src/scripts/utils/node_utils/index.js":
-/*!***********************************************!*\
-  !*** ./src/scripts/utils/node_utils/index.js ***!
-  \***********************************************/
-/*! exports provided: getMakeNodeFunc */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMakeNodeFunc", function() { return getMakeNodeFunc; });
-var getMakeNodeFunc = function getMakeNodeFunc() {
-  var counter = 0;
-  return function (args) {
-    var node = {
-      nodeID: counter,
-      args: args,
-      returnValue: null,
-      children: []
-    };
-    counter += 1;
-    return node;
-  };
-};
 
 /***/ })
 

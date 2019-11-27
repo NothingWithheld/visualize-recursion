@@ -1,4 +1,4 @@
-import { getMakeNodeFunc } from '../../../utils/node_utils'
+import { getMakeNodeFunc } from '../../nodes/useNodes/utils'
 
 function scopeFibonacciGenerator(addChild, addReturnValue) {
 	const makeNode = getMakeNodeFunc()

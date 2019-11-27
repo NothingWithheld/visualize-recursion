@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import useNodes from '../useNodes'
+import useNodes from '../../nodes/useNodes'
 
 const useRecursionStepper = scopeGeneratorFunc => {
 	const { nodes, resetNodes, addChild, addReturnValue } = useNodes()
