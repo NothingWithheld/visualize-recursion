@@ -79857,7 +79857,7 @@ var CodePlayer = function CodePlayer(_ref) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_tree_tree_drawing_just_center_parent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_tree/tree_drawing/just_center_parent */ "./src/scripts/node_tree/tree_drawing/just_center_parent/index.js");
+/* harmony import */ var _node_tree_tree_drawing_reingold_tilford__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_tree/tree_drawing/reingold_tilford */ "./src/scripts/node_tree/tree_drawing/reingold_tilford/index.js");
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -79995,7 +79995,7 @@ var useNodes = function useNodes() {
   return {
     addReturnValue: addReturnValue,
     resetNodes: resetNodes,
-    nodes: nodeArray.length > 0 ? flattenTree(Object(_node_tree_tree_drawing_just_center_parent__WEBPACK_IMPORTED_MODULE_1__["default"])(createNodeTree(nodeArray))) : [],
+    nodes: nodeArray.length > 0 ? flattenTree(Object(_node_tree_tree_drawing_reingold_tilford__WEBPACK_IMPORTED_MODULE_1__["default"])(createNodeTree(nodeArray))) : [],
     addChild: addChildToNodeArray
   };
 };
@@ -81129,26 +81129,38 @@ function (_React$Component) {
 /*!*******************************************************!*\
   !*** ./src/scripts/node_tree/tree_drawing/helpers.js ***!
   \*******************************************************/
-/*! exports provided: hasChildren, hasSingleChild */
+/*! exports provided: hasChildren, hasSingleChild, getLeftChild, getRightChild, getRightmostChild */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasChildren", function() { return hasChildren; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasSingleChild", function() { return hasSingleChild; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLeftChild", function() { return getLeftChild; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRightChild", function() { return getRightChild; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRightmostChild", function() { return getRightmostChild; });
 var hasChildren = function hasChildren(node) {
   return node.children.length > 0;
 };
 var hasSingleChild = function hasSingleChild(node) {
   return node.children.length === 1;
 };
+var getLeftChild = function getLeftChild(node) {
+  return hasChildren(node) ? node.children[0] : null;
+};
+var getRightChild = function getRightChild(node) {
+  return node.children.length === 2 ? node.children[1] : null;
+};
+var getRightmostChild = function getRightmostChild(node) {
+  return hasChildren(node) ? node.children[node.children.length - 1] : null;
+};
 
 /***/ }),
 
-/***/ "./src/scripts/node_tree/tree_drawing/just_center_parent/index.js":
-/*!************************************************************************!*\
-  !*** ./src/scripts/node_tree/tree_drawing/just_center_parent/index.js ***!
-  \************************************************************************/
+/***/ "./src/scripts/node_tree/tree_drawing/reingold_tilford/index.js":
+/*!**********************************************************************!*\
+  !*** ./src/scripts/node_tree/tree_drawing/reingold_tilford/index.js ***!
+  \**********************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -81160,52 +81172,138 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
 
 
-function drawTreeJustCenterParent(treeRoot) {
-  var nextOpenPositions = [];
-  var offsetsFor = [];
-  var distance = 2.5 * _constants__WEBPACK_IMPORTED_MODULE_0__["nodeRadius"];
+var minDistanceBetweenNodes = 2.5 * _constants__WEBPACK_IMPORTED_MODULE_0__["nodeRadius"];
 
-  function draw(node) {
-    var depth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-    var children = node.children.map(function (child) {
-      return draw(child, depth + 1);
-    });
+var drawTreeReingoldTilford = function drawTreeReingoldTilford(treeRoot) {
+  return applyOffsets(getPlacedNode(treeRoot));
+};
 
-    while (depth >= nextOpenPositions.length) {
-      nextOpenPositions.push(0);
-      offsetsFor.push(0);
-    }
+/* harmony default export */ __webpack_exports__["default"] = (drawTreeReingoldTilford);
 
-    var positionWithoutOffset;
+function applyOffsets(node) {
+  var curOffset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
-    if (!Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["hasChildren"])(node)) {
-      positionWithoutOffset = nextOpenPositions[depth];
-    } else if (Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["hasSingleChild"])(node)) {
-      positionWithoutOffset = children[0].x;
-    } else {
-      positionWithoutOffset = (children[0].x + children[children.length - 1].x) / 2;
-    }
+  var x = node.x,
+      children = node.children,
+      nodeOffset = node.offset,
+      thread = node.thread,
+      restOfNode = _objectWithoutProperties(node, ["x", "children", "offset", "thread"]);
 
-    var newNode = _objectSpread({}, node, {
-      children: children,
-      x: Math.max(positionWithoutOffset, nextOpenPositions[depth] + offsetsFor[depth]),
-      y: depth * distance,
-      offset: offsetsFor[depth]
-    });
-
-    var gapToNextOpenSpace = positionWithoutOffset - nextOpenPositions[depth];
-    offsetsFor[depth] = Math.max(offsetsFor[depth], gapToNextOpenSpace);
-    nextOpenPositions[depth] += distance;
-    return newNode;
-  }
-
-  return draw(treeRoot);
+  return _objectSpread({}, restOfNode, {
+    x: x + curOffset,
+    children: children.map(function (child) {
+      return applyOffsets(child, curOffset + nodeOffset);
+    })
+  });
 }
 
-/* harmony default export */ __webpack_exports__["default"] = (drawTreeJustCenterParent);
+function getPlacedNode(node) {
+  var depth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+  if (!Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["hasChildren"])(node)) {
+    return _objectSpread({}, node, {
+      x: 0,
+      y: depth * minDistanceBetweenNodes,
+      offset: 0,
+      thread: null
+    });
+  } else if (Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["hasSingleChild"])(node)) {
+    var placedChild = getPlacedNode(Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["getLeftChild"])(node), depth + 1);
+    return _objectSpread({}, node, {
+      x: placedChild.x,
+      y: depth * minDistanceBetweenNodes,
+      children: [placedChild],
+      offset: 0,
+      thread: null
+    });
+  }
+
+  var placedLeftChild = getPlacedNode(Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["getLeftChild"])(node), depth + 1);
+  var placedRightChild = getPlacedNode(Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["getRightChild"])(node), depth + 1);
+  var adjustedRightChild = getAdjustedRightSubtree(placedLeftChild, placedRightChild);
+  return _objectSpread({}, node, {
+    x: (placedLeftChild.x + adjustedRightChild.x) / 2,
+    y: depth * minDistanceBetweenNodes,
+    children: [placedLeftChild, adjustedRightChild],
+    offset: 0,
+    thread: null
+  });
+}
+
+function getAdjustedRightSubtree(leftTree, rightTree) {
+  var _getContourData = getContourData(leftTree, rightTree, leftTree, rightTree),
+      rightmostOnLeftAtShortestHeightPlusOne = _getContourData.rightmostOnLeftAtShortestHeightPlusOne,
+      leftmostOnRightAtShortestHeightPlusOne = _getContourData.leftmostOnRightAtShortestHeightPlusOne,
+      leftmostOnLeftAtShortestHeight = _getContourData.leftmostOnLeftAtShortestHeight,
+      rightmostOnRightAtShortestHeight = _getContourData.rightmostOnRightAtShortestHeight,
+      maxGap = _getContourData.maxGap,
+      offset = _getContourData.offset;
+
+  var amountToSlideRightTreeOverBy = maxGap + minDistanceBetweenNodes; // if one subtree is taller than the other, attach a thread when combining the trees
+
+  if (rightmostOnLeftAtShortestHeightPlusOne !== null && leftmostOnRightAtShortestHeightPlusOne === null) {
+    rightmostOnRightAtShortestHeight.thread = rightmostOnLeftAtShortestHeightPlusOne;
+    rightmostOnRightAtShortestHeight.offset = offset - amountToSlideRightTreeOverBy;
+  } else if (rightmostOnLeftAtShortestHeightPlusOne === null && leftmostOnRightAtShortestHeightPlusOne !== null) {
+    leftmostOnLeftAtShortestHeight.thread = leftmostOnRightAtShortestHeightPlusOne;
+    leftmostOnLeftAtShortestHeight.offset = amountToSlideRightTreeOverBy - offset;
+  }
+
+  return _objectSpread({}, rightTree, {
+    x: rightTree.x + amountToSlideRightTreeOverBy,
+    offset: rightTree.offset + amountToSlideRightTreeOverBy
+  });
+}
+
+function getContourData(rightmostOnLeftTree, leftmostOnRightTree, leftmostOnLeftTree, rightmostOnRightTree) {
+  var curMaxGap = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
+  var curOffset = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 0;
+  var maxGap = Math.max(curMaxGap, rightmostOnLeftTree.x + curOffset - leftmostOnRightTree.x);
+  var nextRightmostOnLeftTree = getNextRightInTree(rightmostOnLeftTree);
+  var nextLeftmostOnRightTree = getNextLeftInTree(leftmostOnRightTree);
+  var nextLeftmostOnLeftTree = getNextLeftInTree(leftmostOnLeftTree);
+  var nextRightmostOnRightTree = getNextRightInTree(rightmostOnRightTree);
+
+  if (nextRightmostOnLeftTree !== null && nextLeftmostOnRightTree !== null) {
+    var offset = curOffset + rightmostOnLeftTree.offset - leftmostOnRightTree.offset;
+    return getContourData(nextRightmostOnLeftTree, nextLeftmostOnRightTree, nextLeftmostOnLeftTree, nextRightmostOnRightTree, maxGap, offset);
+  }
+
+  return {
+    rightmostOnLeftAtShortestHeightPlusOne: nextRightmostOnLeftTree,
+    leftmostOnRightAtShortestHeightPlusOne: nextLeftmostOnRightTree,
+    leftmostOnLeftAtShortestHeight: leftmostOnLeftTree,
+    rightmostOnRightAtShortestHeight: rightmostOnRightTree,
+    maxGap: maxGap,
+    offset: curOffset
+  };
+}
+
+function getNextLeftInTree(node) {
+  if (Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["hasChildren"])(node)) {
+    return Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["getLeftChild"])(node);
+  } else if (node.thread) {
+    return node.thread;
+  }
+
+  return null;
+}
+
+function getNextRightInTree(node) {
+  if (Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["hasChildren"])(node)) {
+    return Object(_helpers__WEBPACK_IMPORTED_MODULE_1__["getRightmostChild"])(node);
+  } else if (node.thread) {
+    return node.thread;
+  }
+
+  return null;
+}
 
 /***/ }),
 

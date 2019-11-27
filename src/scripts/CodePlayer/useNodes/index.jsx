@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import drawTree from '../../node_tree/tree_drawing/just_center_parent'
+import drawTree from '../../node_tree/tree_drawing/reingold_tilford'
 
 const createNodeTree = nodeArray => {
 	const getNodeTree = nodeIndex => {
