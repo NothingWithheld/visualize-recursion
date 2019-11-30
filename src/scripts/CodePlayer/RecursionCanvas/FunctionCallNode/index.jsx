@@ -1,7 +1,7 @@
 import React from 'react'
 import { Group, Circle, Text, Line } from 'react-konva'
-import { nodeRadius } from '../../../constants'
-import useKonvaTextWidth from '../useKonvaTextWidth'
+import { nodeRadius } from '../../../nodes/constants'
+import useKonvaTextWidth from '../../../Konva/useKonvaTextWidth'
 
 const FunctionCallNode = ({
 	x,

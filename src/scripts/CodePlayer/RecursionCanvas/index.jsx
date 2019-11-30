@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
-import { Stage, Layer, Circle } from 'react-konva'
-import { nodeRadius } from '../../constants'
+import { Stage, Layer } from 'react-konva'
 import FunctionCallNode from './FunctionCallNode'
 import FunctionCallArrow from './FunctionCallArrow'
-import Paper from '@material-ui/core/Paper'
 import Box from '@material-ui/core/Box'
 
 const RecursionCanvas = ({ nodes }) => {

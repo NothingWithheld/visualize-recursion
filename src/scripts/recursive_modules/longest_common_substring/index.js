@@ -1,8 +1,8 @@
-import { getMakeNodeFunc } from '../../nodes/useNodes/utils'
-
-function scopeLongestCommonSubstringGenerator(addChild, addReturnValue) {
-	const makeNode = getMakeNodeFunc()
-
+function scopeLongestCommonSubstringGenerator(
+	makeNode,
+	addChild,
+	addReturnValue
+) {
 	return function* longestCommonSubstringGenerator(wordA, wordB) {
 		function* recursiveGenerator(
 			wordAInd = 0,

@@ -3,9 +3,21 @@ import ReactDOM from 'react-dom'
 import CodePlayer from '../CodePlayer'
 import scopeFibonacciGenerator from './fibonacci'
 import scopeLCSGenerator from './longest_common_substring'
+import BinaryTreeBuilder from '../TreeBuilder/BinaryTreeBuilder'
 
 ReactDOM.render(
 	<>
+		<BinaryTreeBuilder
+			startingNodes={[
+				{
+					nodeID: 0,
+					returnValue: null,
+					children: [],
+					childIndices: [],
+					lastAction: true,
+				},
+			]}
+		/>
 		<CodePlayer
 			scopeGeneratorFunc={scopeFibonacciGenerator}
 			functionInputObjs={[

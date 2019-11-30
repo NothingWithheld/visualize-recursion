@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import useNodes from '../../nodes/useNodes'
 
 const useRecursionStepper = scopeGeneratorFunc => {
-	const { nodes, resetNodes, addChild, addReturnValue } = useNodes()
-	const generatorFunc = scopeGeneratorFunc(addChild, addReturnValue)
+	const { nodes, makeNode, resetNodes, addChild, addReturnValue } = useNodes()
+	const generatorFunc = scopeGeneratorFunc(makeNode, addChild, addReturnValue)
 	const [delayMilliseconds, setDelayMilliseconds] = useState(500)
 	const [generator, setGenerator] = useState(null)
 	const [isStepping, setIsStepping] = useState(false)

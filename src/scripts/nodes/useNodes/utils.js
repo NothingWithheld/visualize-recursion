@@ -1,6 +1,4 @@
-export const getMakeNodeFunc = () => {
-	let counter = 0
-
+export const getMakeNodeFunc = counter => {
 	return args => {
 		const node = {
 			nodeID: counter,

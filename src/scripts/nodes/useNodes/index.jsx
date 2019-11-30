@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import drawTree from '../tree_drawing/reingold_tilford'
+import { getMakeNodeFunc } from './utils'
 
 const createNodeTree = nodeArray => {
 	const getNodeTree = nodeIndex => {
@@ -30,9 +31,13 @@ const flattenTree = treeRoot => {
 	return flattenedTree
 }
 
-const useNodes = () => {
-	const [nodeArray, setNodeArray] = useState([])
+const useNodes = (startingNodes = []) => {
+	const [nodeArray, setNodeArray] = useState(startingNodes)
+	const [makeNode, setMakeNode] = useState(() =>
+		getMakeNodeFunc(startingNodes.length)
+	)
 	const latestNodeArray = useRef(nodeArray)
+	console.log({ nodeArray })
 
 	useEffect(() => {
 		latestNodeArray.current = nodeArray
@@ -82,11 +87,15 @@ const useNodes = () => {
 		setNodeArray(newNodeArray)
 	}
 
-	const resetNodes = () => setNodeArray([])
+	const resetNodes = () => {
+		setNodeArray(startingNodes)
+		setMakeNode(startingNodes.length)
+	}
 
 	return {
 		addReturnValue,
 		resetNodes,
+		makeNode,
 		nodes:
 			nodeArray.length > 0
 				? flattenTree(drawTree(createNodeTree(nodeArray)))

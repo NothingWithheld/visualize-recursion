@@ -1,4 +1,4 @@
-import { nodeRadius } from '../../../constants'
+import { nodeRadius } from '../../constants'
 import {
 	hasChildren,
 	hasSingleChild,
@@ -7,7 +7,8 @@ import {
 	getRightmostChild,
 } from '../helpers'
 
-const minDistanceBetweenNodes = 2.5 * nodeRadius
+const minXDistanceBetweenNodes = 2.5 * nodeRadius
+const minYDistanceBetweenNodes = 2.75 * nodeRadius
 
 const drawTreeReingoldTilford = treeRoot =>
 	applyOffsets(getPlacedNode(treeRoot))
@@ -31,7 +32,7 @@ function getPlacedNode(node, depth = 0) {
 		return {
 			...node,
 			x: 0,
-			y: depth * minDistanceBetweenNodes,
+			y: depth * minYDistanceBetweenNodes,
 			offset: 0,
 			thread: null,
 		}
@@ -41,7 +42,7 @@ function getPlacedNode(node, depth = 0) {
 		return {
 			...node,
 			x: placedChild.x,
-			y: depth * minDistanceBetweenNodes,
+			y: depth * minYDistanceBetweenNodes,
 			children: [placedChild],
 			offset: 0,
 			thread: null,
@@ -58,7 +59,7 @@ function getPlacedNode(node, depth = 0) {
 	return {
 		...node,
 		x: (placedLeftChild.x + adjustedRightChild.x) / 2,
-		y: depth * minDistanceBetweenNodes,
+		y: depth * minYDistanceBetweenNodes,
 		children: [placedLeftChild, adjustedRightChild],
 		offset: 0,
 		thread: null,
@@ -75,7 +76,7 @@ function getAdjustedRightSubtree(leftTree, rightTree) {
 		offset,
 	} = getContourData(leftTree, rightTree, leftTree, rightTree)
 
-	const amountToSlideRightTreeOverBy = maxGap + minDistanceBetweenNodes
+	const amountToSlideRightTreeOverBy = maxGap + minXDistanceBetweenNodes
 
 	// if one subtree is taller than the other, attach a thread when combining the trees
 	if (

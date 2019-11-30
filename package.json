@@ -1,59 +1,59 @@
 {
-  "name": "visualize_recursion",
-  "version": "1.0.0",
-  "description": "Recursive calls demonstrated with asynchronously created browser elements",
-  "main": "index.js",
-  "scripts": {
-    "start": "webpack --mode development",
-    "build": "webpack --mode production"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NothingWithheld/visualize-recursion.git"
-  },
-  "author": "Andrew Hsu",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/NothingWithheld/visualize-recursion/issues"
-  },
-  "homepage": "https://github.com/NothingWithheld/visualize-recursion#readme",
-  "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.2.3",
-    "@babel/preset-react": "^7.0.0",
-    "autoprefixer": "^9.1.1",
-    "babel-core": "^6.26.3",
-    "babel-loader": "^8.0.4",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
-    "cssnano": "^4.0.5",
-    "del": "^3.0.0",
-    "glob": "^7.1.3",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^7.0.1",
-    "gulp-postcss": "^8.0.0",
-    "gulp-rename": "^1.4.0",
-    "gulp-sass": "^4.0.1",
-    "gulp-sourcemaps": "^2.6.4",
-    "gulp-uglify": "^3.0.1",
-    "run-sequence": "^2.2.1",
-    "webpack": "^4.28.2",
-    "webpack-cli": "^3.1.2",
-    "webpack-stream": "^5.2.1"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react"
-    ]
-  },
-  "dependencies": {
-    "@material-ui/core": "^4.3.2",
-    "@material-ui/icons": "^4.2.1",
-    "konva": "^4.0.5",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-konva": "^16.9.0-0"
-  }
+	"name": "visualize_recursion",
+	"version": "1.0.0",
+	"description": "Recursive calls demonstrated with asynchronously created browser elements",
+	"main": "index.js",
+	"scripts": {
+		"start": "webpack --mode development",
+		"build": "webpack --mode production"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/NothingWithheld/visualize-recursion.git"
+	},
+	"author": "Andrew Hsu",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/NothingWithheld/visualize-recursion/issues"
+	},
+	"homepage": "https://github.com/NothingWithheld/visualize-recursion#readme",
+	"devDependencies": {
+		"@babel/core": "^7.2.2",
+		"@babel/preset-env": "^7.2.3",
+		"@babel/preset-react": "^7.0.0",
+		"autoprefixer": "^9.1.1",
+		"babel-core": "^6.26.3",
+		"babel-loader": "^8.0.4",
+		"babel-polyfill": "^6.26.0",
+		"babel-preset-env": "^1.7.0",
+		"babel-preset-react": "^6.24.1",
+		"cssnano": "^4.0.5",
+		"del": "^3.0.0",
+		"glob": "^7.1.3",
+		"gulp": "^3.9.1",
+		"gulp-babel": "^7.0.1",
+		"gulp-postcss": "^8.0.0",
+		"gulp-rename": "^1.4.0",
+		"gulp-sass": "^4.0.1",
+		"gulp-sourcemaps": "^2.6.4",
+		"gulp-uglify": "^3.0.1",
+		"run-sequence": "^2.2.1",
+		"webpack": "^4.28.2",
+		"webpack-cli": "^3.1.2",
+		"webpack-stream": "^5.2.1"
+	},
+	"babel": {
+		"presets": [
+			"@babel/preset-env",
+			"@babel/preset-react"
+		]
+	},
+	"dependencies": {
+		"@material-ui/core": "^4.3.2",
+		"@material-ui/icons": "^4.2.1",
+		"konva": "^4.0.18",
+		"react": "^16.9.0",
+		"react-dom": "^16.9.0",
+		"react-konva": "^16.10.1-0"
+	}
 }
