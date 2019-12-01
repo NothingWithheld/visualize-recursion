@@ -4,7 +4,15 @@ import { nodeRadius } from '../../../nodes/constants'
 import PlusButton from '../PlusButton'
 import DeleteButton from '../DeleteButton'
 
-const TreeNode = ({ x, y, addChild, allowAdditionalChildren, deleteNode }) => {
+const TreeNode = ({
+	x,
+	y,
+	hasNoLeftChild,
+	hasNoRightChild,
+	addLeftChild,
+	addRightChild,
+	deleteNode,
+}) => {
 	const [isHovering, setIsHovering] = useState(false)
 
 	// when deleting a node, the deleted node and its state seems to be
@@ -24,8 +32,11 @@ const TreeNode = ({ x, y, addChild, allowAdditionalChildren, deleteNode }) => {
 				<Circle radius={nodeRadius} fill="#F0F4F8" />
 				{isHovering && <DeleteButton y={0} deleteNode={handleDelete} />}
 			</Group>
-			{allowAdditionalChildren && (
-				<PlusButton y={nodeRadius} addChild={addChild} />
+			{hasNoLeftChild && (
+				<PlusButton x={-25} y={nodeRadius} addChild={addLeftChild} />
+			)}
+			{hasNoRightChild && (
+				<PlusButton x={25} y={nodeRadius} addChild={addRightChild} />
 			)}
 		</Group>
 	)

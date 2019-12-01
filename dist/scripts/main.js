@@ -84534,8 +84534,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CodePlayer_RecursionCanvas_FunctionCallArrow__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../CodePlayer/RecursionCanvas/FunctionCallArrow */ "./src/scripts/CodePlayer/RecursionCanvas/FunctionCallArrow/index.jsx");
 /* harmony import */ var _TreeComponents_TreeNode__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../TreeComponents/TreeNode */ "./src/scripts/TreeBuilder/TreeComponents/TreeNode/index.jsx");
 /* harmony import */ var _Konva_useRefreshLayerOnFontLoad__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Konva/useRefreshLayerOnFontLoad */ "./src/scripts/Konva/useRefreshLayerOnFontLoad/index.jsx");
-/* harmony import */ var _nodes_useNodes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../nodes/useNodes */ "./src/scripts/nodes/useNodes/index.jsx");
-/* harmony import */ var _nodes_useNodes_utils__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../nodes/useNodes/utils */ "./src/scripts/nodes/useNodes/utils.js");
+/* harmony import */ var _nodes_useBinaryNodes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../nodes/useBinaryNodes */ "./src/scripts/nodes/useBinaryNodes/index.jsx");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -84554,19 +84553,16 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 
 
-
 var BinaryTreeBuilder = function BinaryTreeBuilder(_ref) {
   var startingNodes = _ref.startingNodes;
-  console.log({
-    startingNodes: startingNodes
-  });
 
-  var _useNodes = Object(_nodes_useNodes__WEBPACK_IMPORTED_MODULE_6__["default"])(startingNodes),
-      nodes = _useNodes.nodes,
-      makeNode = _useNodes.makeNode,
-      resetNodes = _useNodes.resetNodes,
-      _deleteNode = _useNodes.deleteNode,
-      _addChild = _useNodes.addChild;
+  var _useBinaryNodes = Object(_nodes_useBinaryNodes__WEBPACK_IMPORTED_MODULE_6__["default"])(startingNodes),
+      nodes = _useBinaryNodes.nodes,
+      makeNode = _useBinaryNodes.makeNode,
+      resetNodes = _useBinaryNodes.resetNodes,
+      _deleteNode = _useBinaryNodes.deleteNode,
+      _addLeftChild = _useBinaryNodes.addLeftChild,
+      _addRightChild = _useBinaryNodes.addRightChild;
 
   var layerRef = Object(_Konva_useRefreshLayerOnFontLoad__WEBPACK_IMPORTED_MODULE_5__["default"])();
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Box__WEBPACK_IMPORTED_MODULE_1__["default"], {
@@ -84583,7 +84579,9 @@ var BinaryTreeBuilder = function BinaryTreeBuilder(_ref) {
     x: window.innerWidth / 2,
     y: window.innerHeight / 3
   }, nodes.map(function (node) {
-    return node.childIndices.map(function (childIndex) {
+    return [node.leftIndex, node.rightIndex].filter(function (index) {
+      return index !== null;
+    }).map(function (childIndex) {
       var child = nodes[childIndex];
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodePlayer_RecursionCanvas_FunctionCallArrow__WEBPACK_IMPORTED_MODULE_3__["default"], {
         startX: node.x,
@@ -84598,10 +84596,14 @@ var BinaryTreeBuilder = function BinaryTreeBuilder(_ref) {
   }, []), nodes.map(function (node, i) {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_TreeComponents_TreeNode__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, node, {
       key: i,
-      addChild: function addChild() {
-        return _addChild(node, makeNode());
+      hasNoLeftChild: node.leftIndex === null,
+      hasNoRightChild: node.rightIndex === null,
+      addLeftChild: function addLeftChild() {
+        return _addLeftChild(node, makeNode());
       },
-      allowAdditionalChildren: node.childIndices.length < 2,
+      addRightChild: function addRightChild() {
+        return _addRightChild(node, makeNode());
+      },
       deleteNode: function deleteNode() {
         return _deleteNode(node);
       }
@@ -84701,7 +84703,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var PlusButton = function PlusButton(_ref) {
-  var y = _ref.y,
+  var x = _ref.x,
+      y = _ref.y,
       addChild = _ref.addChild;
 
   var _useKonvaTextWidth = Object(_Konva_useKonvaTextWidth__WEBPACK_IMPORTED_MODULE_2__["default"])(),
@@ -84723,6 +84726,7 @@ var PlusButton = function PlusButton(_ref) {
   };
 
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Group"], {
+    x: x,
     y: y
   }, isHovering ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Group"], {
     onClick: handleClick,
@@ -84791,8 +84795,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var TreeNode = function TreeNode(_ref) {
   var x = _ref.x,
       y = _ref.y,
-      addChild = _ref.addChild,
-      allowAdditionalChildren = _ref.allowAdditionalChildren,
+      hasNoLeftChild = _ref.hasNoLeftChild,
+      hasNoRightChild = _ref.hasNoRightChild,
+      addLeftChild = _ref.addLeftChild,
+      addRightChild = _ref.addRightChild,
       deleteNode = _ref.deleteNode;
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
@@ -84824,9 +84830,14 @@ var TreeNode = function TreeNode(_ref) {
   }), isHovering && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DeleteButton__WEBPACK_IMPORTED_MODULE_4__["default"], {
     y: 0,
     deleteNode: handleDelete
-  })), allowAdditionalChildren && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_PlusButton__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  })), hasNoLeftChild && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_PlusButton__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    x: -25,
     y: _nodes_constants__WEBPACK_IMPORTED_MODULE_2__["nodeRadius"],
-    addChild: addChild
+    addChild: addLeftChild
+  }), hasNoRightChild && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_PlusButton__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    x: 25,
+    y: _nodes_constants__WEBPACK_IMPORTED_MODULE_2__["nodeRadius"],
+    addChild: addRightChild
   }));
 };
 
@@ -84847,6 +84858,171 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nodeTreeRadius", function() { return nodeTreeRadius; });
 var nodeRadius = 50;
 var nodeTreeRadius = 35;
+
+/***/ }),
+
+/***/ "./src/scripts/nodes/tree_drawing/draw_binary_tree/index.js":
+/*!******************************************************************!*\
+  !*** ./src/scripts/nodes/tree_drawing/draw_binary_tree/index.js ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../constants */ "./src/scripts/nodes/constants.js");
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+
+var minXDistanceBetweenNodes = 2.5 * _constants__WEBPACK_IMPORTED_MODULE_0__["nodeRadius"];
+var minYDistanceBetweenNodes = 2.75 * _constants__WEBPACK_IMPORTED_MODULE_0__["nodeRadius"];
+
+var drawBinaryTree = function drawBinaryTree(treeRoot) {
+  return applyOffsets(getPlacedNode(treeRoot));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (drawBinaryTree);
+
+function applyOffsets(node) {
+  var curOffset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+  var x = node.x,
+      left = node.left,
+      right = node.right,
+      nodeOffset = node.offset,
+      thread = node.thread,
+      restOfNode = _objectWithoutProperties(node, ["x", "left", "right", "offset", "thread"]);
+
+  var runningOffset = curOffset + nodeOffset;
+  return _objectSpread({}, restOfNode, {
+    x: x + curOffset,
+    left: left && applyOffsets(left, runningOffset),
+    right: right && applyOffsets(right, runningOffset)
+  });
+}
+
+function getPlacedNode(node) {
+  var depth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+  if (hasNoChildren(node)) {
+    return _objectSpread({}, node, {
+      x: 0,
+      y: depth * minYDistanceBetweenNodes,
+      offset: 0,
+      thread: null
+    });
+  } else if (hasBothChildren(node)) {
+    var placedLeftChild = getPlacedNode(node.left, depth + 1);
+    var placedRightChild = getPlacedNode(node.right, depth + 1);
+    var adjustedRightChild = getAdjustedRightSubtree(placedLeftChild, placedRightChild);
+    return _objectSpread({}, node, {
+      x: (placedLeftChild.x + adjustedRightChild.x) / 2,
+      y: depth * minYDistanceBetweenNodes,
+      left: placedLeftChild,
+      right: adjustedRightChild,
+      offset: 0,
+      thread: null
+    });
+  }
+
+  var hasLeftChild = node.left !== null;
+  var placedChild = getPlacedNode(node.left || node.right, depth + 1);
+  return _objectSpread({}, node, {
+    x: hasLeftChild ? placedChild.x + minXDistanceBetweenNodes / 2 : placedChild.x - minXDistanceBetweenNodes / 2,
+    y: depth * minYDistanceBetweenNodes,
+    left: hasLeftChild ? placedChild : null,
+    right: hasLeftChild ? null : placedChild,
+    offset: 0,
+    thread: null
+  });
+}
+
+function getAdjustedRightSubtree(leftTree, rightTree) {
+  var _getContourData = getContourData(leftTree, rightTree, leftTree, rightTree),
+      rightmostOnLeftAtShortestHeightPlusOne = _getContourData.rightmostOnLeftAtShortestHeightPlusOne,
+      leftmostOnRightAtShortestHeightPlusOne = _getContourData.leftmostOnRightAtShortestHeightPlusOne,
+      leftmostOnLeftAtShortestHeight = _getContourData.leftmostOnLeftAtShortestHeight,
+      rightmostOnRightAtShortestHeight = _getContourData.rightmostOnRightAtShortestHeight,
+      maxGap = _getContourData.maxGap,
+      offset = _getContourData.offset;
+
+  var amountToSlideRightTreeOverBy = maxGap + minXDistanceBetweenNodes; // if one subtree is taller than the other, attach a thread when combining the trees
+
+  if (rightmostOnLeftAtShortestHeightPlusOne !== null && leftmostOnRightAtShortestHeightPlusOne === null) {
+    rightmostOnRightAtShortestHeight.thread = rightmostOnLeftAtShortestHeightPlusOne;
+    rightmostOnRightAtShortestHeight.offset = offset - amountToSlideRightTreeOverBy;
+  } else if (rightmostOnLeftAtShortestHeightPlusOne === null && leftmostOnRightAtShortestHeightPlusOne !== null) {
+    leftmostOnLeftAtShortestHeight.thread = leftmostOnRightAtShortestHeightPlusOne;
+    leftmostOnLeftAtShortestHeight.offset = amountToSlideRightTreeOverBy - offset;
+  }
+
+  return _objectSpread({}, rightTree, {
+    x: rightTree.x + amountToSlideRightTreeOverBy,
+    offset: rightTree.offset + amountToSlideRightTreeOverBy
+  });
+}
+
+function getContourData(rightmostOnLeftTree, leftmostOnRightTree, leftmostOnLeftTree, rightmostOnRightTree) {
+  var curMaxGap = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 0;
+  var curOffset = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 0;
+  var maxGap = Math.max(curMaxGap, rightmostOnLeftTree.x + curOffset - leftmostOnRightTree.x);
+  var nextRightmostOnLeftTree = getNextRightInTree(rightmostOnLeftTree);
+  var nextLeftmostOnRightTree = getNextLeftInTree(leftmostOnRightTree);
+  var nextLeftmostOnLeftTree = getNextLeftInTree(leftmostOnLeftTree);
+  var nextRightmostOnRightTree = getNextRightInTree(rightmostOnRightTree);
+
+  if (nextRightmostOnLeftTree !== null && nextLeftmostOnRightTree !== null) {
+    var offset = curOffset + rightmostOnLeftTree.offset - leftmostOnRightTree.offset;
+    return getContourData(nextRightmostOnLeftTree, nextLeftmostOnRightTree, nextLeftmostOnLeftTree, nextRightmostOnRightTree, maxGap, offset);
+  }
+
+  return {
+    rightmostOnLeftAtShortestHeightPlusOne: nextRightmostOnLeftTree,
+    leftmostOnRightAtShortestHeightPlusOne: nextLeftmostOnRightTree,
+    leftmostOnLeftAtShortestHeight: leftmostOnLeftTree,
+    rightmostOnRightAtShortestHeight: rightmostOnRightTree,
+    maxGap: maxGap,
+    offset: curOffset
+  };
+}
+
+function getNextLeftInTree(node) {
+  if (node.left) {
+    return node.left;
+  } else if (node.right) {
+    return node.right;
+  } else if (node.thread) {
+    return node.thread;
+  }
+
+  return null;
+}
+
+function getNextRightInTree(node) {
+  if (node.right) {
+    return node.right;
+  } else if (node.left) {
+    return node.left;
+  } else if (node.thread) {
+    return node.thread;
+  }
+
+  return null;
+}
+
+function hasNoChildren(binaryNode) {
+  return !binaryNode.left && !binaryNode.right;
+}
+
+function hasBothChildren(binaryNode) {
+  return binaryNode.left && binaryNode.right;
+}
 
 /***/ }),
 
@@ -85033,6 +85209,217 @@ function getNextRightInTree(node) {
 
 /***/ }),
 
+/***/ "./src/scripts/nodes/useBinaryNodes/index.jsx":
+/*!****************************************************!*\
+  !*** ./src/scripts/nodes/useBinaryNodes/index.jsx ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _useNodes_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../useNodes/utils */ "./src/scripts/nodes/useNodes/utils.js");
+/* harmony import */ var _tree_drawing_draw_binary_tree__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../tree_drawing/draw_binary_tree */ "./src/scripts/nodes/tree_drawing/draw_binary_tree/index.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+
+
+
+
+var createNodeTree = function createNodeTree(nodeArray) {
+  var rootIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+  var getNodeTree = function getNodeTree(nodeIndex) {
+    console.log({
+      nodeIndex: nodeIndex
+    });
+
+    if (nodeIndex === null) {
+      return null;
+    }
+
+    var _nodeArray$nodeIndex = nodeArray[nodeIndex],
+        leftIndex = _nodeArray$nodeIndex.leftIndex,
+        rightIndex = _nodeArray$nodeIndex.rightIndex,
+        node = _objectWithoutProperties(_nodeArray$nodeIndex, ["leftIndex", "rightIndex"]);
+
+    var left = getNodeTree(leftIndex);
+    var right = getNodeTree(rightIndex);
+    return _objectSpread({}, node, {
+      left: left,
+      right: right
+    });
+  };
+
+  return getNodeTree(rootIndex);
+};
+
+var flattenTree = function flattenTree(treeRoot) {
+  var flattenedTree = [];
+
+  function flatten(nodeToFlatten) {
+    if (nodeToFlatten === null) {
+      return null;
+    }
+
+    var left = nodeToFlatten.left,
+        right = nodeToFlatten.right,
+        node = _objectWithoutProperties(nodeToFlatten, ["left", "right"]);
+
+    var leftIndex = flatten(left);
+    var rightIndex = flatten(right);
+    var thisNodeIndex = flattenedTree.length;
+    flattenedTree.push(_objectSpread({}, node, {
+      leftIndex: leftIndex,
+      rightIndex: rightIndex
+    }));
+    return thisNodeIndex;
+  }
+
+  flatten(treeRoot);
+  return flattenedTree;
+};
+
+var useBinaryNodes = function useBinaryNodes() {
+  var startingNodes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(startingNodes),
+      _useState2 = _slicedToArray(_useState, 2),
+      nodeArray = _useState2[0],
+      setNodeArray = _useState2[1];
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(function () {
+    return Object(_useNodes_utils__WEBPACK_IMPORTED_MODULE_1__["getMakeNodeFunc"])(startingNodes.length);
+  }),
+      _useState4 = _slicedToArray(_useState3, 2),
+      makeNode = _useState4[0],
+      setMakeNode = _useState4[1];
+
+  var addChildToNodeArray = function addChildToNodeArray(parent, child, isLeftChild) {
+    if (nodeArray.length > 0) {
+      var parentNode = nodeArray.find(function (node) {
+        return node.nodeID === parent.nodeID;
+      });
+
+      var leftIndex = parentNode.leftIndex,
+          rightIndex = parentNode.rightIndex,
+          restOfParentNode = _objectWithoutProperties(parentNode, ["leftIndex", "rightIndex"]);
+
+      if (isLeftChild && leftIndex !== null) {
+        throw new Error("Cannot add a left child when there is already a left child for ".concat(parentNode));
+      } else if (!isLeftChild && rightIndex !== null) {
+        throw new Error("Cannot add a right child when there is already a right child for ".concat(parentNode));
+      }
+
+      var newParentNode = _objectSpread({}, restOfParentNode, {
+        leftIndex: isLeftChild ? nodeArray.length : leftIndex,
+        rightIndex: !isLeftChild ? nodeArray.length : rightIndex
+      });
+
+      var newNodeArray = [].concat(_toConsumableArray(nodeArray.map(function (node) {
+        return node.nodeID === newParentNode.nodeID ? newParentNode : node;
+      })), [_objectSpread({}, child, {
+        leftIndex: null,
+        rightIndex: null
+      })]);
+      setNodeArray(newNodeArray);
+    } else {
+      setNodeArray([_objectSpread({}, child, {
+        leftIndex: null,
+        rightIndex: null
+      })]);
+    }
+  };
+
+  var getParentWithoutChildReference = function getParentWithoutChildReference(childToRemoveIndex) {
+    var _nodeArray$find = nodeArray.find(function (node) {
+      return node.leftIndex === childToRemoveIndex || node.rightIndex === childToRemoveIndex;
+    }),
+        leftIndex = _nodeArray$find.leftIndex,
+        rightIndex = _nodeArray$find.rightIndex,
+        restOfParent = _objectWithoutProperties(_nodeArray$find, ["leftIndex", "rightIndex"]);
+
+    return _objectSpread({}, restOfParent, {
+      leftIndex: leftIndex === childToRemoveIndex ? null : leftIndex,
+      rightIndex: rightIndex === childToRemoveIndex ? null : rightIndex
+    });
+  };
+
+  var deleteNode = function deleteNode(nodeToDelete) {
+    var nodeToDeleteArrayIndex = nodeArray.findIndex(function (node) {
+      return node.nodeID === nodeToDelete.nodeID;
+    });
+    console.log({
+      nodeArray: nodeArray,
+      nodeToDelete: nodeToDelete,
+      nodeToDeleteArrayIndex: nodeToDeleteArrayIndex
+    });
+    var thisSubtreeArray = flattenTree(createNodeTree(nodeArray, nodeToDeleteArrayIndex));
+    var subtreeNodeIDs = new Set(thisSubtreeArray.map(function (node) {
+      return node.nodeID;
+    }));
+    var parentWithoutChildReference = getParentWithoutChildReference(nodeToDeleteArrayIndex);
+    console.log({
+      parentWithoutChildReference: parentWithoutChildReference
+    });
+    var allNodesNotInSubtree = nodeArray.filter(function (node) {
+      return !subtreeNodeIDs.has(node.nodeID);
+    }).map(function (node) {
+      return node.nodeID === parentWithoutChildReference.nodeID ? parentWithoutChildReference : node;
+    });
+    console.log({
+      allNodesNotInSubtree: allNodesNotInSubtree
+    });
+    setNodeArray(allNodesNotInSubtree);
+  };
+
+  var resetNodes = function resetNodes() {
+    setNodeArray(startingNodes);
+    setMakeNode(startingNodes.length);
+  };
+
+  return {
+    resetNodes: resetNodes,
+    makeNode: makeNode,
+    deleteNode: deleteNode,
+    nodes: nodeArray.length > 0 ? flattenTree(Object(_tree_drawing_draw_binary_tree__WEBPACK_IMPORTED_MODULE_2__["default"])(createNodeTree(nodeArray))) : [],
+    addLeftChild: function addLeftChild(parent, child) {
+      return addChildToNodeArray(parent, child, true);
+    },
+    addRightChild: function addRightChild(parent, child) {
+      return addChildToNodeArray(parent, child, false);
+    }
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (useBinaryNodes);
+
+/***/ }),
+
 /***/ "./src/scripts/nodes/useNodes/index.jsx":
 /*!**********************************************!*\
   !*** ./src/scripts/nodes/useNodes/index.jsx ***!
@@ -85183,34 +85570,6 @@ var useNodes = function useNodes() {
     setNodeArray(newNodeArray);
   };
 
-  var getParentWithoutChildReference = function getParentWithoutChildReference(childToRemoveIndex) {
-    var parent = nodeArray.find(function (node) {
-      return node.childIndices.includes(childToRemoveIndex);
-    });
-    return _objectSpread({}, parent, {
-      childIndices: parent.childIndices.filter(function (childIndex) {
-        return childIndex !== childToRemoveIndex;
-      })
-    });
-  };
-
-  var deleteNode = function deleteNode(nodeToDelete) {
-    var nodeToDeleteArrayIndex = nodeArray.findIndex(function (node) {
-      return node.nodeID === nodeToDelete.nodeID;
-    });
-    var thisSubtreeArray = flattenTree(createNodeTree(nodeArray, nodeToDeleteArrayIndex));
-    var subtreeNodeIDs = new Set(thisSubtreeArray.map(function (node) {
-      return node.nodeID;
-    }));
-    var parentWithoutChildReference = getParentWithoutChildReference(nodeToDeleteArrayIndex);
-    var allNodesNotInSubtree = nodeArray.filter(function (node) {
-      return !subtreeNodeIDs.has(node.nodeID);
-    }).map(function (node) {
-      return node.nodeID === parentWithoutChildReference.nodeID ? parentWithoutChildReference : node;
-    });
-    setNodeArray(allNodesNotInSubtree);
-  };
-
   var resetNodes = function resetNodes() {
     setNodeArray(startingNodes);
     setMakeNode(startingNodes.length);
@@ -85220,7 +85579,6 @@ var useNodes = function useNodes() {
     addReturnValue: addReturnValue,
     resetNodes: resetNodes,
     makeNode: makeNode,
-    deleteNode: deleteNode,
     nodes: nodeArray.length > 0 ? flattenTree(Object(_tree_drawing_reingold_tilford__WEBPACK_IMPORTED_MODULE_1__["default"])(createNodeTree(nodeArray))) : [],
     addChild: addChildToNodeArray
   };
@@ -85234,23 +85592,69 @@ var useNodes = function useNodes() {
 /*!*********************************************!*\
   !*** ./src/scripts/nodes/useNodes/utils.js ***!
   \*********************************************/
-/*! exports provided: getMakeNodeFunc */
+/*! exports provided: getMakeNodeFunc, createNodeTree, flattenTree */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMakeNodeFunc", function() { return getMakeNodeFunc; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createNodeTree", function() { return createNodeTree; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "flattenTree", function() { return flattenTree; });
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 var getMakeNodeFunc = function getMakeNodeFunc(counter) {
   return function (args) {
     var node = {
       nodeID: counter,
       args: args,
-      returnValue: null,
-      children: []
+      returnValue: null
     };
     counter += 1;
     return node;
   };
+};
+var createNodeTree = function createNodeTree(nodeArray) {
+  var rootIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+  var getNodeTree = function getNodeTree(nodeIndex) {
+    var _nodeArray$nodeIndex = nodeArray[nodeIndex],
+        childIndices = _nodeArray$nodeIndex.childIndices,
+        node = _objectWithoutProperties(_nodeArray$nodeIndex, ["childIndices"]);
+
+    var children = childIndices.map(getNodeTree);
+
+    var nodeWithChildReferences = _objectSpread({}, node, {
+      children: children
+    });
+
+    return nodeWithChildReferences;
+  };
+
+  return getNodeTree(rootIndex);
+};
+var flattenTree = function flattenTree(treeRoot) {
+  var flattenedTree = [];
+
+  function flatten(nodeToFlatten) {
+    var children = nodeToFlatten.children,
+        node = _objectWithoutProperties(nodeToFlatten, ["children"]);
+
+    var childIndices = children.map(flatten);
+    var thisNodeIndex = flattenedTree.length;
+    flattenedTree.push(_objectSpread({}, node, {
+      childIndices: childIndices
+    }));
+    return thisNodeIndex;
+  }
+
+  flatten(treeRoot);
+  return flattenedTree;
 };
 
 /***/ }),
@@ -85311,10 +85715,8 @@ __webpack_require__.r(__webpack_exports__);
 react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_TreeBuilder_BinaryTreeBuilder__WEBPACK_IMPORTED_MODULE_5__["default"], {
   startingNodes: [{
     nodeID: 0,
-    returnValue: null,
-    children: [],
-    childIndices: [],
-    lastAction: true
+    leftIndex: null,
+    rightIndex: null
   }]
 }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodePlayer__WEBPACK_IMPORTED_MODULE_2__["default"], {
   scopeGeneratorFunc: _fibonacci__WEBPACK_IMPORTED_MODULE_3__["default"],

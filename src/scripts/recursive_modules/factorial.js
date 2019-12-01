@@ -11,10 +11,8 @@ ReactDOM.render(
 			startingNodes={[
 				{
 					nodeID: 0,
-					returnValue: null,
-					children: [],
-					childIndices: [],
-					lastAction: true,
+					leftIndex: null,
+					rightIndex: null,
 				},
 			]}
 		/>

@@ -86,42 +86,6 @@ const useNodes = (startingNodes = []) => {
 		setNodeArray(newNodeArray)
 	}
 
-	const getParentWithoutChildReference = childToRemoveIndex => {
-		const parent = nodeArray.find(node =>
-			node.childIndices.includes(childToRemoveIndex)
-		)
-
-		return {
-			...parent,
-			childIndices: parent.childIndices.filter(
-				childIndex => childIndex !== childToRemoveIndex
-			),
-		}
-	}
-
-	const deleteNode = nodeToDelete => {
-		const nodeToDeleteArrayIndex = nodeArray.findIndex(
-			node => node.nodeID === nodeToDelete.nodeID
-		)
-		const thisSubtreeArray = flattenTree(
-			createNodeTree(nodeArray, nodeToDeleteArrayIndex)
-		)
-		const subtreeNodeIDs = new Set(thisSubtreeArray.map(node => node.nodeID))
-
-		const parentWithoutChildReference = getParentWithoutChildReference(
-			nodeToDeleteArrayIndex
-		)
-		const allNodesNotInSubtree = nodeArray
-			.filter(node => !subtreeNodeIDs.has(node.nodeID))
-			.map(node =>
-				node.nodeID === parentWithoutChildReference.nodeID
-					? parentWithoutChildReference
-					: node
-			)
-
-		setNodeArray(allNodesNotInSubtree)
-	}
-
 	const resetNodes = () => {
 		setNodeArray(startingNodes)
 		setMakeNode(startingNodes.length)
@@ -131,7 +95,6 @@ const useNodes = (startingNodes = []) => {
 		addReturnValue,
 		resetNodes,
 		makeNode,
-		deleteNode,
 		nodes:
 			nodeArray.length > 0
 				? flattenTree(drawTree(createNodeTree(nodeArray)))

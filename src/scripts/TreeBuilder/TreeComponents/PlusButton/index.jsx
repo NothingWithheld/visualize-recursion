@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Group, Text, Rect, Circle } from 'react-konva'
 import useKonvaTextWidth from '../../../Konva/useKonvaTextWidth'
 
-const PlusButton = ({ y, addChild }) => {
+const PlusButton = ({ x, y, addChild }) => {
 	const [plusWidth, plusWidthCallback] = useKonvaTextWidth()
 	const [isHovering, setIsHovering] = useState(false)
 
@@ -15,7 +15,7 @@ const PlusButton = ({ y, addChild }) => {
 	}
 
 	return (
-		<Group y={y}>
+		<Group x={x} y={y}>
 			{isHovering ? (
 				<Group onClick={handleClick} onMouseLeave={() => setIsHovering(false)}>
 					<Rect

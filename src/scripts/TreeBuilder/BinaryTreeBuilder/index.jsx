@@ -4,14 +4,17 @@ import { Stage, Layer } from 'react-konva'
 import FunctionCallArrow from '../../CodePlayer/RecursionCanvas/FunctionCallArrow'
 import TreeNode from '../TreeComponents/TreeNode'
 import useRefreshLayerOnFontLoad from '../../Konva/useRefreshLayerOnFontLoad'
-import useNodes from '../../nodes/useNodes'
-import { getMakeNodeFunc } from '../../nodes/useNodes/utils'
+import useBinaryNodes from '../../nodes/useBinaryNodes'
 
 const BinaryTreeBuilder = ({ startingNodes }) => {
-	console.log({ startingNodes })
-	const { nodes, makeNode, resetNodes, deleteNode, addChild } = useNodes(
-		startingNodes
-	)
+	const {
+		nodes,
+		makeNode,
+		resetNodes,
+		deleteNode,
+		addLeftChild,
+		addRightChild,
+	} = useBinaryNodes(startingNodes)
 	const layerRef = useRefreshLayerOnFontLoad()
 
 	return (
@@ -33,26 +36,30 @@ const BinaryTreeBuilder = ({ startingNodes }) => {
 				>
 					{nodes
 						.map(node =>
-							node.childIndices.map(childIndex => {
-								const child = nodes[childIndex]
-								return (
-									<FunctionCallArrow
-										startX={node.x}
-										startY={node.y}
-										endX={child.x}
-										endY={child.y}
-										key={child.nodeID}
-									/>
-								)
-							})
+							[node.leftIndex, node.rightIndex]
+								.filter(index => index !== null)
+								.map(childIndex => {
+									const child = nodes[childIndex]
+									return (
+										<FunctionCallArrow
+											startX={node.x}
+											startY={node.y}
+											endX={child.x}
+											endY={child.y}
+											key={child.nodeID}
+										/>
+									)
+								})
 						)
 						.reduce((acc, array) => [...acc, ...array], [])}
 					{nodes.map((node, i) => (
 						<TreeNode
 							{...node}
 							key={i}
-							addChild={() => addChild(node, makeNode())}
-							allowAdditionalChildren={node.childIndices.length < 2}
+							hasNoLeftChild={node.leftIndex === null}
+							hasNoRightChild={node.rightIndex === null}
+							addLeftChild={() => addLeftChild(node, makeNode())}
+							addRightChild={() => addRightChild(node, makeNode())}
 							deleteNode={() => deleteNode(node)}
 						/>
 					))}
