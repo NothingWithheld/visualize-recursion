@@ -2,14 +2,13 @@ import { useState } from 'react'
 import { getMakeNodeFunc } from '../useNodes/utils'
 import drawBinaryTree from '../tree_drawing/draw_binary_tree'
 
-const createNodeTree = (nodeArray, rootIndex = 0) => {
+const createNodeTree = (nodeMap, rootIndex = 0) => {
 	const getNodeTree = nodeIndex => {
-		console.log({ nodeIndex })
 		if (nodeIndex === null) {
 			return null
 		}
 
-		const { leftIndex, rightIndex, ...node } = nodeArray[nodeIndex]
+		const { leftIndex, rightIndex, ...node } = nodeMap.get(nodeIndex)
 		const left = getNodeTree(leftIndex)
 		const right = getNodeTree(rightIndex)
 
@@ -42,14 +41,16 @@ const flattenTree = treeRoot => {
 }
 
 const useBinaryNodes = (startingNodes = []) => {
-	const [nodeArray, setNodeArray] = useState(startingNodes)
+	const [nodeMap, setNodeMap] = useState(
+		new Map(startingNodes.map(node => [node.nodeID, node]))
+	)
 	const [makeNode, setMakeNode] = useState(() =>
 		getMakeNodeFunc(startingNodes.length)
 	)
 
 	const addChildToNodeArray = (parent, child, isLeftChild) => {
-		if (nodeArray.length > 0) {
-			const parentNode = nodeArray.find(node => node.nodeID === parent.nodeID)
+		if (nodeMap.size > 0) {
+			const parentNode = nodeMap.get(parent.nodeID)
 			const { leftIndex, rightIndex, ...restOfParentNode } = parentNode
 
 			if (isLeftChild && leftIndex !== null) {
@@ -64,51 +65,50 @@ const useBinaryNodes = (startingNodes = []) => {
 
 			const newParentNode = {
 				...restOfParentNode,
-				leftIndex: isLeftChild ? nodeArray.length : leftIndex,
-				rightIndex: !isLeftChild ? nodeArray.length : rightIndex,
+				leftIndex: isLeftChild ? child.nodeID : leftIndex,
+				rightIndex: !isLeftChild ? child.nodeID : rightIndex,
 			}
-			const newNodeArray = [
-				...nodeArray.map(node =>
-					node.nodeID === newParentNode.nodeID ? newParentNode : node
+			const newNodeMap = new Map([
+				...Array.from(nodeMap.entries()).map(([nodeID, node]) =>
+					nodeID === newParentNode.nodeID
+						? [newParentNode.nodeID, newParentNode]
+						: [nodeID, node]
 				),
-				{ ...child, leftIndex: null, rightIndex: null },
-			]
+				[child.nodeID, { ...child, leftIndex: null, rightIndex: null }],
+			])
 
-			setNodeArray(newNodeArray)
+			setNodeMap(newNodeMap)
 		} else {
-			setNodeArray([{ ...child, leftIndex: null, rightIndex: null }])
+			setNodeMap(
+				new Map([
+					[child.nodeID, { ...child, leftIndex: null, rightIndex: null }],
+				])
+			)
 		}
 	}
 
-	const getParentWithoutChildReference = childToRemoveIndex => {
-		const { leftIndex, rightIndex, ...restOfParent } = nodeArray.find(
-			node =>
-				node.leftIndex === childToRemoveIndex ||
-				node.rightIndex === childToRemoveIndex
-		)
+	const getParentWithoutChildReference = childID => {
+		const { leftIndex, rightIndex, ...restOfParent } = Array.from(
+			nodeMap.values()
+		).find(node => node.leftIndex === childID || node.rightIndex === childID)
 
 		return {
 			...restOfParent,
-			leftIndex: leftIndex === childToRemoveIndex ? null : leftIndex,
-			rightIndex: rightIndex === childToRemoveIndex ? null : rightIndex,
+			leftIndex: leftIndex === childID ? null : leftIndex,
+			rightIndex: rightIndex === childID ? null : rightIndex,
 		}
 	}
 
 	const deleteNode = nodeToDelete => {
-		const nodeToDeleteArrayIndex = nodeArray.findIndex(
-			node => node.nodeID === nodeToDelete.nodeID
-		)
-		console.log({ nodeArray, nodeToDelete, nodeToDeleteArrayIndex })
 		const thisSubtreeArray = flattenTree(
-			createNodeTree(nodeArray, nodeToDeleteArrayIndex)
+			createNodeTree(nodeMap, nodeToDelete.nodeID)
 		)
 		const subtreeNodeIDs = new Set(thisSubtreeArray.map(node => node.nodeID))
 
 		const parentWithoutChildReference = getParentWithoutChildReference(
-			nodeToDeleteArrayIndex
+			nodeToDelete.nodeID
 		)
-		console.log({ parentWithoutChildReference })
-		const allNodesNotInSubtree = nodeArray
+		const allNodesNotInSubtree = Array.from(nodeMap.values())
 			.filter(node => !subtreeNodeIDs.has(node.nodeID))
 			.map(node =>
 				node.nodeID === parentWithoutChildReference.nodeID
@@ -116,12 +116,11 @@ const useBinaryNodes = (startingNodes = []) => {
 					: node
 			)
 
-		console.log({ allNodesNotInSubtree })
-		setNodeArray(allNodesNotInSubtree)
+		setNodeMap(new Map(allNodesNotInSubtree.map(node => [node.nodeID, node])))
 	}
 
 	const resetNodes = () => {
-		setNodeArray(startingNodes)
+		setNodeMap(new Map(startingNodes.map(node => [node.nodeID, node])))
 		setMakeNode(startingNodes.length)
 	}
 
@@ -130,8 +129,8 @@ const useBinaryNodes = (startingNodes = []) => {
 		makeNode,
 		deleteNode,
 		nodes:
-			nodeArray.length > 0
-				? flattenTree(drawBinaryTree(createNodeTree(nodeArray)))
+			nodeMap.size > 0
+				? flattenTree(drawBinaryTree(createNodeTree(nodeMap)))
 				: [],
 		addLeftChild: (parent, child) => addChildToNodeArray(parent, child, true),
 		addRightChild: (parent, child) => addChildToNodeArray(parent, child, false),

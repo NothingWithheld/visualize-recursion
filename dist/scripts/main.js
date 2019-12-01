@@ -85250,22 +85250,18 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 
-var createNodeTree = function createNodeTree(nodeArray) {
+var createNodeTree = function createNodeTree(nodeMap) {
   var rootIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
   var getNodeTree = function getNodeTree(nodeIndex) {
-    console.log({
-      nodeIndex: nodeIndex
-    });
-
     if (nodeIndex === null) {
       return null;
     }
 
-    var _nodeArray$nodeIndex = nodeArray[nodeIndex],
-        leftIndex = _nodeArray$nodeIndex.leftIndex,
-        rightIndex = _nodeArray$nodeIndex.rightIndex,
-        node = _objectWithoutProperties(_nodeArray$nodeIndex, ["leftIndex", "rightIndex"]);
+    var _nodeMap$get = nodeMap.get(nodeIndex),
+        leftIndex = _nodeMap$get.leftIndex,
+        rightIndex = _nodeMap$get.rightIndex,
+        node = _objectWithoutProperties(_nodeMap$get, ["leftIndex", "rightIndex"]);
 
     var left = getNodeTree(leftIndex);
     var right = getNodeTree(rightIndex);
@@ -85307,10 +85303,12 @@ var flattenTree = function flattenTree(treeRoot) {
 var useBinaryNodes = function useBinaryNodes() {
   var startingNodes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(startingNodes),
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(new Map(startingNodes.map(function (node) {
+    return [node.nodeID, node];
+  }))),
       _useState2 = _slicedToArray(_useState, 2),
-      nodeArray = _useState2[0],
-      setNodeArray = _useState2[1];
+      nodeMap = _useState2[0],
+      setNodeMap = _useState2[1];
 
   var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(function () {
     return Object(_useNodes_utils__WEBPACK_IMPORTED_MODULE_1__["getMakeNodeFunc"])(startingNodes.length);
@@ -85320,10 +85318,8 @@ var useBinaryNodes = function useBinaryNodes() {
       setMakeNode = _useState4[1];
 
   var addChildToNodeArray = function addChildToNodeArray(parent, child, isLeftChild) {
-    if (nodeArray.length > 0) {
-      var parentNode = nodeArray.find(function (node) {
-        return node.nodeID === parent.nodeID;
-      });
+    if (nodeMap.size > 0) {
+      var parentNode = nodeMap.get(parent.nodeID);
 
       var leftIndex = parentNode.leftIndex,
           rightIndex = parentNode.rightIndex,
@@ -85336,69 +85332,63 @@ var useBinaryNodes = function useBinaryNodes() {
       }
 
       var newParentNode = _objectSpread({}, restOfParentNode, {
-        leftIndex: isLeftChild ? nodeArray.length : leftIndex,
-        rightIndex: !isLeftChild ? nodeArray.length : rightIndex
+        leftIndex: isLeftChild ? child.nodeID : leftIndex,
+        rightIndex: !isLeftChild ? child.nodeID : rightIndex
       });
 
-      var newNodeArray = [].concat(_toConsumableArray(nodeArray.map(function (node) {
-        return node.nodeID === newParentNode.nodeID ? newParentNode : node;
-      })), [_objectSpread({}, child, {
+      var newNodeMap = new Map([].concat(_toConsumableArray(Array.from(nodeMap.entries()).map(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+            nodeID = _ref2[0],
+            node = _ref2[1];
+
+        return nodeID === newParentNode.nodeID ? [newParentNode.nodeID, newParentNode] : [nodeID, node];
+      })), [[child.nodeID, _objectSpread({}, child, {
         leftIndex: null,
         rightIndex: null
-      })]);
-      setNodeArray(newNodeArray);
+      })]]));
+      setNodeMap(newNodeMap);
     } else {
-      setNodeArray([_objectSpread({}, child, {
+      setNodeMap(new Map([[child.nodeID, _objectSpread({}, child, {
         leftIndex: null,
         rightIndex: null
-      })]);
+      })]]));
     }
   };
 
-  var getParentWithoutChildReference = function getParentWithoutChildReference(childToRemoveIndex) {
-    var _nodeArray$find = nodeArray.find(function (node) {
-      return node.leftIndex === childToRemoveIndex || node.rightIndex === childToRemoveIndex;
+  var getParentWithoutChildReference = function getParentWithoutChildReference(childID) {
+    var _Array$from$find = Array.from(nodeMap.values()).find(function (node) {
+      return node.leftIndex === childID || node.rightIndex === childID;
     }),
-        leftIndex = _nodeArray$find.leftIndex,
-        rightIndex = _nodeArray$find.rightIndex,
-        restOfParent = _objectWithoutProperties(_nodeArray$find, ["leftIndex", "rightIndex"]);
+        leftIndex = _Array$from$find.leftIndex,
+        rightIndex = _Array$from$find.rightIndex,
+        restOfParent = _objectWithoutProperties(_Array$from$find, ["leftIndex", "rightIndex"]);
 
     return _objectSpread({}, restOfParent, {
-      leftIndex: leftIndex === childToRemoveIndex ? null : leftIndex,
-      rightIndex: rightIndex === childToRemoveIndex ? null : rightIndex
+      leftIndex: leftIndex === childID ? null : leftIndex,
+      rightIndex: rightIndex === childID ? null : rightIndex
     });
   };
 
   var deleteNode = function deleteNode(nodeToDelete) {
-    var nodeToDeleteArrayIndex = nodeArray.findIndex(function (node) {
-      return node.nodeID === nodeToDelete.nodeID;
-    });
-    console.log({
-      nodeArray: nodeArray,
-      nodeToDelete: nodeToDelete,
-      nodeToDeleteArrayIndex: nodeToDeleteArrayIndex
-    });
-    var thisSubtreeArray = flattenTree(createNodeTree(nodeArray, nodeToDeleteArrayIndex));
+    var thisSubtreeArray = flattenTree(createNodeTree(nodeMap, nodeToDelete.nodeID));
     var subtreeNodeIDs = new Set(thisSubtreeArray.map(function (node) {
       return node.nodeID;
     }));
-    var parentWithoutChildReference = getParentWithoutChildReference(nodeToDeleteArrayIndex);
-    console.log({
-      parentWithoutChildReference: parentWithoutChildReference
-    });
-    var allNodesNotInSubtree = nodeArray.filter(function (node) {
+    var parentWithoutChildReference = getParentWithoutChildReference(nodeToDelete.nodeID);
+    var allNodesNotInSubtree = Array.from(nodeMap.values()).filter(function (node) {
       return !subtreeNodeIDs.has(node.nodeID);
     }).map(function (node) {
       return node.nodeID === parentWithoutChildReference.nodeID ? parentWithoutChildReference : node;
     });
-    console.log({
-      allNodesNotInSubtree: allNodesNotInSubtree
-    });
-    setNodeArray(allNodesNotInSubtree);
+    setNodeMap(new Map(allNodesNotInSubtree.map(function (node) {
+      return [node.nodeID, node];
+    })));
   };
 
   var resetNodes = function resetNodes() {
-    setNodeArray(startingNodes);
+    setNodeMap(new Map(startingNodes.map(function (node) {
+      return [node.nodeID, node];
+    })));
     setMakeNode(startingNodes.length);
   };
 
@@ -85406,7 +85396,7 @@ var useBinaryNodes = function useBinaryNodes() {
     resetNodes: resetNodes,
     makeNode: makeNode,
     deleteNode: deleteNode,
-    nodes: nodeArray.length > 0 ? flattenTree(Object(_tree_drawing_draw_binary_tree__WEBPACK_IMPORTED_MODULE_2__["default"])(createNodeTree(nodeArray))) : [],
+    nodes: nodeMap.size > 0 ? flattenTree(Object(_tree_drawing_draw_binary_tree__WEBPACK_IMPORTED_MODULE_2__["default"])(createNodeTree(nodeMap))) : [],
     addLeftChild: function addLeftChild(parent, child) {
       return addChildToNodeArray(parent, child, true);
     },
