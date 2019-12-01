@@ -84565,6 +84565,7 @@ var BinaryTreeBuilder = function BinaryTreeBuilder(_ref) {
       nodes = _useNodes.nodes,
       makeNode = _useNodes.makeNode,
       resetNodes = _useNodes.resetNodes,
+      _deleteNode = _useNodes.deleteNode,
       _addChild = _useNodes.addChild;
 
   var layerRef = Object(_Konva_useRefreshLayerOnFontLoad__WEBPACK_IMPORTED_MODULE_5__["default"])();
@@ -84600,12 +84601,76 @@ var BinaryTreeBuilder = function BinaryTreeBuilder(_ref) {
       addChild: function addChild() {
         return _addChild(node, makeNode());
       },
-      allowAdditionalChildren: node.childIndices.length < 2
+      allowAdditionalChildren: node.childIndices.length < 2,
+      deleteNode: function deleteNode() {
+        return _deleteNode(node);
+      }
     }));
   }))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (BinaryTreeBuilder);
+
+/***/ }),
+
+/***/ "./src/scripts/TreeBuilder/TreeComponents/DeleteButton/index.jsx":
+/*!***********************************************************************!*\
+  !*** ./src/scripts/TreeBuilder/TreeComponents/DeleteButton/index.jsx ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_konva__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-konva */ "./node_modules/react-konva/lib/ReactKonva.js");
+/* harmony import */ var react_konva__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_konva__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _Konva_useKonvaTextWidth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../Konva/useKonvaTextWidth */ "./src/scripts/Konva/useKonvaTextWidth/index.jsx");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+var DeleteButton = function DeleteButton(_ref) {
+  var y = _ref.y,
+      deleteNode = _ref.deleteNode;
+
+  var _useKonvaTextWidth = Object(_Konva_useKonvaTextWidth__WEBPACK_IMPORTED_MODULE_2__["default"])(),
+      _useKonvaTextWidth2 = _slicedToArray(_useKonvaTextWidth, 2),
+      xWidth = _useKonvaTextWidth2[0],
+      xWidthCallback = _useKonvaTextWidth2[1];
+
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Group"], {
+    y: y,
+    onClick: deleteNode
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Rect"], {
+    fill: "#E12D39",
+    cornerRadius: 4,
+    width: 30,
+    height: 30,
+    x: -15,
+    y: -15
+  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Text"], {
+    text: "x",
+    fill: "#F0F4F8",
+    x: -xWidth / 2,
+    y: -10,
+    fontStyle: "bold",
+    fontFamily: "Roboto",
+    fontSize: 18,
+    ref: xWidthCallback
+  }));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (DeleteButton);
 
 /***/ }),
 
@@ -84708,6 +84773,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_konva__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_konva__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _nodes_constants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../nodes/constants */ "./src/scripts/nodes/constants.js");
 /* harmony import */ var _PlusButton__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../PlusButton */ "./src/scripts/TreeBuilder/TreeComponents/PlusButton/index.jsx");
+/* harmony import */ var _DeleteButton__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../DeleteButton */ "./src/scripts/TreeBuilder/TreeComponents/DeleteButton/index.jsx");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
 
 
 
@@ -84717,14 +84792,31 @@ var TreeNode = function TreeNode(_ref) {
   var x = _ref.x,
       y = _ref.y,
       addChild = _ref.addChild,
-      allowAdditionalChildren = _ref.allowAdditionalChildren;
+      allowAdditionalChildren = _ref.allowAdditionalChildren,
+      deleteNode = _ref.deleteNode;
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState2 = _slicedToArray(_useState, 2),
+      isHovering = _useState2[0],
+      setIsHovering = _useState2[1];
+
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Group"], {
     x: x,
     y: y
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Group"], {
+    onMouseEnter: function onMouseEnter() {
+      return setIsHovering(true);
+    },
+    onMouseLeave: function onMouseLeave() {
+      return setIsHovering(false);
+    }
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Circle"], {
     radius: _nodes_constants__WEBPACK_IMPORTED_MODULE_2__["nodeRadius"],
     fill: "#F0F4F8"
-  }), allowAdditionalChildren && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_PlusButton__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }), isHovering && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DeleteButton__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    y: 0,
+    deleteNode: deleteNode
+  })), allowAdditionalChildren && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_PlusButton__WEBPACK_IMPORTED_MODULE_3__["default"], {
     y: _nodes_constants__WEBPACK_IMPORTED_MODULE_2__["nodeRadius"],
     addChild: addChild
   }));
@@ -84975,6 +85067,8 @@ function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) r
 
 
 var createNodeTree = function createNodeTree(nodeArray) {
+  var rootIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
   var getNodeTree = function getNodeTree(nodeIndex) {
     var _nodeArray$nodeIndex = nodeArray[nodeIndex],
         childIndices = _nodeArray$nodeIndex.childIndices,
@@ -84989,7 +85083,7 @@ var createNodeTree = function createNodeTree(nodeArray) {
     return nodeWithChildReferences;
   };
 
-  return getNodeTree(0);
+  return getNodeTree(rootIndex);
 };
 
 var flattenTree = function flattenTree(treeRoot) {
@@ -85027,9 +85121,6 @@ var useNodes = function useNodes() {
       setMakeNode = _useState4[1];
 
   var latestNodeArray = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(nodeArray);
-  console.log({
-    nodeArray: nodeArray
-  });
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     latestNodeArray.current = nodeArray;
   }, [nodeArray]);
@@ -85084,6 +85175,34 @@ var useNodes = function useNodes() {
     setNodeArray(newNodeArray);
   };
 
+  var getParentWithoutChildReference = function getParentWithoutChildReference(childToRemoveIndex) {
+    var parent = nodeArray.find(function (node) {
+      return node.childIndices.includes(childToRemoveIndex);
+    });
+    return _objectSpread({}, parent, {
+      childIndices: parent.childIndices.filter(function (childIndex) {
+        return childIndex !== childToRemoveIndex;
+      })
+    });
+  };
+
+  var deleteNode = function deleteNode(nodeToDelete) {
+    var nodeToDeleteArrayIndex = nodeArray.findIndex(function (node) {
+      return node.nodeID === nodeToDelete.nodeID;
+    });
+    var thisSubtreeArray = flattenTree(createNodeTree(nodeArray, nodeToDeleteArrayIndex));
+    var subtreeNodeIDs = new Set(thisSubtreeArray.map(function (node) {
+      return node.nodeID;
+    }));
+    var parentWithoutChildReference = getParentWithoutChildReference(nodeToDeleteArrayIndex);
+    var allNodesNotInSubtree = nodeArray.filter(function (node) {
+      return !subtreeNodeIDs.has(node.nodeID);
+    }).map(function (node) {
+      return node.nodeID === parentWithoutChildReference.nodeID ? parentWithoutChildReference : node;
+    });
+    setNodeArray(allNodesNotInSubtree);
+  };
+
   var resetNodes = function resetNodes() {
     setNodeArray(startingNodes);
     setMakeNode(startingNodes.length);
@@ -85093,6 +85212,7 @@ var useNodes = function useNodes() {
     addReturnValue: addReturnValue,
     resetNodes: resetNodes,
     makeNode: makeNode,
+    deleteNode: deleteNode,
     nodes: nodeArray.length > 0 ? flattenTree(Object(_tree_drawing_reingold_tilford__WEBPACK_IMPORTED_MODULE_1__["default"])(createNodeTree(nodeArray))) : [],
     addChild: addChildToNodeArray
   };

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import drawTree from '../tree_drawing/reingold_tilford'
 import { getMakeNodeFunc } from './utils'
 
-const createNodeTree = nodeArray => {
+const createNodeTree = (nodeArray, rootIndex = 0) => {
 	const getNodeTree = nodeIndex => {
 		const { childIndices, ...node } = nodeArray[nodeIndex]
 		const children = childIndices.map(getNodeTree)
@@ -11,7 +11,7 @@ const createNodeTree = nodeArray => {
 		return nodeWithChildReferences
 	}
 
-	return getNodeTree(0)
+	return getNodeTree(rootIndex)
 }
 
 const flattenTree = treeRoot => {
@@ -37,7 +37,6 @@ const useNodes = (startingNodes = []) => {
 		getMakeNodeFunc(startingNodes.length)
 	)
 	const latestNodeArray = useRef(nodeArray)
-	console.log({ nodeArray })
 
 	useEffect(() => {
 		latestNodeArray.current = nodeArray
@@ -87,6 +86,42 @@ const useNodes = (startingNodes = []) => {
 		setNodeArray(newNodeArray)
 	}
 
+	const getParentWithoutChildReference = childToRemoveIndex => {
+		const parent = nodeArray.find(node =>
+			node.childIndices.includes(childToRemoveIndex)
+		)
+
+		return {
+			...parent,
+			childIndices: parent.childIndices.filter(
+				childIndex => childIndex !== childToRemoveIndex
+			),
+		}
+	}
+
+	const deleteNode = nodeToDelete => {
+		const nodeToDeleteArrayIndex = nodeArray.findIndex(
+			node => node.nodeID === nodeToDelete.nodeID
+		)
+		const thisSubtreeArray = flattenTree(
+			createNodeTree(nodeArray, nodeToDeleteArrayIndex)
+		)
+		const subtreeNodeIDs = new Set(thisSubtreeArray.map(node => node.nodeID))
+
+		const parentWithoutChildReference = getParentWithoutChildReference(
+			nodeToDeleteArrayIndex
+		)
+		const allNodesNotInSubtree = nodeArray
+			.filter(node => !subtreeNodeIDs.has(node.nodeID))
+			.map(node =>
+				node.nodeID === parentWithoutChildReference.nodeID
+					? parentWithoutChildReference
+					: node
+			)
+
+		setNodeArray(allNodesNotInSubtree)
+	}
+
 	const resetNodes = () => {
 		setNodeArray(startingNodes)
 		setMakeNode(startingNodes.length)
@@ -96,6 +131,7 @@ const useNodes = (startingNodes = []) => {
 		addReturnValue,
 		resetNodes,
 		makeNode,
+		deleteNode,
 		nodes:
 			nodeArray.length > 0
 				? flattenTree(drawTree(createNodeTree(nodeArray)))

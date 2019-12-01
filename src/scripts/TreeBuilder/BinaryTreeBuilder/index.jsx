@@ -9,7 +9,9 @@ import { getMakeNodeFunc } from '../../nodes/useNodes/utils'
 
 const BinaryTreeBuilder = ({ startingNodes }) => {
 	console.log({ startingNodes })
-	const { nodes, makeNode, resetNodes, addChild } = useNodes(startingNodes)
+	const { nodes, makeNode, resetNodes, deleteNode, addChild } = useNodes(
+		startingNodes
+	)
 	const layerRef = useRefreshLayerOnFontLoad()
 
 	return (
@@ -51,6 +53,7 @@ const BinaryTreeBuilder = ({ startingNodes }) => {
 							key={i}
 							addChild={() => addChild(node, makeNode())}
 							allowAdditionalChildren={node.childIndices.length < 2}
+							deleteNode={() => deleteNode(node)}
 						/>
 					))}
 				</Layer>
