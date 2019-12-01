@@ -84798,7 +84798,15 @@ var TreeNode = function TreeNode(_ref) {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState2 = _slicedToArray(_useState, 2),
       isHovering = _useState2[0],
-      setIsHovering = _useState2[1];
+      setIsHovering = _useState2[1]; // when deleting a node, the deleted node and its state seems to be
+  // used for its parent node, causing the parent node's delete button to
+  // appear, if `setIsHovering(false)` isn't called
+
+
+  var handleDelete = function handleDelete() {
+    deleteNode();
+    setIsHovering(false);
+  };
 
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Group"], {
     x: x,
@@ -84815,7 +84823,7 @@ var TreeNode = function TreeNode(_ref) {
     fill: "#F0F4F8"
   }), isHovering && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DeleteButton__WEBPACK_IMPORTED_MODULE_4__["default"], {
     y: 0,
-    deleteNode: deleteNode
+    deleteNode: handleDelete
   })), allowAdditionalChildren && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_PlusButton__WEBPACK_IMPORTED_MODULE_3__["default"], {
     y: _nodes_constants__WEBPACK_IMPORTED_MODULE_2__["nodeRadius"],
     addChild: addChild
