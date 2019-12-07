@@ -12,6 +12,8 @@ const TreeNode = ({
 	addLeftChild,
 	addRightChild,
 	deleteNode,
+	handleHoverToBeDeleted,
+	isHoveringToBeDeleted = false,
 }) => {
 	const [isHovering, setIsHovering] = useState(false)
 
@@ -29,8 +31,19 @@ const TreeNode = ({
 				onMouseEnter={() => setIsHovering(true)}
 				onMouseLeave={() => setIsHovering(false)}
 			>
-				<Circle radius={nodeRadius} fill="#F0F4F8" />
-				{isHovering && <DeleteButton y={0} deleteNode={handleDelete} />}
+				<Circle
+					radius={nodeRadius}
+					fill="#F0F4F8"
+					stroke="#E12D39"
+					strokeWidth={isHoveringToBeDeleted ? 4 : 0}
+				/>
+				{isHovering && (
+					<DeleteButton
+						y={0}
+						deleteNode={handleDelete}
+						handleHoverToBeDeleted={handleHoverToBeDeleted}
+					/>
+				)}
 			</Group>
 			{hasNoLeftChild && (
 				<PlusButton x={-25} y={nodeRadius} addChild={addLeftChild} />

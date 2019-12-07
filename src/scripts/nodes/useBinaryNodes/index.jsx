@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { curry } from 'ramda'
 import {
 	getMakeBinaryNodeFunc,
@@ -15,6 +15,13 @@ const useBinaryNodes = (startingNodes = []) => {
 		getMakeBinaryNodeFunc(startingNodes.length)
 	)
 	const [treeRoot, setTreeRoot] = useState(makeNode())
+	const [drawnTree, setDrawnTree] = useState(
+		treeRoot && drawBinaryTree(treeRoot)
+	)
+
+	useEffect(() => setDrawnTree(treeRoot && drawBinaryTree(treeRoot)), [
+		treeRoot,
+	])
 
 	const addNode = curry((isLeftChild, parent) => {
 		const newNode = makeNode()
@@ -43,7 +50,7 @@ const useBinaryNodes = (startingNodes = []) => {
 	return {
 		resetNodes,
 		deleteNode,
-		nodes: treeRoot === null ? null : drawBinaryTree(treeRoot),
+		nodes: drawnTree,
 		addLeftChild: addNode(true),
 		addRightChild: addNode(false),
 	}

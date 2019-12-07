@@ -100662,6 +100662,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _nodes_useBinaryNodes__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../nodes/useBinaryNodes */ "./src/scripts/nodes/useBinaryNodes/index.jsx");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
@@ -100689,6 +100691,15 @@ var BinaryTreeBuilder = function BinaryTreeBuilder(_ref) {
       _addRightChild = _useBinaryNodes.addRightChild;
 
   var layerRef = Object(_Konva_useRefreshLayerOnFontLoad__WEBPACK_IMPORTED_MODULE_5__["default"])();
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
+      _useState2 = _slicedToArray(_useState, 2),
+      hoveringToBeDeletedNodeID = _useState2[0],
+      setHoveringToBeDeletedNodeID = _useState2[1];
+
+  var extraNodeProps = hoveringToBeDeletedNodeID ? _defineProperty({}, hoveringToBeDeletedNodeID, {
+    isHoveringToBeDeleted: true
+  }) : {};
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Box__WEBPACK_IMPORTED_MODULE_1__["default"], {
     margin: "12px 8px",
     border: "thin solid",
@@ -100702,10 +100713,10 @@ var BinaryTreeBuilder = function BinaryTreeBuilder(_ref) {
     ref: layerRef,
     x: window.innerWidth / 2,
     y: window.innerHeight / 3
-  }, Object(_nodes_useBinaryNodes__WEBPACK_IMPORTED_MODULE_6__["getEdges"])(nodes).map(function (_ref2) {
-    var _ref3 = _slicedToArray(_ref2, 2),
-        parent = _ref3[0],
-        child = _ref3[1];
+  }, Object(_nodes_useBinaryNodes__WEBPACK_IMPORTED_MODULE_6__["getEdges"])(nodes).map(function (_ref3) {
+    var _ref4 = _slicedToArray(_ref3, 2),
+        parent = _ref4[0],
+        child = _ref4[1];
 
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodePlayer_RecursionCanvas_FunctionCallArrow__WEBPACK_IMPORTED_MODULE_3__["default"], {
       startX: parent.x,
@@ -100714,10 +100725,10 @@ var BinaryTreeBuilder = function BinaryTreeBuilder(_ref) {
       endY: child.y,
       key: child.nodeID
     });
-  }), Object(_nodes_useBinaryNodes__WEBPACK_IMPORTED_MODULE_6__["preorder"])(nodes).map(function (_ref4, i) {
-    var _ref5 = _slicedToArray(_ref4, 2),
-        node = _ref5[0],
-        extraProps = _ref5[1];
+  }), Object(_nodes_useBinaryNodes__WEBPACK_IMPORTED_MODULE_6__["preorder"])(nodes, extraNodeProps).map(function (_ref5, i) {
+    var _ref6 = _slicedToArray(_ref5, 2),
+        node = _ref6[0],
+        extraProps = _ref6[1];
 
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_TreeComponents_TreeNode__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, node, extraProps, {
       key: i,
@@ -100731,6 +100742,9 @@ var BinaryTreeBuilder = function BinaryTreeBuilder(_ref) {
       },
       deleteNode: function deleteNode() {
         return _deleteNode(node);
+      },
+      handleHoverToBeDeleted: function handleHoverToBeDeleted(mouseEntering) {
+        return mouseEntering ? setHoveringToBeDeletedNodeID(node.nodeID) : setHoveringToBeDeletedNodeID(null);
       }
     }));
   }))));
@@ -100768,7 +100782,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var DeleteButton = function DeleteButton(_ref) {
   var y = _ref.y,
-      deleteNode = _ref.deleteNode;
+      deleteNode = _ref.deleteNode,
+      handleHoverToBeDeleted = _ref.handleHoverToBeDeleted;
 
   var _useKonvaTextWidth = Object(_Konva_useKonvaTextWidth__WEBPACK_IMPORTED_MODULE_2__["default"])(),
       _useKonvaTextWidth2 = _slicedToArray(_useKonvaTextWidth, 2),
@@ -100777,7 +100792,13 @@ var DeleteButton = function DeleteButton(_ref) {
 
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Group"], {
     y: y,
-    onClick: deleteNode
+    onClick: deleteNode,
+    onMouseEnter: function onMouseEnter() {
+      return handleHoverToBeDeleted(true);
+    },
+    onMouseLeave: function onMouseLeave() {
+      return handleHoverToBeDeleted(false);
+    }
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Rect"], {
     fill: "#E12D39",
     cornerRadius: 4,
@@ -100924,7 +100945,10 @@ var TreeNode = function TreeNode(_ref) {
       hasNoRightChild = _ref.hasNoRightChild,
       addLeftChild = _ref.addLeftChild,
       addRightChild = _ref.addRightChild,
-      deleteNode = _ref.deleteNode;
+      deleteNode = _ref.deleteNode,
+      handleHoverToBeDeleted = _ref.handleHoverToBeDeleted,
+      _ref$isHoveringToBeDe = _ref.isHoveringToBeDeleted,
+      isHoveringToBeDeleted = _ref$isHoveringToBeDe === void 0 ? false : _ref$isHoveringToBeDe;
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState2 = _slicedToArray(_useState, 2),
@@ -100951,10 +100975,13 @@ var TreeNode = function TreeNode(_ref) {
     }
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Circle"], {
     radius: _nodes_constants__WEBPACK_IMPORTED_MODULE_2__["nodeRadius"],
-    fill: "#F0F4F8"
+    fill: "#F0F4F8",
+    stroke: "#E12D39",
+    strokeWidth: isHoveringToBeDeleted ? 4 : 0
   }), isHovering && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DeleteButton__WEBPACK_IMPORTED_MODULE_4__["default"], {
     y: 0,
-    deleteNode: handleDelete
+    deleteNode: handleDelete,
+    handleHoverToBeDeleted: handleHoverToBeDeleted
   })), hasNoLeftChild && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_PlusButton__WEBPACK_IMPORTED_MODULE_3__["default"], {
     x: -25,
     y: _nodes_constants__WEBPACK_IMPORTED_MODULE_2__["nodeRadius"],
@@ -101383,6 +101410,14 @@ var useBinaryNodes = function useBinaryNodes() {
       treeRoot = _useState4[0],
       setTreeRoot = _useState4[1];
 
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(treeRoot && Object(_tree_drawing_draw_binary_tree__WEBPACK_IMPORTED_MODULE_3__["default"])(treeRoot)),
+      _useState6 = _slicedToArray(_useState5, 2),
+      drawnTree = _useState6[0],
+      setDrawnTree = _useState6[1];
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    return setDrawnTree(treeRoot && Object(_tree_drawing_draw_binary_tree__WEBPACK_IMPORTED_MODULE_3__["default"])(treeRoot));
+  }, [treeRoot]);
   var addNode = Object(ramda__WEBPACK_IMPORTED_MODULE_1__["curry"])(function (isLeftChild, parent) {
     var newNode = makeNode();
 
@@ -101413,7 +101448,7 @@ var useBinaryNodes = function useBinaryNodes() {
   return {
     resetNodes: resetNodes,
     deleteNode: deleteNode,
-    nodes: treeRoot === null ? null : Object(_tree_drawing_draw_binary_tree__WEBPACK_IMPORTED_MODULE_3__["default"])(treeRoot),
+    nodes: drawnTree,
     addLeftChild: addNode(true),
     addRightChild: addNode(false)
   };

@@ -1,12 +1,17 @@
 import React from 'react'
-import { Group, Text, Rect, Circle } from 'react-konva'
+import { Group, Text, Rect } from 'react-konva'
 import useKonvaTextWidth from '../../../Konva/useKonvaTextWidth'
 
-const DeleteButton = ({ y, deleteNode }) => {
+const DeleteButton = ({ y, deleteNode, handleHoverToBeDeleted }) => {
 	const [xWidth, xWidthCallback] = useKonvaTextWidth()
 
 	return (
-		<Group y={y} onClick={deleteNode}>
+		<Group
+			y={y}
+			onClick={deleteNode}
+			onMouseEnter={() => handleHoverToBeDeleted(true)}
+			onMouseLeave={() => handleHoverToBeDeleted(false)}
+		>
 			<Rect
 				fill="#E12D39"
 				cornerRadius={4}

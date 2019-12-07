@@ -16,6 +16,18 @@ const BinaryTreeBuilder = ({ startingNodes }) => {
 	} = useBinaryNodes(startingNodes)
 	const layerRef = useRefreshLayerOnFontLoad()
 
+	const [hoveringToBeDeletedNodeID, setHoveringToBeDeletedNodeID] = useState(
+		null
+	)
+
+	const extraNodeProps = hoveringToBeDeletedNodeID
+		? {
+				[hoveringToBeDeletedNodeID]: {
+					isHoveringToBeDeleted: true,
+				},
+		  }
+		: {}
+
 	return (
 		<Box
 			margin="12px 8px"
@@ -42,7 +54,7 @@ const BinaryTreeBuilder = ({ startingNodes }) => {
 							key={child.nodeID}
 						/>
 					))}
-					{preorder(nodes).map(([node, extraProps], i) => (
+					{preorder(nodes, extraNodeProps).map(([node, extraProps], i) => (
 						<TreeNode
 							{...node}
 							{...extraProps}
@@ -52,6 +64,11 @@ const BinaryTreeBuilder = ({ startingNodes }) => {
 							addLeftChild={() => addLeftChild(node)}
 							addRightChild={() => addRightChild(node)}
 							deleteNode={() => deleteNode(node)}
+							handleHoverToBeDeleted={mouseEntering =>
+								mouseEntering
+									? setHoveringToBeDeletedNodeID(node.nodeID)
+									: setHoveringToBeDeletedNodeID(null)
+							}
 						/>
 					))}
 				</Layer>
