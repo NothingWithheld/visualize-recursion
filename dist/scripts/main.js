@@ -101399,13 +101399,15 @@ var useBinaryNodes = function useBinaryNodes() {
   var startingNodes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(function () {
-    return Object(_utils__WEBPACK_IMPORTED_MODULE_2__["getMakeBinaryNodeFunc"])(startingNodes.length);
+    return Object(_utils__WEBPACK_IMPORTED_MODULE_2__["getMakeBinaryNodeFunc"])();
   }),
       _useState2 = _slicedToArray(_useState, 2),
       makeNode = _useState2[0],
       setMakeNode = _useState2[1];
 
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(makeNode()),
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(function () {
+    return Object(_utils__WEBPACK_IMPORTED_MODULE_2__["buildBinaryTreeFromArraySpec"])(makeNode, startingNodes);
+  }),
       _useState4 = _slicedToArray(_useState3, 2),
       treeRoot = _useState4[0],
       setTreeRoot = _useState4[1];
@@ -101439,10 +101441,11 @@ var useBinaryNodes = function useBinaryNodes() {
   };
 
   var resetNodes = function resetNodes() {
-    setTreeRoot(null);
-    setMakeNode(function () {
-      return Object(_utils__WEBPACK_IMPORTED_MODULE_2__["getMakeBinaryNodeFunc"])(startingNodes.length);
+    var resetMakeNode = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["getMakeBinaryNodeFunc"])();
+    setTreeRoot(function () {
+      return Object(_utils__WEBPACK_IMPORTED_MODULE_2__["buildBinaryTreeFromArraySpec"])(resetMakeNode, startingNodes);
     });
+    setMakeNode(resetMakeNode);
   };
 
   return {
@@ -101576,11 +101579,12 @@ var getEdges = function getEdges(root) {
 /*!***************************************************!*\
   !*** ./src/scripts/nodes/useBinaryNodes/utils.js ***!
   \***************************************************/
-/*! exports provided: isSameNode, addNodeToTree, deleteNodeFromTree, getMakeBinaryNodeFunc */
+/*! exports provided: buildBinaryTreeFromArraySpec, isSameNode, addNodeToTree, deleteNodeFromTree, getMakeBinaryNodeFunc */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "buildBinaryTreeFromArraySpec", function() { return buildBinaryTreeFromArraySpec; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isSameNode", function() { return isSameNode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addNodeToTree", function() { return addNodeToTree; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteNodeFromTree", function() { return deleteNodeFromTree; });
@@ -101590,7 +101594,69 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+var buildBinaryTreeFromArraySpec = function buildBinaryTreeFromArraySpec(makeNode, nodeArrays) {
+  var treeRoot = null;
+  var prevLevelNodes = [];
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = nodeArrays[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var thisLevel = _step.value;
+      var thisLevelNodes = thisLevel.map(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+            idxOfParentInLevel = _ref2[0],
+            isLeftNode = _ref2[1];
+
+        var node = makeNode();
+
+        if (idxOfParentInLevel === -1) {
+          if (treeRoot !== null) {
+            throw Error('There can only be one tree root');
+          }
+
+          treeRoot = node;
+        } else {
+          var parentNode = prevLevelNodes[idxOfParentInLevel];
+
+          if (isLeftNode) {
+            parentNode.left = node;
+          } else {
+            parentNode.right = node;
+          }
+        }
+
+        return node;
+      });
+      prevLevelNodes = thisLevelNodes;
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return != null) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  return treeRoot;
+};
 var isSameNode = function isSameNode(nodeA, nodeB) {
   return nodeA === null || nodeB === null ? false : nodeA.nodeID === nodeB.nodeID;
 };
@@ -101644,7 +101710,8 @@ var deleteNodeFromTree = function deleteNodeFromTree(treeRoot, nodeToDelete) {
 
   return updateTree(_defineProperty({}, parent.nodeID, removeChildFromParent), treeRoot);
 };
-var getMakeBinaryNodeFunc = function getMakeBinaryNodeFunc(counter) {
+var getMakeBinaryNodeFunc = function getMakeBinaryNodeFunc() {
+  var counter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
   return function () {
     var node = {
       nodeID: counter,
@@ -101951,11 +102018,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_TreeBuilder_BinaryTreeBuilder__WEBPACK_IMPORTED_MODULE_5__["default"], {
-  startingNodes: [{
-    nodeID: 0,
-    leftIndex: null,
-    rightIndex: null
-  }]
+  startingNodes: [[[-1, true]], [[0, true], [0, false]], [[0, true], [1, true], [1, false]]]
 }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodePlayer__WEBPACK_IMPORTED_MODULE_2__["default"], {
   scopeGeneratorFunc: _fibonacci__WEBPACK_IMPORTED_MODULE_3__["default"],
   functionInputObjs: [{

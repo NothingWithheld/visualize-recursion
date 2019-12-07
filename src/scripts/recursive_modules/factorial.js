@@ -9,11 +9,16 @@ ReactDOM.render(
 	<>
 		<BinaryTreeBuilder
 			startingNodes={[
-				{
-					nodeID: 0,
-					leftIndex: null,
-					rightIndex: null,
-				},
+				[[-1, true]],
+				[
+					[0, true],
+					[0, false],
+				],
+				[
+					[0, true],
+					[1, true],
+					[1, false],
+				],
 			]}
 		/>
 		<CodePlayer

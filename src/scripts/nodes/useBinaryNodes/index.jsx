@@ -5,16 +5,17 @@ import {
 	addNodeToTree,
 	deleteNodeFromTree,
 	isSameNode,
+	buildBinaryTreeFromArraySpec,
 } from './utils'
 import drawBinaryTree from '../tree_drawing/draw_binary_tree'
 import { preorder, getEdges } from './traversals'
 export { preorder, getEdges }
 
 const useBinaryNodes = (startingNodes = []) => {
-	const [makeNode, setMakeNode] = useState(() =>
-		getMakeBinaryNodeFunc(startingNodes.length)
+	const [makeNode, setMakeNode] = useState(() => getMakeBinaryNodeFunc())
+	const [treeRoot, setTreeRoot] = useState(() =>
+		buildBinaryTreeFromArraySpec(makeNode, startingNodes)
 	)
-	const [treeRoot, setTreeRoot] = useState(makeNode())
 	const [drawnTree, setDrawnTree] = useState(
 		treeRoot && drawBinaryTree(treeRoot)
 	)
@@ -43,8 +44,11 @@ const useBinaryNodes = (startingNodes = []) => {
 	}
 
 	const resetNodes = () => {
-		setTreeRoot(null)
-		setMakeNode(() => getMakeBinaryNodeFunc(startingNodes.length))
+		const resetMakeNode = getMakeBinaryNodeFunc()
+		setTreeRoot(() =>
+			buildBinaryTreeFromArraySpec(resetMakeNode, startingNodes)
+		)
+		setMakeNode(resetMakeNode)
 	}
 
 	return {

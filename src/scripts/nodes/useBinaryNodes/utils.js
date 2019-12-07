@@ -1,5 +1,36 @@
 import { identity } from 'ramda'
 
+export const buildBinaryTreeFromArraySpec = (makeNode, nodeArrays) => {
+	let treeRoot = null
+
+	let prevLevelNodes = []
+	for (const thisLevel of nodeArrays) {
+		const thisLevelNodes = thisLevel.map(([idxOfParentInLevel, isLeftNode]) => {
+			const node = makeNode()
+			if (idxOfParentInLevel === -1) {
+				if (treeRoot !== null) {
+					throw Error('There can only be one tree root')
+				}
+
+				treeRoot = node
+			} else {
+				const parentNode = prevLevelNodes[idxOfParentInLevel]
+				if (isLeftNode) {
+					parentNode.left = node
+				} else {
+					parentNode.right = node
+				}
+			}
+
+			return node
+		})
+
+		prevLevelNodes = thisLevelNodes
+	}
+
+	return treeRoot
+}
+
 export const isSameNode = (nodeA, nodeB) =>
 	nodeA === null || nodeB === null ? false : nodeA.nodeID === nodeB.nodeID
 
@@ -54,7 +85,7 @@ export const deleteNodeFromTree = (treeRoot, nodeToDelete) => {
 	return updateTree({ [parent.nodeID]: removeChildFromParent }, treeRoot)
 }
 
-export const getMakeBinaryNodeFunc = counter => {
+export const getMakeBinaryNodeFunc = (counter = 0) => {
 	return () => {
 		const node = {
 			nodeID: counter,
