@@ -20,13 +20,14 @@ const BinaryTreeBuilder = ({ startingNodes }) => {
 		null
 	)
 
-	const extraNodeProps = hoveringToBeDeletedNodeID
-		? {
-				[hoveringToBeDeletedNodeID]: {
-					isHoveringToBeDeleted: true,
-				},
-		  }
-		: {}
+	const extraNodeProps =
+		hoveringToBeDeletedNodeID !== null
+			? {
+					[hoveringToBeDeletedNodeID]: {
+						isHoveringToBeDeleted: true,
+					},
+			  }
+			: {}
 
 	return (
 		<Box

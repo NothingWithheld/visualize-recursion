@@ -35,7 +35,7 @@ const TreeNode = ({
 					radius={nodeRadius}
 					fill="#F0F4F8"
 					stroke="#E12D39"
-					strokeWidth={isHoveringToBeDeleted ? 4 : 0}
+					strokeWidth={isHoveringToBeDeleted ? 3 : 0}
 				/>
 				{isHovering && (
 					<DeleteButton

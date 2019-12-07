@@ -100697,7 +100697,7 @@ var BinaryTreeBuilder = function BinaryTreeBuilder(_ref) {
       hoveringToBeDeletedNodeID = _useState2[0],
       setHoveringToBeDeletedNodeID = _useState2[1];
 
-  var extraNodeProps = hoveringToBeDeletedNodeID ? _defineProperty({}, hoveringToBeDeletedNodeID, {
+  var extraNodeProps = hoveringToBeDeletedNodeID !== null ? _defineProperty({}, hoveringToBeDeletedNodeID, {
     isHoveringToBeDeleted: true
   }) : {};
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Box__WEBPACK_IMPORTED_MODULE_1__["default"], {
@@ -100977,7 +100977,7 @@ var TreeNode = function TreeNode(_ref) {
     radius: _nodes_constants__WEBPACK_IMPORTED_MODULE_2__["nodeRadius"],
     fill: "#F0F4F8",
     stroke: "#E12D39",
-    strokeWidth: isHoveringToBeDeleted ? 4 : 0
+    strokeWidth: isHoveringToBeDeleted ? 3 : 0
   }), isHovering && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DeleteButton__WEBPACK_IMPORTED_MODULE_4__["default"], {
     y: 0,
     deleteNode: handleDelete,
