@@ -13,6 +13,7 @@ const TreeNode = ({
 	addRightChild,
 	deleteNode,
 	handleHoverToBeDeleted,
+	isCurrentlyCalled,
 	isHoveringToBeDeleted = false,
 }) => {
 	const [isHovering, setIsHovering] = useState(false)
@@ -34,8 +35,8 @@ const TreeNode = ({
 				<Circle
 					radius={nodeRadius}
 					fill="#F0F4F8"
-					stroke="#E12D39"
-					strokeWidth={isHoveringToBeDeleted ? 3 : 0}
+					stroke={isCurrentlyCalled ? '#B990FF' : '#E12D39'}
+					strokeWidth={isCurrentlyCalled || isHoveringToBeDeleted ? 3 : 0}
 				/>
 				{isHovering && (
 					<DeleteButton

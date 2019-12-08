@@ -4,10 +4,13 @@ import CodePlayer from '../CodePlayer'
 import scopeFibonacciGenerator from './fibonacci'
 import scopeLCSGenerator from './longest_common_substring'
 import BinaryTreeBuilder from '../TreeBuilder/BinaryTreeBuilder'
+import TreePlayer from '../TreePlayer'
+import preorder from '../tree_modules/binary/preorder'
 
 ReactDOM.render(
 	<>
-		<BinaryTreeBuilder
+		<TreePlayer
+			algoGeneratorFunc={preorder}
 			startingNodes={[
 				[[-1, true]],
 				[

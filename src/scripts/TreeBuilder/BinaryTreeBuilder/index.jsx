@@ -4,18 +4,16 @@ import { Stage, Layer } from 'react-konva'
 import FunctionCallArrow from '../../CodePlayer/RecursionCanvas/FunctionCallArrow'
 import TreeNode from '../TreeComponents/TreeNode'
 import useRefreshLayerOnFontLoad from '../../Konva/useRefreshLayerOnFontLoad'
-import useBinaryNodes, { preorder, getEdges } from '../../nodes/useBinaryNodes'
+import { preorder, getEdges } from '../../nodes/useBinaryNodes'
 
-const BinaryTreeBuilder = ({ startingNodes }) => {
-	const {
-		nodes,
-		resetNodes,
-		deleteNode,
-		addLeftChild,
-		addRightChild,
-	} = useBinaryNodes(startingNodes)
+const BinaryTreeBuilder = ({
+	treeRoot,
+	deleteNode,
+	addLeftChild,
+	addRightChild,
+	calledNodeID,
+}) => {
 	const layerRef = useRefreshLayerOnFontLoad()
-
 	const [hoveringToBeDeletedNodeID, setHoveringToBeDeletedNodeID] = useState(
 		null
 	)
@@ -46,7 +44,7 @@ const BinaryTreeBuilder = ({ startingNodes }) => {
 					x={window.innerWidth / 2}
 					y={window.innerHeight / 3}
 				>
-					{getEdges(nodes).map(([parent, child]) => (
+					{getEdges(treeRoot).map(([parent, child]) => (
 						<FunctionCallArrow
 							startX={parent.x}
 							startY={parent.y}
@@ -55,7 +53,7 @@ const BinaryTreeBuilder = ({ startingNodes }) => {
 							key={child.nodeID}
 						/>
 					))}
-					{preorder(nodes, extraNodeProps).map(([node, extraProps], i) => (
+					{preorder(treeRoot, extraNodeProps).map(([node, extraProps], i) => (
 						<TreeNode
 							{...node}
 							{...extraProps}
@@ -70,6 +68,7 @@ const BinaryTreeBuilder = ({ startingNodes }) => {
 									? setHoveringToBeDeletedNodeID(node.nodeID)
 									: setHoveringToBeDeletedNodeID(null)
 							}
+							isCurrentlyCalled={node.nodeID === calledNodeID}
 						/>
 					))}
 				</Layer>

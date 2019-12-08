@@ -54,7 +54,7 @@ const useBinaryNodes = (startingNodes = []) => {
 	return {
 		resetNodes,
 		deleteNode,
-		nodes: drawnTree,
+		treeRoot: drawnTree,
 		addLeftChild: addNode(true),
 		addRightChild: addNode(false),
 	}

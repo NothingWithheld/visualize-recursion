@@ -100681,15 +100681,11 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 var BinaryTreeBuilder = function BinaryTreeBuilder(_ref) {
-  var startingNodes = _ref.startingNodes;
-
-  var _useBinaryNodes = Object(_nodes_useBinaryNodes__WEBPACK_IMPORTED_MODULE_6__["default"])(startingNodes),
-      nodes = _useBinaryNodes.nodes,
-      resetNodes = _useBinaryNodes.resetNodes,
-      _deleteNode = _useBinaryNodes.deleteNode,
-      _addLeftChild = _useBinaryNodes.addLeftChild,
-      _addRightChild = _useBinaryNodes.addRightChild;
-
+  var treeRoot = _ref.treeRoot,
+      _deleteNode = _ref.deleteNode,
+      _addLeftChild = _ref.addLeftChild,
+      _addRightChild = _ref.addRightChild,
+      calledNodeID = _ref.calledNodeID;
   var layerRef = Object(_Konva_useRefreshLayerOnFontLoad__WEBPACK_IMPORTED_MODULE_5__["default"])();
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
@@ -100713,7 +100709,7 @@ var BinaryTreeBuilder = function BinaryTreeBuilder(_ref) {
     ref: layerRef,
     x: window.innerWidth / 2,
     y: window.innerHeight / 3
-  }, Object(_nodes_useBinaryNodes__WEBPACK_IMPORTED_MODULE_6__["getEdges"])(nodes).map(function (_ref3) {
+  }, Object(_nodes_useBinaryNodes__WEBPACK_IMPORTED_MODULE_6__["getEdges"])(treeRoot).map(function (_ref3) {
     var _ref4 = _slicedToArray(_ref3, 2),
         parent = _ref4[0],
         child = _ref4[1];
@@ -100725,7 +100721,7 @@ var BinaryTreeBuilder = function BinaryTreeBuilder(_ref) {
       endY: child.y,
       key: child.nodeID
     });
-  }), Object(_nodes_useBinaryNodes__WEBPACK_IMPORTED_MODULE_6__["preorder"])(nodes, extraNodeProps).map(function (_ref5, i) {
+  }), Object(_nodes_useBinaryNodes__WEBPACK_IMPORTED_MODULE_6__["preorder"])(treeRoot, extraNodeProps).map(function (_ref5, i) {
     var _ref6 = _slicedToArray(_ref5, 2),
         node = _ref6[0],
         extraProps = _ref6[1];
@@ -100745,7 +100741,8 @@ var BinaryTreeBuilder = function BinaryTreeBuilder(_ref) {
       },
       handleHoverToBeDeleted: function handleHoverToBeDeleted(mouseEntering) {
         return mouseEntering ? setHoveringToBeDeletedNodeID(node.nodeID) : setHoveringToBeDeletedNodeID(null);
-      }
+      },
+      isCurrentlyCalled: node.nodeID === calledNodeID
     }));
   }))));
 };
@@ -100947,6 +100944,7 @@ var TreeNode = function TreeNode(_ref) {
       addRightChild = _ref.addRightChild,
       deleteNode = _ref.deleteNode,
       handleHoverToBeDeleted = _ref.handleHoverToBeDeleted,
+      isCurrentlyCalled = _ref.isCurrentlyCalled,
       _ref$isHoveringToBeDe = _ref.isHoveringToBeDeleted,
       isHoveringToBeDeleted = _ref$isHoveringToBeDe === void 0 ? false : _ref$isHoveringToBeDe;
 
@@ -100976,8 +100974,8 @@ var TreeNode = function TreeNode(_ref) {
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Circle"], {
     radius: _nodes_constants__WEBPACK_IMPORTED_MODULE_2__["nodeRadius"],
     fill: "#F0F4F8",
-    stroke: "#E12D39",
-    strokeWidth: isHoveringToBeDeleted ? 3 : 0
+    stroke: isCurrentlyCalled ? '#B990FF' : '#E12D39',
+    strokeWidth: isCurrentlyCalled || isHoveringToBeDeleted ? 3 : 0
   }), isHovering && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_DeleteButton__WEBPACK_IMPORTED_MODULE_4__["default"], {
     y: 0,
     deleteNode: handleDelete,
@@ -100994,6 +100992,345 @@ var TreeNode = function TreeNode(_ref) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (TreeNode);
+
+/***/ }),
+
+/***/ "./src/scripts/TreePlayer/TreeCodeController/index.jsx":
+/*!*************************************************************!*\
+  !*** ./src/scripts/TreePlayer/TreeCodeController/index.jsx ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _material_ui_core_Button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @material-ui/core/Button */ "./node_modules/@material-ui/core/esm/Button/index.js");
+/* harmony import */ var _material_ui_core_ButtonGroup__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @material-ui/core/ButtonGroup */ "./node_modules/@material-ui/core/esm/ButtonGroup/index.js");
+/* harmony import */ var _material_ui_icons_PlayArrowRounded__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @material-ui/icons/PlayArrowRounded */ "./node_modules/@material-ui/icons/PlayArrowRounded.js");
+/* harmony import */ var _material_ui_icons_PlayArrowRounded__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_PlayArrowRounded__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _material_ui_icons_PauseRounded__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @material-ui/icons/PauseRounded */ "./node_modules/@material-ui/icons/PauseRounded.js");
+/* harmony import */ var _material_ui_icons_PauseRounded__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_PauseRounded__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _material_ui_icons_Refresh__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @material-ui/icons/Refresh */ "./node_modules/@material-ui/icons/Refresh.js");
+/* harmony import */ var _material_ui_icons_Refresh__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_Refresh__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @material-ui/core/TextField */ "./node_modules/@material-ui/core/esm/TextField/index.js");
+/* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @material-ui/core/styles */ "./node_modules/@material-ui/core/esm/styles/index.js");
+/* harmony import */ var _material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @material-ui/core/Paper */ "./node_modules/@material-ui/core/esm/Paper/index.js");
+/* harmony import */ var _material_ui_icons_Forward__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @material-ui/icons/Forward */ "./node_modules/@material-ui/icons/Forward.js");
+/* harmony import */ var _material_ui_icons_Forward__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_material_ui_icons_Forward__WEBPACK_IMPORTED_MODULE_9__);
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+
+
+
+
+var MinWidthButton = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_7__["withStyles"])({
+  root: {
+    minWidth: 150
+  },
+  label: {
+    display: 'flex',
+    alignItems: 'flex-start'
+  }
+})(_material_ui_core_Button__WEBPACK_IMPORTED_MODULE_1__["default"]);
+var SpaceBetweenPaper = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_7__["withStyles"])({
+  root: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '14px 8px',
+    padding: '14px 12px'
+  }
+})(_material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_8__["default"]);
+
+var TreeCodeController = function TreeCodeController(_ref) {
+  var treeRoot = _ref.treeRoot,
+      play = _ref.play,
+      pause = _ref.pause,
+      reset = _ref.reset,
+      isStepping = _ref.isStepping,
+      isInitialized = _ref.isInitialized,
+      canStepForward = _ref.canStepForward,
+      canStepBackward = _ref.canStepBackward,
+      start = _ref.start,
+      startAndStepOnce = _ref.startAndStepOnce,
+      stepForward = _ref.stepForward,
+      stepBackward = _ref.stepBackward;
+
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(500),
+      _useState2 = _slicedToArray(_useState, 2),
+      delayMilliseconds = _useState2[0],
+      setDelayMilliseconds = _useState2[1];
+
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SpaceBetweenPaper, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_ButtonGroup__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    variant: "contained",
+    size: "large"
+  }, isStepping ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MinWidthButton, {
+    onClick: pause
+  }, "PAUSE", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_PauseRounded__WEBPACK_IMPORTED_MODULE_4___default.a, null)) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MinWidthButton, {
+    disabled: isInitialized && !canStepForward,
+    onClick: isInitialized ? play : function () {
+      return start(treeRoot);
+    }
+  }, "PLAY", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_PlayArrowRounded__WEBPACK_IMPORTED_MODULE_3___default.a, null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MinWidthButton, {
+    onClick: isInitialized ? stepForward : function () {
+      return startAndStepOnce(treeRoot);
+    },
+    disabled: isInitialized && (isStepping || !canStepForward)
+  }, "STEP FORWARD", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_Forward__WEBPACK_IMPORTED_MODULE_9___default.a, null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MinWidthButton, {
+    onClick: stepBackward,
+    disabled: isStepping || !canStepBackward
+  }, "STEP BACKWARD", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_Forward__WEBPACK_IMPORTED_MODULE_9___default.a, null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MinWidthButton, {
+    onClick: reset,
+    disabled: isStepping || !isInitialized
+  }, "RESET", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_Refresh__WEBPACK_IMPORTED_MODULE_5___default.a, null))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    type: "number",
+    label: "Delay (seconds)",
+    value: (delayMilliseconds / 1000).toString(),
+    onChange: function onChange(event) {
+      setDelayMilliseconds(1000 * event.target.value);
+    },
+    disabled: isStepping,
+    variant: "filled"
+  })));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (TreeCodeController);
+
+/***/ }),
+
+/***/ "./src/scripts/TreePlayer/index.jsx":
+/*!******************************************!*\
+  !*** ./src/scripts/TreePlayer/index.jsx ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _TreeCodeController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TreeCodeController */ "./src/scripts/TreePlayer/TreeCodeController/index.jsx");
+/* harmony import */ var _useTreeAlgoStepper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./useTreeAlgoStepper */ "./src/scripts/TreePlayer/useTreeAlgoStepper/index.js");
+/* harmony import */ var _TreeBuilder_BinaryTreeBuilder__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../TreeBuilder/BinaryTreeBuilder */ "./src/scripts/TreeBuilder/BinaryTreeBuilder/index.jsx");
+/* harmony import */ var _nodes_useBinaryNodes__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../nodes/useBinaryNodes */ "./src/scripts/nodes/useBinaryNodes/index.jsx");
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
+
+
+
+
+
+
+var TreePlayer = function TreePlayer(_ref) {
+  var algoGeneratorFunc = _ref.algoGeneratorFunc,
+      startingNodes = _ref.startingNodes;
+
+  var _useTreeAlgoStepper = Object(_useTreeAlgoStepper__WEBPACK_IMPORTED_MODULE_2__["default"])(algoGeneratorFunc),
+      calledNodeID = _useTreeAlgoStepper.calledNodeID,
+      treeCodePlayerProps = _objectWithoutProperties(_useTreeAlgoStepper, ["calledNodeID"]);
+
+  var _useBinaryNodes = Object(_nodes_useBinaryNodes__WEBPACK_IMPORTED_MODULE_4__["default"])(startingNodes),
+      treeRoot = _useBinaryNodes.treeRoot,
+      deleteNode = _useBinaryNodes.deleteNode,
+      addLeftChild = _useBinaryNodes.addLeftChild,
+      addRightChild = _useBinaryNodes.addRightChild;
+
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_TreeCodeController__WEBPACK_IMPORTED_MODULE_1__["default"], _extends({}, treeCodePlayerProps, {
+    treeRoot: treeRoot
+  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_TreeBuilder_BinaryTreeBuilder__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    treeRoot: treeRoot,
+    deleteNode: deleteNode,
+    addLeftChild: addLeftChild,
+    addRightChild: addRightChild,
+    calledNodeID: calledNodeID
+  }));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (TreePlayer);
+
+/***/ }),
+
+/***/ "./src/scripts/TreePlayer/useTreeAlgoStepper/index.js":
+/*!************************************************************!*\
+  !*** ./src/scripts/TreePlayer/useTreeAlgoStepper/index.js ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+var useTreeAlgoStepper = function useTreeAlgoStepper(algoGeneratorFunc) {
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState2 = _slicedToArray(_useState, 2),
+      isInitialized = _useState2[0],
+      setIsInitialized = _useState2[1];
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      isStepping = _useState4[0],
+      setIsStepping = _useState4[1];
+
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(500),
+      _useState6 = _slicedToArray(_useState5, 2),
+      delayMilliseconds = _useState6[0],
+      setDelayMilliseconds = _useState6[1];
+
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
+      _useState8 = _slicedToArray(_useState7, 2),
+      stepFuncID = _useState8[0],
+      setStepFuncID = _useState8[1];
+
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([null]),
+      _useState10 = _slicedToArray(_useState9, 2),
+      calledNodes = _useState10[0],
+      setCalledNodes = _useState10[1];
+
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState12 = _slicedToArray(_useState11, 2),
+      callIdx = _useState12[0],
+      setCallIdx = _useState12[1];
+
+  var latestIsStepping = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(isStepping);
+  var latestCallIdx = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(callIdx);
+
+  var initialize = function initialize(treeRoot) {
+    var initializedCalledNodes = [{}].concat(_toConsumableArray(algoGeneratorFunc(treeRoot)));
+    setCalledNodes(initializedCalledNodes);
+    setIsInitialized(true);
+    return initializedCalledNodes;
+  };
+
+  var canStepForward = function canStepForward(calledNodesArg, callIdxArg) {
+    return callIdxArg < calledNodesArg.length - 1;
+  };
+
+  var canStepBackward = function canStepBackward() {
+    return callIdx > 0;
+  };
+
+  var _stepForward = function stepForward(calledNodesArg, callIdxArg) {
+    if (canStepForward(calledNodesArg, callIdxArg)) {
+      setCallIdx(callIdxArg + 1);
+      return true;
+    }
+
+    return false;
+  };
+
+  var stepBackward = function stepBackward() {
+    if (canStepBackward()) {
+      setCallIdx(callIdx - 1);
+    }
+  };
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    latestCallIdx.current = callIdx;
+  }, [callIdx]);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    latestIsStepping.current = isStepping;
+    var initialClickTimerID = setTimeout(function stepFunc() {
+      if (!latestIsStepping.current) return;
+
+      var stepSucceeded = _stepForward(calledNodes, latestCallIdx.current);
+
+      if (stepSucceeded) {
+        var recursiveTimerID = setTimeout(stepFunc, delayMilliseconds);
+        setStepFuncID(recursiveTimerID);
+      } else {
+        setIsStepping(false);
+      }
+    }, 0);
+    setStepFuncID(initialClickTimerID);
+  }, [isStepping]);
+
+  var start = function start(startAndStepOnce) {
+    return function (treeRoot) {
+      if (startAndStepOnce) {
+        var initializedCalledNodes = initialize(treeRoot);
+
+        _stepForward(initializedCalledNodes, 0);
+      } else {
+        initialize(treeRoot);
+        setIsStepping(true);
+      }
+    };
+  };
+
+  var play = function play() {
+    if (canStepForward(calledNodes, callIdx)) {
+      setIsStepping(true);
+    }
+  };
+
+  var pause = function pause() {
+    return setIsStepping(false);
+  };
+
+  var reset = function reset() {
+    clearTimeout(stepFuncID);
+    setStepFuncID(null);
+    setCalledNodes([null]);
+    setCallIdx(0);
+    setIsStepping(false);
+    setIsInitialized(false);
+  };
+
+  return {
+    calledNodeID: calledNodes[callIdx],
+    isInitialized: isInitialized,
+    isStepping: isStepping,
+    canStepForward: canStepForward(calledNodes, callIdx),
+    canStepBackward: canStepBackward(),
+    start: start(false),
+    startAndStepOnce: start(true),
+    play: play,
+    pause: pause,
+    stepForward: function stepForward() {
+      return _stepForward(calledNodes, callIdx);
+    },
+    stepBackward: stepBackward,
+    reset: reset
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (useTreeAlgoStepper);
 
 /***/ }),
 
@@ -101451,7 +101788,7 @@ var useBinaryNodes = function useBinaryNodes() {
   return {
     resetNodes: resetNodes,
     deleteNode: deleteNode,
-    nodes: drawnTree,
+    treeRoot: drawnTree,
     addLeftChild: addNode(true),
     addRightChild: addNode(false)
   };
@@ -102011,13 +102348,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fibonacci__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./fibonacci */ "./src/scripts/recursive_modules/fibonacci/index.js");
 /* harmony import */ var _longest_common_substring__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./longest_common_substring */ "./src/scripts/recursive_modules/longest_common_substring/index.js");
 /* harmony import */ var _TreeBuilder_BinaryTreeBuilder__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../TreeBuilder/BinaryTreeBuilder */ "./src/scripts/TreeBuilder/BinaryTreeBuilder/index.jsx");
+/* harmony import */ var _TreePlayer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../TreePlayer */ "./src/scripts/TreePlayer/index.jsx");
+/* harmony import */ var _tree_modules_binary_preorder__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../tree_modules/binary/preorder */ "./src/scripts/tree_modules/binary/preorder/index.js");
 
 
 
 
 
 
-react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_TreeBuilder_BinaryTreeBuilder__WEBPACK_IMPORTED_MODULE_5__["default"], {
+
+
+react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_TreePlayer__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  algoGeneratorFunc: _tree_modules_binary_preorder__WEBPACK_IMPORTED_MODULE_7__["default"],
   startingNodes: [[[-1, true]], [[0, true], [0, false]], [[0, true], [1, true], [1, false]]]
 }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodePlayer__WEBPACK_IMPORTED_MODULE_2__["default"], {
   scopeGeneratorFunc: _fibonacci__WEBPACK_IMPORTED_MODULE_3__["default"],
@@ -102310,6 +102652,52 @@ function scopeLongestCommonSubstringGenerator(makeNode, addChild, addReturnValue
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (scopeLongestCommonSubstringGenerator);
+
+/***/ }),
+
+/***/ "./src/scripts/tree_modules/binary/preorder/index.js":
+/*!***********************************************************!*\
+  !*** ./src/scripts/tree_modules/binary/preorder/index.js ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return preorderGenerator; });
+var _marked =
+/*#__PURE__*/
+regeneratorRuntime.mark(preorderGenerator);
+
+function preorderGenerator(node) {
+  return regeneratorRuntime.wrap(function preorderGenerator$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          if (!(node === null)) {
+            _context.next = 2;
+            break;
+          }
+
+          return _context.abrupt("return");
+
+        case 2:
+          _context.next = 4;
+          return node.nodeID;
+
+        case 4:
+          return _context.delegateYield(preorderGenerator(node.left), "t0", 5);
+
+        case 5:
+          return _context.delegateYield(preorderGenerator(node.right), "t1", 6);
+
+        case 6:
+        case "end":
+          return _context.stop();
+      }
+    }
+  }, _marked, this);
+}
 
 /***/ })
 
