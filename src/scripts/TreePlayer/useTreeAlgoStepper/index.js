@@ -56,6 +56,7 @@ const useTreeAlgoStepper = algoGeneratorFunc => {
 			}
 		}, 0)
 		setStepFuncID(initialClickTimerID)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isStepping])
 
 	const start = startAndStepOnce => treeRoot => {

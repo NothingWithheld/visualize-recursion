@@ -101277,7 +101277,7 @@ var useTreeAlgoStepper = function useTreeAlgoStepper(algoGeneratorFunc) {
         setIsStepping(false);
       }
     }, 0);
-    setStepFuncID(initialClickTimerID);
+    setStepFuncID(initialClickTimerID); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isStepping]);
 
   var start = function start(startAndStepOnce) {
