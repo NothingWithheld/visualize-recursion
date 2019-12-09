@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import { Stage, Layer } from 'react-konva'
 import FunctionCallNode from './FunctionCallNode'
 import FunctionCallArrow from './FunctionCallArrow'
+import CallNodeExtraDetails from './CallNodeExtraDetails'
 import Box from '@material-ui/core/Box'
 
 const RecursionCanvas = ({ nodes }) => {
 	const [layerX, setLayerX] = useState(0)
 	const [layerY, setLayerY] = useState(0)
+	const [nodeExtraDetailPositions, setNodeExtraDetailPositions] = useState([])
 
 	const setLayerPosition = (x, y) => {
 		setLayerX(x)
@@ -19,6 +21,7 @@ const RecursionCanvas = ({ nodes }) => {
 			border="thin solid"
 			borderRadius="4px"
 			borderColor="#BCCCDC"
+			position="relative"
 		>
 			<Stage
 				width={window.innerWidth}
@@ -33,6 +36,12 @@ const RecursionCanvas = ({ nodes }) => {
 						<FunctionCallNode
 							{...node}
 							setLayerPosition={setLayerPosition}
+							openExtraDetails={(x, y) =>
+								setNodeExtraDetailPositions([
+									...nodeExtraDetailPositions,
+									{ x, y },
+								])
+							}
 							key={i}
 						/>
 					))}
@@ -54,6 +63,9 @@ const RecursionCanvas = ({ nodes }) => {
 						.reduce((acc, array) => [...acc, ...array], [])}
 				</Layer>
 			</Stage>
+			{nodeExtraDetailPositions.map((positionProps, i) => (
+				<CallNodeExtraDetails {...positionProps} key={i} />
+			))}
 		</Box>
 	)
 }

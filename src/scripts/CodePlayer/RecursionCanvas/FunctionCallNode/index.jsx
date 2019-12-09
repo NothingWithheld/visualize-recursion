@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { Group, Circle, Text, Line } from 'react-konva'
 import { nodeRadius } from '../../../nodes/constants'
 import useKonvaTextWidth from '../../../Konva/useKonvaTextWidth'
@@ -11,12 +11,19 @@ const FunctionCallNode = ({
 	args,
 	lastAction,
 	setLayerPosition,
+	openExtraDetails,
 }) => {
 	const [funcNameWidth, funcNameWidthCallback] = useKonvaTextWidth()
 	const [returnValueWidth, returnValueWidthCallback] = useKonvaTextWidth()
 
 	if (lastAction) {
 		setLayerPosition(-x, -y)
+	}
+
+	const circleRef = useRef(null)
+	const handleClick = () => {
+		const { x, y } = circleRef.current.absolutePosition()
+		openExtraDetails(x, y)
 	}
 
 	return (
@@ -28,6 +35,8 @@ const FunctionCallNode = ({
 					lastAction ? '#B990FF' : returnValue === null ? '#FADB5F' : '#BCCCDC'
 				}
 				strokeWidth={5}
+				ref={circleRef}
+				onClick={handleClick}
 			/>
 			<Text
 				text={args.join(', ')}

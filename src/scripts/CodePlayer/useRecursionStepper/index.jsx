@@ -48,6 +48,7 @@ const useRecursionStepper = scopeGeneratorFunc => {
 			setStepFuncID(recursiveTimerID)
 		}, 0)
 		setStepFuncID(initialClickTimerID)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isStepping])
 
 	const play = () => {
