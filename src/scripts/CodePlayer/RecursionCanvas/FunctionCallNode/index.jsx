@@ -39,7 +39,7 @@ const FunctionCallNode = ({
 				onClick={handleClick}
 			/>
 			<Text
-				text={args.join(', ')}
+				text={Object.values(args).join(', ')}
 				x={-funcNameWidth / 2}
 				y={-24}
 				fontStyle="bold"

@@ -1,12 +1,12 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 
 const useKonvaTextWidth = () => {
 	const [textWidth, setTextWidth] = useState(0)
-	const callbackRef = useCallback(konvaText => {
+	const callbackRef = konvaText => {
 		if (konvaText) {
 			setTextWidth(konvaText.getTextWidth())
 		}
-	})
+	}
 
 	return [textWidth, callbackRef]
 }

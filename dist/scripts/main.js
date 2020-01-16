@@ -100291,11 +100291,12 @@ module.exports = g;
 /*!*********************************************************!*\
   !*** ./src/scripts/CodePlayer/CodeController/index.jsx ***!
   \*********************************************************/
-/*! exports provided: default */
+/*! exports provided: default, CodeControllerNew */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CodeControllerNew", function() { return CodeControllerNew; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _material_ui_core_Button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @material-ui/core/Button */ "./node_modules/@material-ui/core/esm/Button/index.js");
@@ -100447,6 +100448,90 @@ var CodeController = function CodeController(_ref) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (CodeController);
+var CodeControllerNew = function CodeControllerNew(_ref2) {
+  var play = _ref2.play,
+      pause = _ref2.pause,
+      reset = _ref2.reset,
+      isStepping = _ref2.isStepping,
+      canStepForward = _ref2.canStepForward,
+      canStepBackward = _ref2.canStepBackward,
+      stepForward = _ref2.stepForward,
+      stepBackward = _ref2.stepBackward,
+      isReset = _ref2.isReset,
+      start = _ref2.start,
+      startAndStepOnce = _ref2.startAndStepOnce,
+      functionInputObjs = _ref2.functionInputObjs;
+
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(500),
+      _useState6 = _slicedToArray(_useState5, 2),
+      delayMilliseconds = _useState6[0],
+      setDelayMilliseconds = _useState6[1];
+
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(functionInputObjs),
+      _useState8 = _slicedToArray(_useState7, 2),
+      functionInputDetails = _useState8[0],
+      setFunctionInputDetails = _useState8[1];
+
+  var functionArgs = functionInputDetails.map(function (inputDetails) {
+    return inputDetails.value;
+  });
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SpaceBetweenPaper, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_ButtonGroup__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    variant: "contained",
+    size: "large"
+  }, isStepping ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MinWidthButton, {
+    disabled: !canStepForward,
+    onClick: pause
+  }, "PAUSE", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_PauseRounded__WEBPACK_IMPORTED_MODULE_5___default.a, null)) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MinWidthButton, {
+    disabled: !isReset && !canStepForward,
+    onClick: !isReset ? play : function () {
+      return start(functionArgs, delayMilliseconds);
+    }
+  }, "PLAY", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_PlayArrowRounded__WEBPACK_IMPORTED_MODULE_4___default.a, null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MinWidthButton, {
+    onClick: !isReset ? stepForward : function () {
+      return startAndStepOnce(functionArgs, delayMilliseconds);
+    },
+    disabled: !isReset && (isStepping || !canStepForward)
+  }, "STEP FORWARD", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_Forward__WEBPACK_IMPORTED_MODULE_12___default.a, null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MinWidthButton, {
+    onClick: stepBackward,
+    disabled: isStepping || !canStepBackward
+  }, "STEP BACKWARD", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_Forward__WEBPACK_IMPORTED_MODULE_12___default.a, null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MinWidthButton, {
+    onClick: reset,
+    disabled: isStepping || isReset
+  }, "RESET", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_icons_Refresh__WEBPACK_IMPORTED_MODULE_6___default.a, null))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, functionInputDetails.map(function (inputDetails, i) {
+    var value = inputDetails.value,
+        label = inputDetails.label,
+        type = inputDetails.type,
+        toValue = inputDetails.toValue,
+        fromValue = inputDetails.fromValue;
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_7__["default"], {
+      type: type,
+      label: label,
+      value: fromValue ? fromValue(value) : value,
+      onChange: function onChange(event) {
+        var updatedFunctionInputDetails = functionInputDetails.map(function (details, j) {
+          return i === j ? toValue ? _objectSpread({}, details, {
+            value: toValue(event.target.value)
+          }) : _objectSpread({}, details, {
+            value: event.target.value
+          }) : details;
+        });
+        setFunctionInputDetails(updatedFunctionInputDetails);
+      },
+      disabled: !isReset,
+      key: i,
+      variant: "filled"
+    });
+  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_TextField__WEBPACK_IMPORTED_MODULE_7__["default"], {
+    type: "number",
+    label: "Delay (seconds)",
+    value: (delayMilliseconds / 1000).toString(),
+    onChange: function onChange(event) {
+      setDelayMilliseconds(1000 * event.target.value);
+    },
+    disabled: !isReset,
+    variant: "filled"
+  })));
+};
 
 /***/ }),
 
@@ -100464,6 +100549,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @material-ui/core/Typography */ "./node_modules/@material-ui/core/esm/Typography/index.js");
 /* harmony import */ var _material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @material-ui/core/Paper */ "./node_modules/@material-ui/core/esm/Paper/index.js");
 /* harmony import */ var _material_ui_core_styles__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @material-ui/core/styles */ "./node_modules/@material-ui/core/esm/styles/index.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -100480,17 +100573,34 @@ var useStyles = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_3__["ma
     transform: 'translate(-50%, -50%)'
   }
 });
+var CodeText = Object(_material_ui_core_styles__WEBPACK_IMPORTED_MODULE_3__["withStyles"])({
+  root: {
+    backgroundColor: 'rgba(27,31,35,.05)',
+    fontFamily: 'Roboto Mono, monospace'
+  }
+})(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
 var CallNodeExtraDetails = function CallNodeExtraDetails(_ref) {
   var x = _ref.x,
-      y = _ref.y;
+      y = _ref.y,
+      args = _ref.args,
+      variableDetails = _ref.variableDetails,
+      returnVal = _ref.returnVal;
   var classes = useStyles({
     x: x,
     y: y
   });
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Paper__WEBPACK_IMPORTED_MODULE_2__["default"], {
     className: classes.root
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_1__["default"], null, "Some text here"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "See this here"));
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Typography__WEBPACK_IMPORTED_MODULE_1__["default"], null, "Arguments"), Object.entries(args).map(function (_ref2, i) {
+    var _ref3 = _slicedToArray(_ref2, 2),
+        name = _ref3[0],
+        val = _ref3[1];
+
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(CodeText, {
+      key: i
+    }, "".concat(name.toString(), " = ").concat(val.toString()));
+  }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(CodeText, null, "Some text here"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "See this here"));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (CallNodeExtraDetails);
@@ -100614,7 +100724,7 @@ var FunctionCallNode = function FunctionCallNode(_ref) {
     ref: circleRef,
     onClick: handleClick
   }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Text"], {
-    text: args.join(', '),
+    text: Object.values(args).join(', '),
     x: -funcNameWidth / 2,
     y: -24,
     fontStyle: "bold",
@@ -100644,11 +100754,12 @@ var FunctionCallNode = function FunctionCallNode(_ref) {
 /*!**********************************************************!*\
   !*** ./src/scripts/CodePlayer/RecursionCanvas/index.jsx ***!
   \**********************************************************/
-/*! exports provided: default */
+/*! exports provided: default, RecursionCanvasNew */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RecursionCanvasNew", function() { return RecursionCanvasNew; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_konva__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-konva */ "./node_modules/react-konva/lib/ReactKonva.js");
@@ -100657,7 +100768,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FunctionCallArrow__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./FunctionCallArrow */ "./src/scripts/CodePlayer/RecursionCanvas/FunctionCallArrow/index.jsx");
 /* harmony import */ var _CallNodeExtraDetails__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./CallNodeExtraDetails */ "./src/scripts/CodePlayer/RecursionCanvas/CallNodeExtraDetails/index.jsx");
 /* harmony import */ var _material_ui_core_Box__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @material-ui/core/Box */ "./node_modules/@material-ui/core/esm/Box/index.js");
+/* harmony import */ var _nodes_useNodes_traversals__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../nodes/useNodes/traversals */ "./src/scripts/nodes/useNodes/traversals.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
@@ -100674,6 +100790,7 @@ function _nonIterableRest() { throw new TypeError("Invalid attempt to destructur
 function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -100722,10 +100839,10 @@ var RecursionCanvas = function RecursionCanvas(_ref) {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_FunctionCallNode__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({}, node, {
       setLayerPosition: setLayerPosition,
       openExtraDetails: function openExtraDetails(x, y) {
-        return setNodeExtraDetailPositions([].concat(_toConsumableArray(nodeExtraDetailPositions), [{
+        return setNodeExtraDetailPositions([].concat(_toConsumableArray(nodeExtraDetailPositions), [_objectSpread({}, node, {
           x: x,
           y: y
-        }]));
+        })]));
       },
       key: i
     }));
@@ -100750,6 +100867,75 @@ var RecursionCanvas = function RecursionCanvas(_ref) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (RecursionCanvas);
+var RecursionCanvasNew = function RecursionCanvasNew(_ref2) {
+  var treeRoot = _ref2.treeRoot;
+
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState8 = _slicedToArray(_useState7, 2),
+      layerX = _useState8[0],
+      setLayerX = _useState8[1];
+
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0),
+      _useState10 = _slicedToArray(_useState9, 2),
+      layerY = _useState10[0],
+      setLayerY = _useState10[1];
+
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]),
+      _useState12 = _slicedToArray(_useState11, 2),
+      nodeExtraDetailPositions = _useState12[0],
+      setNodeExtraDetailPositions = _useState12[1];
+
+  var setLayerPosition = function setLayerPosition(x, y) {
+    setLayerX(x);
+    setLayerY(y);
+  };
+
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_material_ui_core_Box__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    margin: "12px 8px",
+    border: "thin solid",
+    borderRadius: "4px",
+    borderColor: "#BCCCDC",
+    position: "relative"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Stage"], {
+    width: window.innerWidth,
+    height: 2 * window.innerHeight / 3,
+    draggable: true
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Layer"], {
+    x: layerX + window.innerWidth / 2,
+    y: layerY + window.innerHeight / 3
+  }, Object(_nodes_useNodes_traversals__WEBPACK_IMPORTED_MODULE_6__["preorder"])(treeRoot).map(function (_ref3, i) {
+    var _ref4 = _slicedToArray(_ref3, 2),
+        node = _ref4[0],
+        _ = _ref4[1];
+
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_FunctionCallNode__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({}, node, {
+      setLayerPosition: setLayerPosition,
+      openExtraDetails: function openExtraDetails(x, y) {
+        return setNodeExtraDetailPositions([].concat(_toConsumableArray(nodeExtraDetailPositions), [_objectSpread({}, node, {
+          x: x,
+          y: y
+        })]));
+      },
+      key: i
+    }));
+  }), Object(_nodes_useNodes_traversals__WEBPACK_IMPORTED_MODULE_6__["getEdges"])(treeRoot).map(function (_ref5) {
+    var _ref6 = _slicedToArray(_ref5, 2),
+        parent = _ref6[0],
+        child = _ref6[1];
+
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_FunctionCallArrow__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      startX: parent.x,
+      startY: parent.y,
+      endX: child.x,
+      endY: child.y,
+      key: child.nodeID
+    });
+  }))), nodeExtraDetailPositions.map(function (positionProps, i) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CallNodeExtraDetails__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, positionProps, {
+      key: i
+    }));
+  }));
+};
 
 /***/ }),
 
@@ -100757,16 +100943,23 @@ var RecursionCanvas = function RecursionCanvas(_ref) {
 /*!*****************************************!*\
   !*** ./src/scripts/CodePlayer/index.js ***!
   \*****************************************/
-/*! exports provided: default */
+/*! exports provided: default, CodePlayerNew */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CodePlayerNew", function() { return CodePlayerNew; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _useRecursionStepper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useRecursionStepper */ "./src/scripts/CodePlayer/useRecursionStepper/index.jsx");
 /* harmony import */ var _CodeController__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CodeController */ "./src/scripts/CodePlayer/CodeController/index.jsx");
 /* harmony import */ var _RecursionCanvas__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./RecursionCanvas */ "./src/scripts/CodePlayer/RecursionCanvas/index.jsx");
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+
 
 
 
@@ -100805,6 +100998,20 @@ var CodePlayer = function CodePlayer(_ref) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (CodePlayer);
+var CodePlayerNew = function CodePlayerNew(_ref2) {
+  var scopeGeneratorFunc = _ref2.scopeGeneratorFunc,
+      functionInputObjs = _ref2.functionInputObjs;
+
+  var _useRecursionStepperN = Object(_useRecursionStepper__WEBPACK_IMPORTED_MODULE_1__["useRecursionStepperNew"])(scopeGeneratorFunc),
+      treeRoot = _useRecursionStepperN.treeRoot,
+      codeControllerProps = _objectWithoutProperties(_useRecursionStepperN, ["treeRoot"]);
+
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodeController__WEBPACK_IMPORTED_MODULE_2__["CodeControllerNew"], _extends({}, codeControllerProps, {
+    functionInputObjs: functionInputObjs
+  })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_RecursionCanvas__WEBPACK_IMPORTED_MODULE_3__["RecursionCanvasNew"], {
+    treeRoot: treeRoot
+  }));
+};
 
 /***/ }),
 
@@ -100812,14 +101019,16 @@ var CodePlayer = function CodePlayer(_ref) {
 /*!**************************************************************!*\
   !*** ./src/scripts/CodePlayer/useRecursionStepper/index.jsx ***!
   \**************************************************************/
-/*! exports provided: default */
+/*! exports provided: default, useRecursionStepperNew */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useRecursionStepperNew", function() { return useRecursionStepperNew; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _nodes_useNodes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../nodes/useNodes */ "./src/scripts/nodes/useNodes/index.jsx");
+/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/index.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
@@ -100827,6 +101036,7 @@ function _nonIterableRest() { throw new TypeError("Invalid attempt to destructur
 function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -100945,6 +101155,99 @@ var useRecursionStepper = function useRecursionStepper(scopeGeneratorFunc) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (useRecursionStepper);
+var useRecursionStepperNew = function useRecursionStepperNew(scopeGeneratorFunc) {
+  var _useNodesNew = Object(_nodes_useNodes__WEBPACK_IMPORTED_MODULE_1__["useNodesNew"])(),
+      treeRoot = _useNodesNew.treeRoot,
+      resetNodes = _useNodesNew.resetNodes,
+      isReset = _useNodesNew.isReset,
+      stepForward = _useNodesNew.stepForward,
+      stepBackward = _useNodesNew.stepBackward,
+      setupNodes = _useNodesNew.setupNodes,
+      makeNode = _useNodesNew.makeNode,
+      canStepForward = _useNodesNew.canStepForward,
+      canStepBackward = _useNodesNew.canStepBackward;
+
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(500),
+      _useState12 = _slicedToArray(_useState11, 2),
+      delayMilliseconds = _useState12[0],
+      setDelayMilliseconds = _useState12[1];
+
+  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState14 = _slicedToArray(_useState13, 2),
+      isStepping = _useState14[0],
+      setIsStepping = _useState14[1];
+
+  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
+      _useState16 = _slicedToArray(_useState15, 2),
+      stepFuncID = _useState16[0],
+      setStepFuncID = _useState16[1];
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    if (!isReset && canStepForward) {
+      stepForward();
+    }
+  }, [isReset, canStepForward, stepForward]);
+  var latestCanStepForward = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(canStepForward);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    latestCanStepForward.current = canStepForward;
+  }, [canStepForward]);
+  var latestIsStepping = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(isStepping);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    latestIsStepping.current = isStepping;
+    var initialClickTimerID = setTimeout(function stepFunc() {
+      if (!latestIsStepping.current || !latestCanStepForward.current) {
+        setIsStepping(false);
+        return;
+      }
+
+      stepForward();
+      var recursiveTimerID = setTimeout(stepFunc, delayMilliseconds);
+      setStepFuncID(recursiveTimerID);
+    }, delayMilliseconds);
+    setStepFuncID(initialClickTimerID);
+  }, [isStepping, delayMilliseconds, stepForward]);
+  var start = Object(ramda__WEBPACK_IMPORTED_MODULE_2__["curry"])(function (andStartStepping, args, delayMilliseconds) {
+    setupNodes(scopeGeneratorFunc(makeNode), args);
+    setDelayMilliseconds(delayMilliseconds);
+
+    if (andStartStepping) {
+      setIsStepping(true);
+    }
+  });
+
+  var play = function play() {
+    if (canStepForward) {
+      setIsStepping(true);
+    }
+  };
+
+  var pause = function pause() {
+    setIsStepping(false);
+    clearTimeout(stepFuncID);
+  };
+
+  var reset = function reset() {
+    clearTimeout(stepFuncID);
+    setStepFuncID(null);
+    resetNodes();
+    setIsStepping(false);
+  };
+
+  return {
+    treeRoot: treeRoot,
+    play: play,
+    pause: pause,
+    reset: reset,
+    isStepping: isStepping,
+    canStepForward: canStepForward,
+    canStepBackward: canStepBackward,
+    stepForward: stepForward,
+    stepBackward: stepBackward,
+    isReset: isReset,
+    start: start(true),
+    startAndStepOnce: start(false)
+  };
+};
 
 /***/ }),
 
@@ -100975,11 +101278,12 @@ var useKonvaTextWidth = function useKonvaTextWidth() {
       textWidth = _useState2[0],
       setTextWidth = _useState2[1];
 
-  var callbackRef = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (konvaText) {
+  var callbackRef = function callbackRef(konvaText) {
     if (konvaText) {
       setTextWidth(konvaText.getTextWidth());
     }
-  });
+  };
+
   return [textWidth, callbackRef];
 };
 
@@ -101710,15 +102014,21 @@ var useTreeAlgoStepper = function useTreeAlgoStepper(algoGeneratorFunc) {
 /*!****************************************!*\
   !*** ./src/scripts/nodes/constants.js ***!
   \****************************************/
-/*! exports provided: nodeRadius, nodeTreeRadius */
+/*! exports provided: nodeRadius, nodeTreeRadius, hasNotReturned, notYetAssigned, noParentNode */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nodeRadius", function() { return nodeRadius; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nodeTreeRadius", function() { return nodeTreeRadius; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasNotReturned", function() { return hasNotReturned; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "notYetAssigned", function() { return notYetAssigned; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "noParentNode", function() { return noParentNode; });
 var nodeRadius = 50;
 var nodeTreeRadius = 35;
+var hasNotReturned = undefined;
+var notYetAssigned = undefined;
+var noParentNode = 'NO_PARENT_NODE';
 
 /***/ }),
 
@@ -102438,11 +102748,12 @@ var getMakeBinaryNodeFunc = function getMakeBinaryNodeFunc() {
 /*!**********************************************!*\
   !*** ./src/scripts/nodes/useNodes/index.jsx ***!
   \**********************************************/
-/*! exports provided: default */
+/*! exports provided: default, useNodesNew */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useNodesNew", function() { return useNodesNew; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _tree_drawing_reingold_tilford__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../tree_drawing/reingold_tilford */ "./src/scripts/nodes/tree_drawing/reingold_tilford/index.js");
@@ -102599,6 +102910,279 @@ var useNodes = function useNodes() {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (useNodes);
+var useNodesNew = function useNodesNew() {
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(function () {
+    return Object(_utils__WEBPACK_IMPORTED_MODULE_2__["getMakeNodeFunc"])();
+  }),
+      _useState6 = _slicedToArray(_useState5, 2),
+      makeNode = _useState6[0],
+      setMakeNode = _useState6[1];
+
+  var _useReducer = Object(react__WEBPACK_IMPORTED_MODULE_0__["useReducer"])(_utils__WEBPACK_IMPORTED_MODULE_2__["functionProgressReducer"], _utils__WEBPACK_IMPORTED_MODULE_2__["defaultFunctionProgressState"]),
+      _useReducer2 = _slicedToArray(_useReducer, 2),
+      nodeState = _useReducer2[0],
+      nodeDispatch = _useReducer2[1];
+
+  var treeRoot = nodeState.treeRoot,
+      isReset = nodeState.isReset,
+      canStepForward = nodeState.canStepForward,
+      canStepBackward = nodeState.canStepBackward;
+
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(treeRoot && Object(_tree_drawing_reingold_tilford__WEBPACK_IMPORTED_MODULE_1__["default"])(treeRoot)),
+      _useState8 = _slicedToArray(_useState7, 2),
+      drawnTree = _useState8[0],
+      setDrawnTree = _useState8[1];
+
+  console.log({
+    treeRoot: treeRoot,
+    drawnTree: drawnTree,
+    isReset: isReset,
+    nodeState: nodeState
+  });
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    return setDrawnTree(treeRoot && Object(_tree_drawing_reingold_tilford__WEBPACK_IMPORTED_MODULE_1__["default"])(treeRoot));
+  }, [treeRoot]);
+  var setupNodes = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function (generatorFunc, args) {
+    return nodeDispatch({
+      type: 'setup',
+      generatorFunc: generatorFunc,
+      args: args
+    });
+  }, []);
+  var stepForward = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function () {
+    return nodeDispatch({
+      type: 'stepForward'
+    });
+  }, []);
+  var stepBackward = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function () {
+    return nodeDispatch({
+      type: 'stepBackward'
+    });
+  }, []);
+  var resetNodes = Object(react__WEBPACK_IMPORTED_MODULE_0__["useCallback"])(function () {
+    nodeDispatch({
+      type: 'reset'
+    });
+    setMakeNode(function () {
+      return Object(_utils__WEBPACK_IMPORTED_MODULE_2__["getMakeNodeFunc"])();
+    });
+  }, []);
+  return {
+    setupNodes: setupNodes,
+    stepForward: stepForward,
+    stepBackward: stepBackward,
+    resetNodes: resetNodes,
+    makeNode: makeNode,
+    treeRoot: drawnTree,
+    isReset: isReset,
+    canStepForward: canStepForward,
+    canStepBackward: canStepBackward
+  };
+};
+
+/***/ }),
+
+/***/ "./src/scripts/nodes/useNodes/traversals.js":
+/*!**************************************************!*\
+  !*** ./src/scripts/nodes/useNodes/traversals.js ***!
+  \**************************************************/
+/*! exports provided: preorder, getEdges */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "preorder", function() { return preorder; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEdges", function() { return getEdges; });
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var preorder = function preorder(root) {
+  var _marked =
+  /*#__PURE__*/
+  regeneratorRuntime.mark(preorderGenerator);
+
+  var propsForNodeAndChildren = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  function preorderGenerator(node) {
+    var props,
+        nodeID,
+        children,
+        updatedProps,
+        _iteratorNormalCompletion,
+        _didIteratorError,
+        _iteratorError,
+        _iterator,
+        _step,
+        child,
+        _args = arguments;
+
+    return regeneratorRuntime.wrap(function preorderGenerator$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            props = _args.length > 1 && _args[1] !== undefined ? _args[1] : {};
+
+            if (!(node === null)) {
+              _context.next = 3;
+              break;
+            }
+
+            return _context.abrupt("return");
+
+          case 3:
+            nodeID = node.nodeID, children = node.children;
+            updatedProps = _objectSpread({}, props, propsForNodeAndChildren[nodeID]);
+            _iteratorNormalCompletion = true;
+            _didIteratorError = false;
+            _iteratorError = undefined;
+            _context.prev = 8;
+            _iterator = children[Symbol.iterator]();
+
+          case 10:
+            if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+              _context.next = 16;
+              break;
+            }
+
+            child = _step.value;
+            return _context.delegateYield(preorderGenerator(child, updatedProps), "t0", 13);
+
+          case 13:
+            _iteratorNormalCompletion = true;
+            _context.next = 10;
+            break;
+
+          case 16:
+            _context.next = 22;
+            break;
+
+          case 18:
+            _context.prev = 18;
+            _context.t1 = _context["catch"](8);
+            _didIteratorError = true;
+            _iteratorError = _context.t1;
+
+          case 22:
+            _context.prev = 22;
+            _context.prev = 23;
+
+            if (!_iteratorNormalCompletion && _iterator.return != null) {
+              _iterator.return();
+            }
+
+          case 25:
+            _context.prev = 25;
+
+            if (!_didIteratorError) {
+              _context.next = 28;
+              break;
+            }
+
+            throw _iteratorError;
+
+          case 28:
+            return _context.finish(25);
+
+          case 29:
+            return _context.finish(22);
+
+          case 30:
+            _context.next = 32;
+            return [node, updatedProps];
+
+          case 32:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _marked, this, [[8, 18, 22, 30], [23,, 25, 29]]);
+  }
+
+  return Array.from(preorderGenerator(root));
+};
+var getEdges = function getEdges(root) {
+  var _marked2 =
+  /*#__PURE__*/
+  regeneratorRuntime.mark(edgeGenerator);
+
+  function edgeGenerator(node) {
+    var children, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, child;
+
+    return regeneratorRuntime.wrap(function edgeGenerator$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            children = node.children;
+            _iteratorNormalCompletion2 = true;
+            _didIteratorError2 = false;
+            _iteratorError2 = undefined;
+            _context2.prev = 4;
+            _iterator2 = children[Symbol.iterator]();
+
+          case 6:
+            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+              _context2.next = 14;
+              break;
+            }
+
+            child = _step2.value;
+            _context2.next = 10;
+            return [node, child];
+
+          case 10:
+            return _context2.delegateYield(edgeGenerator(child), "t0", 11);
+
+          case 11:
+            _iteratorNormalCompletion2 = true;
+            _context2.next = 6;
+            break;
+
+          case 14:
+            _context2.next = 20;
+            break;
+
+          case 16:
+            _context2.prev = 16;
+            _context2.t1 = _context2["catch"](4);
+            _didIteratorError2 = true;
+            _iteratorError2 = _context2.t1;
+
+          case 20:
+            _context2.prev = 20;
+            _context2.prev = 21;
+
+            if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+              _iterator2.return();
+            }
+
+          case 23:
+            _context2.prev = 23;
+
+            if (!_didIteratorError2) {
+              _context2.next = 26;
+              break;
+            }
+
+            throw _iteratorError2;
+
+          case 26:
+            return _context2.finish(23);
+
+          case 27:
+            return _context2.finish(20);
+
+          case 28:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _marked2, this, [[4, 16, 20, 28], [21,, 23, 27]]);
+  }
+
+  if (root === null) return [];
+  return Array.from(edgeGenerator(root));
+};
 
 /***/ }),
 
@@ -102606,28 +103190,289 @@ var useNodes = function useNodes() {
 /*!*********************************************!*\
   !*** ./src/scripts/nodes/useNodes/utils.js ***!
   \*********************************************/
-/*! exports provided: getMakeNodeFunc, createNodeTree, flattenTree */
+/*! exports provided: defaultFunctionProgressState, functionProgressReducer, getMakeNodeFunc, createNodeTree, flattenTree */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultFunctionProgressState", function() { return defaultFunctionProgressState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "functionProgressReducer", function() { return functionProgressReducer; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMakeNodeFunc", function() { return getMakeNodeFunc; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createNodeTree", function() { return createNodeTree; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "flattenTree", function() { return flattenTree; });
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+/* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/index.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils */ "./src/scripts/nodes/utils.js");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../constants */ "./src/scripts/nodes/constants.js");
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
-var getMakeNodeFunc = function getMakeNodeFunc(counter) {
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+var setLastAction = function setLastAction(node) {
+  return _objectSpread({}, node, {
+    lastAction: true
+  });
+};
+
+var unsetLastAction = function unsetLastAction(node) {
+  return _objectSpread({}, node, {
+    lastAction: false
+  });
+};
+
+var updateTree = function updateTree(updateFuncs, node) {
+  console.log({
+    node: node
+  });
+  if (node === null) return null;
+  var updateFunc = updateFuncs[node.nodeID] || unsetLastAction;
+  var updatedNode = updateFunc(node);
+  console.log({
+    updatedNode: updatedNode
+  });
+  var updatedChildren = updatedNode.children.map(function (child) {
+    return updateTree(updateFuncs, child);
+  });
+  return _objectSpread({}, updatedNode, {
+    children: updatedChildren
+  });
+};
+
+var handleTreeUpdates = Object(ramda__WEBPACK_IMPORTED_MODULE_0__["curry"])(function (updateFuncs, treeRoot) {
+  console.log({
+    treeRoot: treeRoot,
+    updateFuncs: updateFuncs
+  });
+
+  if (updateFuncs[_constants__WEBPACK_IMPORTED_MODULE_2__["noParentNode"]]) {
+    return updateFuncs[_constants__WEBPACK_IMPORTED_MODULE_2__["noParentNode"]]();
+  }
+
+  return updateTree(updateFuncs, treeRoot);
+});
+var addChildToParent = Object(ramda__WEBPACK_IMPORTED_MODULE_0__["curry"])(function (child, parent) {
+  return _objectSpread({}, parent, {
+    children: [].concat(_toConsumableArray(parent.children), [child])
+  });
+});
+var removeChildFromParent = Object(ramda__WEBPACK_IMPORTED_MODULE_0__["curry"])(function (childToRemove, parent) {
+  return _objectSpread({}, parent, {
+    children: parent.children.filter(function (child) {
+      return !Object(_utils__WEBPACK_IMPORTED_MODULE_1__["isSameNode"])(child, childToRemove);
+    })
+  });
+});
+var addReturnValue = Object(ramda__WEBPACK_IMPORTED_MODULE_0__["curry"])(function (returnValue, node) {
+  return _objectSpread({}, node, {
+    returnValue: returnValue
+  });
+});
+
+var removeReturnValue = function removeReturnValue(node) {
+  return _objectSpread({}, node, {
+    returnVal: _constants__WEBPACK_IMPORTED_MODULE_2__["hasNotReturned"]
+  });
+};
+
+var addVariableDetails = Object(ramda__WEBPACK_IMPORTED_MODULE_0__["curry"])(function (variableDetails, node) {
+  return _objectSpread({}, node, {
+    variableDetails: _objectSpread({}, node.variableDetails, variableDetails)
+  });
+});
+var revertVariableDetails = Object(ramda__WEBPACK_IMPORTED_MODULE_0__["curry"])(function (variableDetails, node) {
+  var notYetAssignedVariableDetails = Object.fromEntries(Object.keys(variableDetails).map(function (variableName) {
+    return [variableName, _constants__WEBPACK_IMPORTED_MODULE_2__["notYetAssigned"]];
+  }));
+  return _objectSpread({}, node, {
+    variableDetails: _objectSpread({}, node.variableDetails, notYetAssignedVariableDetails)
+  });
+});
+var defaultFunctionProgressState = {
+  forwardUpdateFuncs: [],
+  backwardUpdateFuncs: [],
+  curIndex: 0,
+  treeRoot: null,
+  isReset: true,
+  canStepForward: false,
+  canStepBackward: false
+};
+var functionProgressReducer = function functionProgressReducer(state, action) {
+  switch (action.type) {
+    case 'reset':
+      return defaultFunctionProgressState;
+
+    case 'setup':
+      {
+        if (!state.isReset) {
+          throw new Error('should reset before new setup');
+        }
+
+        var args = action.args,
+            generatorFunc = action.generatorFunc;
+
+        var nodeEvents = _toConsumableArray(generatorFunc.apply(void 0, [{
+          nodeID: _constants__WEBPACK_IMPORTED_MODULE_2__["noParentNode"]
+        }].concat(_toConsumableArray(args))));
+
+        console.log({
+          state: state,
+          action: action,
+          nodeEvents: nodeEvents
+        });
+        var forwardUpdateFuncs = [{}].concat(_toConsumableArray(nodeEvents.map(function (eventObj) {
+          var updateFuncsForEvents = Object.entries(eventObj).map(function (_ref) {
+            var _ref2 = _slicedToArray(_ref, 2),
+                nodeID = _ref2[0],
+                events = _ref2[1];
+
+            return [nodeID, events.reduce(function (updateFunc, event) {
+              console.log({
+                nodeID: nodeID,
+                event: event,
+                events: events
+              });
+
+              if (event.isAddToParent) {
+                if (nodeID === _constants__WEBPACK_IMPORTED_MODULE_2__["noParentNode"]) return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(setLastAction, function () {
+                  return event.childNode;
+                }, updateFunc);
+                return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(unsetLastAction, addChildToParent(event.childNode), updateFunc);
+              } else if (event.isAddReturnValue) {
+                return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(addReturnValue(event.returnValue), updateFunc);
+              } else if (event.isSetLastAction) {
+                return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(setLastAction, updateFunc);
+              }
+
+              throw new Error('no event type');
+            }, ramda__WEBPACK_IMPORTED_MODULE_0__["identity"])];
+          }); // console.log({
+          // 	updateFuncsForEvents,
+          // 	something: updateFuncsForEvents[0][1](),
+          // })
+
+          return Object.fromEntries(updateFuncsForEvents);
+        })), [{}]);
+        var backwardUpdateFuncs = [{}, {}].concat(_toConsumableArray(nodeEvents.map(function (eventObj) {
+          var updateFuncsForEvents = Object.entries(eventObj).map(function (_ref3) {
+            var _ref4 = _slicedToArray(_ref3, 2),
+                nodeID = _ref4[0],
+                events = _ref4[1];
+
+            return [nodeID, events.reduce(function (updateFunc, event) {
+              if (event.isAddToParent) {
+                if (event.parentNode === null) return function () {
+                  return null;
+                };
+                return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(removeChildFromParent(event.childNode), updateFunc);
+              } else if (event.isAddReturnValue) {
+                return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(removeReturnValue, updateFunc);
+              } else if (event.isSetLastAction) {
+                return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(unsetLastAction, updateFunc);
+              }
+
+              throw new Error('no event type');
+            }, ramda__WEBPACK_IMPORTED_MODULE_0__["identity"])];
+          });
+          return Object.fromEntries(updateFuncsForEvents);
+        })));
+        return {
+          forwardUpdateFuncs: forwardUpdateFuncs,
+          backwardUpdateFuncs: backwardUpdateFuncs,
+          curIndex: 1,
+          treeRoot: null,
+          isReset: false,
+          canStepForward: forwardUpdateFuncs.length > 2,
+          canStepBackward: false
+        };
+      }
+
+    case 'stepForward':
+      {
+        var _forwardUpdateFuncs = state.forwardUpdateFuncs,
+            curIndex = state.curIndex,
+            treeRoot = state.treeRoot;
+
+        if (curIndex + 1 >= _forwardUpdateFuncs.length) {
+          throw new Error('cannot step forward');
+        }
+
+        var updateFuncs = _forwardUpdateFuncs[curIndex];
+        var updatedTreeRoot = handleTreeUpdates(updateFuncs, treeRoot);
+        console.log({
+          updatedTreeRoot: updatedTreeRoot
+        });
+        var updatedIndex = curIndex + 1;
+        return _objectSpread({}, state, {
+          curIndex: updatedIndex,
+          treeRoot: updatedTreeRoot,
+          canStepForward: curIndex + 1 < _forwardUpdateFuncs.length,
+          canStepBackward: true
+        });
+      }
+
+    case 'stepBackward':
+      {
+        var _forwardUpdateFuncs2 = state.forwardUpdateFuncs,
+            _backwardUpdateFuncs = state.backwardUpdateFuncs,
+            _curIndex = state.curIndex,
+            _treeRoot = state.treeRoot;
+
+        if (_curIndex >= _backwardUpdateFuncs.length || _curIndex - 2 < 0 || _curIndex - 2 < _forwardUpdateFuncs2.length) {
+          throw new Error('cannot step backward');
+        }
+
+        var backwardUpdateFuncsForFirstStepBack = _backwardUpdateFuncs[_curIndex];
+        var backwardUpdateFuncsForSecondStepBack = _backwardUpdateFuncs[_curIndex - 1];
+        var forwardUpdateFuncsForResolvingStepForward = _forwardUpdateFuncs2[_curIndex - 2];
+        var resolveUpdatesFunc = Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(handleTreeUpdates(forwardUpdateFuncsForResolvingStepForward), handleTreeUpdates(backwardUpdateFuncsForSecondStepBack), handleTreeUpdates(backwardUpdateFuncsForFirstStepBack));
+
+        var _updatedTreeRoot = resolveUpdatesFunc(_treeRoot);
+
+        var _updatedIndex = _curIndex - 1;
+
+        return _objectSpread({}, state, {
+          curIndex: _updatedIndex,
+          treeRoot: _updatedTreeRoot,
+          canStepForward: true,
+          canStepBackward: _curIndex - 2 >= 0
+        });
+      }
+
+    default:
+      throw new Error('no correct action type specified');
+  }
+};
+var getMakeNodeFunc = function getMakeNodeFunc() {
+  var counter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
   return function (args) {
     var node = {
       nodeID: counter,
       args: args,
-      returnValue: null
+      returnValue: null,
+      children: []
     };
     counter += 1;
     return node;
@@ -102677,12 +103522,13 @@ var flattenTree = function flattenTree(treeRoot) {
 /*!************************************!*\
   !*** ./src/scripts/nodes/utils.js ***!
   \************************************/
-/*! exports provided: calculatePerimeterPositions */
+/*! exports provided: calculatePerimeterPositions, isSameNode */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "calculatePerimeterPositions", function() { return calculatePerimeterPositions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isSameNode", function() { return isSameNode; });
 var calculatePerimeterPositions = function calculatePerimeterPositions(nodeRadius, startX, startY, endX, endY) {
   var dx = endX - startX;
   var dy = endY - startY;
@@ -102699,6 +103545,9 @@ var calculatePerimeterPositions = function calculatePerimeterPositions(nodeRadiu
     endX: endX - radiusOverScaledHypotenuse * dx,
     endY: endY - radiusOverScaledHypotenuse * dy
   };
+};
+var isSameNode = function isSameNode(nodeA, nodeB) {
+  return nodeA === null || nodeB === null ? false : nodeA.nodeID === nodeB.nodeID;
 };
 
 /***/ }),
@@ -102733,6 +103582,19 @@ __webpack_require__.r(__webpack_exports__);
 react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_TreePlayer__WEBPACK_IMPORTED_MODULE_6__["default"], {
   algoGeneratorFunc: _tree_modules_binary_preorder__WEBPACK_IMPORTED_MODULE_7__["default"],
   startingNodes: [[[-1, true]], [[0, true], [0, false]], [[0, true], [1, true], [1, false]]]
+}), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodePlayer__WEBPACK_IMPORTED_MODULE_2__["CodePlayerNew"], {
+  scopeGeneratorFunc: _fibonacci__WEBPACK_IMPORTED_MODULE_3__["createFibonacciGenerator"],
+  functionInputObjs: [{
+    value: 7,
+    label: 'Fibonacci Number of',
+    type: 'number',
+    toValue: function toValue(val) {
+      return val.toString();
+    },
+    fromValue: function fromValue(val) {
+      return parseInt(val, 10);
+    }
+  }]
 }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CodePlayer__WEBPACK_IMPORTED_MODULE_2__["default"], {
   scopeGeneratorFunc: _fibonacci__WEBPACK_IMPORTED_MODULE_3__["default"],
   functionInputObjs: [{
@@ -102848,11 +103710,14 @@ factorialDemoContainer ? factorial(5) : null;
 /*!**********************************************************!*\
   !*** ./src/scripts/recursive_modules/fibonacci/index.js ***!
   \**********************************************************/
-/*! exports provided: default */
+/*! exports provided: default, createFibonacciGenerator */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createFibonacciGenerator", function() { return createFibonacciGenerator; });
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function scopeFibonacciGenerator(makeNode, addChild, addReturnValue) {
   return (
     /*#__PURE__*/
@@ -102913,6 +103778,70 @@ function scopeFibonacciGenerator(makeNode, addChild, addReturnValue) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (scopeFibonacciGenerator);
+function createFibonacciGenerator(makeNode) {
+  return (
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function fibonacciGenerator(parentNode, argValue) {
+      var _ref;
+
+      var node, nodeID, returnValue, fibOfArgValueMinusOne, fibOfArgValueMinusTwo;
+      return regeneratorRuntime.wrap(function fibonacciGenerator$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              node = makeNode([argValue]);
+              nodeID = node.nodeID;
+              _context2.next = 4;
+              return _ref = {}, _defineProperty(_ref, parentNode.nodeID, [{
+                isAddToParent: true,
+                parentNode: parentNode,
+                childNode: node
+              }]), _defineProperty(_ref, nodeID, [{
+                isSetLastAction: true
+              }]), _ref;
+
+            case 4:
+              if (!(argValue === 1 || argValue === 2)) {
+                _context2.next = 8;
+                break;
+              }
+
+              returnValue = 1;
+              _context2.next = 13;
+              break;
+
+            case 8:
+              return _context2.delegateYield(fibonacciGenerator(node, argValue - 1), "t0", 9);
+
+            case 9:
+              fibOfArgValueMinusOne = _context2.t0;
+              return _context2.delegateYield(fibonacciGenerator(node, argValue - 2), "t1", 11);
+
+            case 11:
+              fibOfArgValueMinusTwo = _context2.t1;
+              returnValue = fibOfArgValueMinusOne + fibOfArgValueMinusTwo;
+
+            case 13:
+              _context2.next = 15;
+              return _defineProperty({}, nodeID, [{
+                isAddReturnValue: true,
+                returnValue: returnValue
+              }, {
+                isSetLastAction: true
+              }]);
+
+            case 15:
+              return _context2.abrupt("return", returnValue);
+
+            case 16:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, fibonacciGenerator, this);
+    })
+  );
+}
 
 /***/ }),
 
@@ -102952,7 +103881,10 @@ function scopeLongestCommonSubstringGenerator(makeNode, addChild, addReturnValue
                         wordAInd = _args.length > 0 && _args[0] !== undefined ? _args[0] : 0;
                         wordBInd = _args.length > 1 && _args[1] !== undefined ? _args[1] : 0;
                         parentNode = _args.length > 2 && _args[2] !== undefined ? _args[2] : null;
-                        node = makeNode([wordAInd, wordBInd]);
+                        node = makeNode({
+                          wordAInd: wordAInd,
+                          wordBInd: wordBInd
+                        });
                         addChild(parentNode, node);
                         _context.next = 7;
                         return;

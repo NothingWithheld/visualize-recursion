@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
-import useNodes from '../../nodes/useNodes'
+import useNodes, { useNodesNew } from '../../nodes/useNodes'
+import { curry } from 'ramda'
 
 const useRecursionStepper = scopeGeneratorFunc => {
 	const { nodes, makeNode, resetNodes, addChild, addReturnValue } = useNodes()
@@ -85,3 +86,89 @@ const useRecursionStepper = scopeGeneratorFunc => {
 }
 
 export default useRecursionStepper
+
+export const useRecursionStepperNew = scopeGeneratorFunc => {
+	const {
+		treeRoot,
+		resetNodes,
+		isReset,
+		stepForward,
+		stepBackward,
+		setupNodes,
+		makeNode,
+		canStepForward,
+		canStepBackward,
+	} = useNodesNew()
+	const [delayMilliseconds, setDelayMilliseconds] = useState(500)
+	const [isStepping, setIsStepping] = useState(false)
+	const [stepFuncID, setStepFuncID] = useState(null)
+
+	useEffect(() => {
+		if (!isReset && canStepForward) {
+			stepForward()
+		}
+	}, [isReset, canStepForward, stepForward])
+
+	const latestCanStepForward = useRef(canStepForward)
+	useEffect(() => {
+		latestCanStepForward.current = canStepForward
+	}, [canStepForward])
+
+	const latestIsStepping = useRef(isStepping)
+	useEffect(() => {
+		latestIsStepping.current = isStepping
+
+		const initialClickTimerID = setTimeout(function stepFunc() {
+			if (!latestIsStepping.current || !latestCanStepForward.current) {
+				setIsStepping(false)
+				return
+			}
+
+			stepForward()
+			const recursiveTimerID = setTimeout(stepFunc, delayMilliseconds)
+			setStepFuncID(recursiveTimerID)
+		}, delayMilliseconds)
+		setStepFuncID(initialClickTimerID)
+	}, [isStepping, delayMilliseconds, stepForward])
+
+	const start = curry((andStartStepping, args, delayMilliseconds) => {
+		setupNodes(scopeGeneratorFunc(makeNode), args)
+		setDelayMilliseconds(delayMilliseconds)
+		if (andStartStepping) {
+			setIsStepping(true)
+		}
+	})
+
+	const play = () => {
+		if (canStepForward) {
+			setIsStepping(true)
+		}
+	}
+
+	const pause = () => {
+		setIsStepping(false)
+		clearTimeout(stepFuncID)
+	}
+
+	const reset = () => {
+		clearTimeout(stepFuncID)
+		setStepFuncID(null)
+		resetNodes()
+		setIsStepping(false)
+	}
+
+	return {
+		treeRoot,
+		play,
+		pause,
+		reset,
+		isStepping,
+		canStepForward,
+		canStepBackward,
+		stepForward,
+		stepBackward,
+		isReset,
+		start: start(true),
+		startAndStepOnce: start(false),
+	}
+}

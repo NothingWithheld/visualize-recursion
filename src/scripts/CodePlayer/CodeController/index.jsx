@@ -129,3 +129,109 @@ const CodeController = ({
 }
 
 export default CodeController
+
+export const CodeControllerNew = ({
+	play,
+	pause,
+	reset,
+	isStepping,
+	canStepForward,
+	canStepBackward,
+	stepForward,
+	stepBackward,
+	isReset,
+	start,
+	startAndStepOnce,
+	functionInputObjs,
+}) => {
+	const [delayMilliseconds, setDelayMilliseconds] = useState(500)
+	const [functionInputDetails, setFunctionInputDetails] = useState(
+		functionInputObjs
+	)
+
+	const functionArgs = functionInputDetails.map(
+		inputDetails => inputDetails.value
+	)
+
+	return (
+		<SpaceBetweenPaper>
+			<ButtonGroup variant="contained" size="large">
+				{isStepping ? (
+					<MinWidthButton disabled={!canStepForward} onClick={pause}>
+						PAUSE
+						<PauseIcon />
+					</MinWidthButton>
+				) : (
+					<MinWidthButton
+						disabled={!isReset && !canStepForward}
+						onClick={
+							!isReset ? play : () => start(functionArgs, delayMilliseconds)
+						}
+					>
+						PLAY
+						<PlayArrowIcon />
+					</MinWidthButton>
+				)}
+				<MinWidthButton
+					onClick={
+						!isReset
+							? stepForward
+							: () => startAndStepOnce(functionArgs, delayMilliseconds)
+					}
+					disabled={!isReset && (isStepping || !canStepForward)}
+				>
+					STEP FORWARD
+					<ForwardIcon />
+				</MinWidthButton>
+				<MinWidthButton
+					onClick={stepBackward}
+					disabled={isStepping || !canStepBackward}
+				>
+					STEP BACKWARD
+					<ForwardIcon />
+				</MinWidthButton>
+				<MinWidthButton onClick={reset} disabled={isStepping || isReset}>
+					RESET
+					<RefreshIcon />
+				</MinWidthButton>
+			</ButtonGroup>
+			<span>
+				{functionInputDetails.map((inputDetails, i) => {
+					const { value, label, type, toValue, fromValue } = inputDetails
+					return (
+						<TextField
+							type={type}
+							label={label}
+							value={fromValue ? fromValue(value) : value}
+							onChange={event => {
+								const updatedFunctionInputDetails = functionInputDetails.map(
+									(details, j) =>
+										i === j
+											? toValue
+												? { ...details, value: toValue(event.target.value) }
+												: { ...details, value: event.target.value }
+											: details
+								)
+
+								setFunctionInputDetails(updatedFunctionInputDetails)
+							}}
+							disabled={!isReset}
+							key={i}
+							variant="filled"
+						/>
+					)
+				})}
+				<TextField
+					type="number"
+					label="Delay (seconds)"
+					value={(delayMilliseconds / 1000).toString()}
+					onChange={event => {
+						setDelayMilliseconds(1000 * event.target.value)
+					}}
+					disabled={!isReset}
+					variant="filled"
+				/>
+			</span>
+		</SpaceBetweenPaper>
+	)
+}

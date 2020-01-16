@@ -9,7 +9,7 @@ function scopeLongestCommonSubstringGenerator(
 			wordBInd = 0,
 			parentNode = null
 		) {
-			const node = makeNode([wordAInd, wordBInd])
+			const node = makeNode({ wordAInd, wordBInd })
 			addChild(parentNode, node)
 			yield
 

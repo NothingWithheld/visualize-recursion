@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import CodePlayer from '../CodePlayer'
-import scopeFibonacciGenerator from './fibonacci'
+import CodePlayer, { CodePlayerNew } from '../CodePlayer'
+import scopeFibonacciGenerator, { createFibonacciGenerator } from './fibonacci'
 import scopeLCSGenerator from './longest_common_substring'
 import BinaryTreeBuilder from '../TreeBuilder/BinaryTreeBuilder'
 import TreePlayer from '../TreePlayer'
@@ -22,6 +22,18 @@ ReactDOM.render(
 					[1, true],
 					[1, false],
 				],
+			]}
+		/>
+		<CodePlayerNew
+			scopeGeneratorFunc={createFibonacciGenerator}
+			functionInputObjs={[
+				{
+					value: 7,
+					label: 'Fibonacci Number of',
+					type: 'number',
+					toValue: val => val.toString(),
+					fromValue: val => parseInt(val, 10),
+				},
 			]}
 		/>
 		<CodePlayer

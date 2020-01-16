@@ -24,3 +24,6 @@ export const calculatePerimeterPositions = (
 		endY: endY - radiusOverScaledHypotenuse * dy,
 	}
 }
+
+export const isSameNode = (nodeA, nodeB) =>
+	nodeA === null || nodeB === null ? false : nodeA.nodeID === nodeB.nodeID

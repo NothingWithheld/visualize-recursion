@@ -1,7 +1,9 @@
 import React from 'react'
-import useRecursionStepper from './useRecursionStepper'
-import CodeController from './CodeController'
-import RecursionCanvas from './RecursionCanvas'
+import useRecursionStepper, {
+	useRecursionStepperNew,
+} from './useRecursionStepper'
+import CodeController, { CodeControllerNew } from './CodeController'
+import RecursionCanvas, { RecursionCanvasNew } from './RecursionCanvas'
 
 const CodePlayer = ({ scopeGeneratorFunc, functionInputObjs }) => {
 	const {
@@ -37,3 +39,19 @@ const CodePlayer = ({ scopeGeneratorFunc, functionInputObjs }) => {
 }
 
 export default CodePlayer
+
+export const CodePlayerNew = ({ scopeGeneratorFunc, functionInputObjs }) => {
+	const { treeRoot, ...codeControllerProps } = useRecursionStepperNew(
+		scopeGeneratorFunc
+	)
+
+	return (
+		<>
+			<CodeControllerNew
+				{...codeControllerProps}
+				functionInputObjs={functionInputObjs}
+			/>
+			<RecursionCanvasNew treeRoot={treeRoot} />
+		</>
+	)
+}
