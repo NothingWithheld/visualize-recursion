@@ -100679,6 +100679,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var FunctionCallNode = function FunctionCallNode(_ref) {
   var x = _ref.x,
       y = _ref.y,
@@ -100713,13 +100714,14 @@ var FunctionCallNode = function FunctionCallNode(_ref) {
     openExtraDetails(x, y);
   };
 
+  var functionHasNotReturned = returnValue === _nodes_constants__WEBPACK_IMPORTED_MODULE_2__["hasNotReturned"];
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Group"], {
     x: x,
     y: y
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Circle"], {
     radius: _nodes_constants__WEBPACK_IMPORTED_MODULE_2__["nodeRadius"],
     fill: "#F0F4F8",
-    stroke: lastAction ? '#B990FF' : returnValue === null ? '#FADB5F' : '#BCCCDC',
+    stroke: lastAction ? '#B990FF' : functionHasNotReturned ? '#FADB5F' : '#BCCCDC',
     strokeWidth: 5,
     ref: circleRef,
     onClick: handleClick
@@ -100736,12 +100738,12 @@ var FunctionCallNode = function FunctionCallNode(_ref) {
     stroke: "#BCCCDC",
     width: 1
   }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_konva__WEBPACK_IMPORTED_MODULE_1__["Text"], {
-    text: returnValue !== null ? returnValue.toString() : 'waiting',
+    text: functionHasNotReturned ? 'waiting' : returnValue.toString(),
     x: -returnValueWidth / 2,
     y: 12,
     fontStyle: "bold",
     fontFamily: "Roboto",
-    fontSize: returnValue === null ? 14 : 18,
+    fontSize: functionHasNotReturned ? 14 : 18,
     ref: returnValueWidthCallback
   }));
 };
@@ -103293,7 +103295,7 @@ var addReturnValue = Object(ramda__WEBPACK_IMPORTED_MODULE_0__["curry"])(functio
 
 var removeReturnValue = function removeReturnValue(node) {
   return _objectSpread({}, node, {
-    returnVal: _constants__WEBPACK_IMPORTED_MODULE_2__["hasNotReturned"]
+    returnValue: _constants__WEBPACK_IMPORTED_MODULE_2__["hasNotReturned"]
   });
 };
 
@@ -103349,12 +103351,6 @@ var functionProgressReducer = function functionProgressReducer(state, action) {
                 events = _ref2[1];
 
             return [nodeID, events.reduce(function (updateFunc, event) {
-              console.log({
-                nodeID: nodeID,
-                event: event,
-                events: events
-              });
-
               if (event.isAddToParent) {
                 if (nodeID === _constants__WEBPACK_IMPORTED_MODULE_2__["noParentNode"]) return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(setLastAction, function () {
                   return event.childNode;
@@ -103368,11 +103364,7 @@ var functionProgressReducer = function functionProgressReducer(state, action) {
 
               throw new Error('no event type');
             }, ramda__WEBPACK_IMPORTED_MODULE_0__["identity"])];
-          }); // console.log({
-          // 	updateFuncsForEvents,
-          // 	something: updateFuncsForEvents[0][1](),
-          // })
-
+          });
           return Object.fromEntries(updateFuncsForEvents);
         })), [{}]);
         var backwardUpdateFuncs = [{}, {}].concat(_toConsumableArray(nodeEvents.map(function (eventObj) {
@@ -103383,9 +103375,9 @@ var functionProgressReducer = function functionProgressReducer(state, action) {
 
             return [nodeID, events.reduce(function (updateFunc, event) {
               if (event.isAddToParent) {
-                if (event.parentNode === null) return function () {
+                if (nodeID === _constants__WEBPACK_IMPORTED_MODULE_2__["noParentNode"]) return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(function () {
                   return null;
-                };
+                }, updateFunc);
                 return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(removeChildFromParent(event.childNode), updateFunc);
               } else if (event.isAddReturnValue) {
                 return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(removeReturnValue, updateFunc);
@@ -103421,9 +103413,6 @@ var functionProgressReducer = function functionProgressReducer(state, action) {
 
         var updateFuncs = _forwardUpdateFuncs[curIndex];
         var updatedTreeRoot = handleTreeUpdates(updateFuncs, treeRoot);
-        console.log({
-          updatedTreeRoot: updatedTreeRoot
-        });
         var updatedIndex = curIndex + 1;
         return _objectSpread({}, state, {
           curIndex: updatedIndex,
@@ -103439,8 +103428,11 @@ var functionProgressReducer = function functionProgressReducer(state, action) {
             _backwardUpdateFuncs = state.backwardUpdateFuncs,
             _curIndex = state.curIndex,
             _treeRoot = state.treeRoot;
+        console.log({
+          state: state
+        });
 
-        if (_curIndex >= _backwardUpdateFuncs.length || _curIndex - 2 < 0 || _curIndex - 2 < _forwardUpdateFuncs2.length) {
+        if (_curIndex >= _backwardUpdateFuncs.length || _curIndex - 2 < 0 || _curIndex - 2 >= _forwardUpdateFuncs2.length) {
           throw new Error('cannot step backward');
         }
 
@@ -103471,7 +103463,7 @@ var getMakeNodeFunc = function getMakeNodeFunc() {
     var node = {
       nodeID: counter,
       args: args,
-      returnValue: null,
+      returnValue: _constants__WEBPACK_IMPORTED_MODULE_2__["hasNotReturned"],
       children: []
     };
     counter += 1;

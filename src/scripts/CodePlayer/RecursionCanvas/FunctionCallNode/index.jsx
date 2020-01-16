@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import { Group, Circle, Text, Line } from 'react-konva'
 import { nodeRadius } from '../../../nodes/constants'
 import useKonvaTextWidth from '../../../Konva/useKonvaTextWidth'
+import { hasNotReturned } from '../../../nodes/constants'
 
 const FunctionCallNode = ({
 	x,
@@ -26,13 +27,19 @@ const FunctionCallNode = ({
 		openExtraDetails(x, y)
 	}
 
+	const functionHasNotReturned = returnValue === hasNotReturned
+
 	return (
 		<Group x={x} y={y}>
 			<Circle
 				radius={nodeRadius}
 				fill="#F0F4F8"
 				stroke={
-					lastAction ? '#B990FF' : returnValue === null ? '#FADB5F' : '#BCCCDC'
+					lastAction
+						? '#B990FF'
+						: functionHasNotReturned
+						? '#FADB5F'
+						: '#BCCCDC'
 				}
 				strokeWidth={5}
 				ref={circleRef}
@@ -49,12 +56,12 @@ const FunctionCallNode = ({
 			/>
 			<Line points={[-10, 0, 10, 0]} stroke="#BCCCDC" width={1} />
 			<Text
-				text={returnValue !== null ? returnValue.toString() : 'waiting'}
+				text={functionHasNotReturned ? 'waiting' : returnValue.toString()}
 				x={-returnValueWidth / 2}
 				y={12}
 				fontStyle="bold"
 				fontFamily="Roboto"
-				fontSize={returnValue === null ? 14 : 18}
+				fontSize={functionHasNotReturned ? 14 : 18}
 				ref={returnValueWidthCallback}
 			/>
 		</Group>

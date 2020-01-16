@@ -41,7 +41,7 @@ const removeChildFromParent = curry((childToRemove, parent) => ({
 
 const addReturnValue = curry((returnValue, node) => ({ ...node, returnValue }))
 
-const removeReturnValue = node => ({ ...node, returnVal: hasNotReturned })
+const removeReturnValue = node => ({ ...node, returnValue: hasNotReturned })
 
 const addVariableDetails = curry((variableDetails, node) => ({
 	...node,
@@ -94,7 +94,6 @@ export const functionProgressReducer = (state, action) => {
 						([nodeID, events]) => [
 							nodeID,
 							events.reduce((updateFunc, event) => {
-								console.log({ nodeID, event, events })
 								if (event.isAddToParent) {
 									if (nodeID === noParentNode)
 										return compose(
@@ -118,10 +117,7 @@ export const functionProgressReducer = (state, action) => {
 							}, identity),
 						]
 					)
-					// console.log({
-					// 	updateFuncsForEvents,
-					// 	something: updateFuncsForEvents[0][1](),
-					// })
+
 					return Object.fromEntries(updateFuncsForEvents)
 				}),
 				{},
@@ -136,7 +132,8 @@ export const functionProgressReducer = (state, action) => {
 							nodeID,
 							events.reduce((updateFunc, event) => {
 								if (event.isAddToParent) {
-									if (event.parentNode === null) return () => null
+									if (nodeID === noParentNode)
+										return compose(() => null, updateFunc)
 
 									return compose(
 										removeChildFromParent(event.childNode),
@@ -175,7 +172,6 @@ export const functionProgressReducer = (state, action) => {
 
 			const updateFuncs = forwardUpdateFuncs[curIndex]
 			const updatedTreeRoot = handleTreeUpdates(updateFuncs, treeRoot)
-			console.log({ updatedTreeRoot })
 			const updatedIndex = curIndex + 1
 
 			return {
@@ -194,10 +190,12 @@ export const functionProgressReducer = (state, action) => {
 				treeRoot,
 			} = state
 
+			console.log({ state })
+
 			if (
 				curIndex >= backwardUpdateFuncs.length ||
 				curIndex - 2 < 0 ||
-				curIndex - 2 < forwardUpdateFuncs.length
+				curIndex - 2 >= forwardUpdateFuncs.length
 			) {
 				throw new Error('cannot step backward')
 			}
@@ -234,7 +232,7 @@ export const getMakeNodeFunc = (counter = 0) => {
 		const node = {
 			nodeID: counter,
 			args,
-			returnValue: null,
+			returnValue: hasNotReturned,
 			children: [],
 		}
 
