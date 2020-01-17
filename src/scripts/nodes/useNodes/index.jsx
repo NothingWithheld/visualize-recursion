@@ -118,7 +118,6 @@ export const useNodesNew = () => {
 
 	const { treeRoot, isReset, canStepForward, canStepBackward } = nodeState
 	const [drawnTree, setDrawnTree] = useState(treeRoot && drawTree(treeRoot))
-	console.log({ treeRoot, drawnTree, isReset, nodeState })
 
 	useEffect(() => setDrawnTree(treeRoot && drawTree(treeRoot)), [treeRoot])
 

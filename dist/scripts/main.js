@@ -102935,12 +102935,6 @@ var useNodesNew = function useNodesNew() {
       drawnTree = _useState8[0],
       setDrawnTree = _useState8[1];
 
-  console.log({
-    treeRoot: treeRoot,
-    drawnTree: drawnTree,
-    isReset: isReset,
-    nodeState: nodeState
-  });
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     return setDrawnTree(treeRoot && Object(_tree_drawing_reingold_tilford__WEBPACK_IMPORTED_MODULE_1__["default"])(treeRoot));
   }, [treeRoot]);
@@ -103246,15 +103240,9 @@ var unsetLastAction = function unsetLastAction(node) {
 };
 
 var updateTree = function updateTree(updateFuncs, node) {
-  console.log({
-    node: node
-  });
   if (node === null) return null;
   var updateFunc = updateFuncs[node.nodeID] || unsetLastAction;
   var updatedNode = updateFunc(node);
-  console.log({
-    updatedNode: updatedNode
-  });
   var updatedChildren = updatedNode.children.map(function (child) {
     return updateTree(updateFuncs, child);
   });
@@ -103264,11 +103252,6 @@ var updateTree = function updateTree(updateFuncs, node) {
 };
 
 var handleTreeUpdates = Object(ramda__WEBPACK_IMPORTED_MODULE_0__["curry"])(function (updateFuncs, treeRoot) {
-  console.log({
-    treeRoot: treeRoot,
-    updateFuncs: updateFuncs
-  });
-
   if (updateFuncs[_constants__WEBPACK_IMPORTED_MODULE_2__["noParentNode"]]) {
     return updateFuncs[_constants__WEBPACK_IMPORTED_MODULE_2__["noParentNode"]]();
   }
@@ -103339,11 +103322,6 @@ var functionProgressReducer = function functionProgressReducer(state, action) {
           nodeID: _constants__WEBPACK_IMPORTED_MODULE_2__["noParentNode"]
         }].concat(_toConsumableArray(args))));
 
-        console.log({
-          state: state,
-          action: action,
-          nodeEvents: nodeEvents
-        });
         var forwardUpdateFuncs = [{}].concat(_toConsumableArray(nodeEvents.map(function (eventObj) {
           var updateFuncsForEvents = Object.entries(eventObj).map(function (_ref) {
             var _ref2 = _slicedToArray(_ref, 2),
@@ -103417,7 +103395,7 @@ var functionProgressReducer = function functionProgressReducer(state, action) {
         return _objectSpread({}, state, {
           curIndex: updatedIndex,
           treeRoot: updatedTreeRoot,
-          canStepForward: curIndex + 1 < _forwardUpdateFuncs.length,
+          canStepForward: updatedIndex + 1 < _forwardUpdateFuncs.length,
           canStepBackward: true
         });
       }
@@ -103428,9 +103406,6 @@ var functionProgressReducer = function functionProgressReducer(state, action) {
             _backwardUpdateFuncs = state.backwardUpdateFuncs,
             _curIndex = state.curIndex,
             _treeRoot = state.treeRoot;
-        console.log({
-          state: state
-        });
 
         if (_curIndex >= _backwardUpdateFuncs.length || _curIndex - 2 < 0 || _curIndex - 2 >= _forwardUpdateFuncs2.length) {
           throw new Error('cannot step backward');
@@ -103449,7 +103424,7 @@ var functionProgressReducer = function functionProgressReducer(state, action) {
           curIndex: _updatedIndex,
           treeRoot: _updatedTreeRoot,
           canStepForward: true,
-          canStepBackward: _curIndex - 2 >= 0
+          canStepBackward: _updatedIndex - 2 >= 0
         });
       }
 

@@ -7,12 +7,10 @@ const setLastAction = node => ({ ...node, lastAction: true })
 const unsetLastAction = node => ({ ...node, lastAction: false })
 
 const updateTree = (updateFuncs, node) => {
-	console.log({ node })
 	if (node === null) return null
 
 	const updateFunc = updateFuncs[node.nodeID] || unsetLastAction
 	const updatedNode = updateFunc(node)
-	console.log({ updatedNode })
 	const updatedChildren = updatedNode.children.map(child =>
 		updateTree(updateFuncs, child)
 	)
@@ -21,7 +19,6 @@ const updateTree = (updateFuncs, node) => {
 }
 
 const handleTreeUpdates = curry((updateFuncs, treeRoot) => {
-	console.log({ treeRoot, updateFuncs })
 	if (updateFuncs[noParentNode]) {
 		return updateFuncs[noParentNode]()
 	}
@@ -85,7 +82,6 @@ export const functionProgressReducer = (state, action) => {
 			}
 			const { args, generatorFunc } = action
 			const nodeEvents = [...generatorFunc({ nodeID: noParentNode }, ...args)]
-			console.log({ state, action, nodeEvents })
 
 			const forwardUpdateFuncs = [
 				{},
@@ -178,7 +174,7 @@ export const functionProgressReducer = (state, action) => {
 				...state,
 				curIndex: updatedIndex,
 				treeRoot: updatedTreeRoot,
-				canStepForward: curIndex + 1 < forwardUpdateFuncs.length,
+				canStepForward: updatedIndex + 1 < forwardUpdateFuncs.length,
 				canStepBackward: true,
 			}
 		}
@@ -189,8 +185,6 @@ export const functionProgressReducer = (state, action) => {
 				curIndex,
 				treeRoot,
 			} = state
-
-			console.log({ state })
 
 			if (
 				curIndex >= backwardUpdateFuncs.length ||
@@ -219,7 +213,7 @@ export const functionProgressReducer = (state, action) => {
 				curIndex: updatedIndex,
 				treeRoot: updatedTreeRoot,
 				canStepForward: true,
-				canStepBackward: curIndex - 2 >= 0,
+				canStepBackward: updatedIndex - 2 >= 0,
 			}
 		}
 		default:
