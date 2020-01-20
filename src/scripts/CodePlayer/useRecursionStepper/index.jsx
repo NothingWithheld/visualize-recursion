@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import useNodes, { useNodesNew } from '../../nodes/useNodes'
 import { curry } from 'ramda'
+import { usePrevious } from '../../utils'
 
 const useRecursionStepper = scopeGeneratorFunc => {
 	const { nodes, makeNode, resetNodes, addChild, addReturnValue } = useNodes()
@@ -99,15 +100,17 @@ export const useRecursionStepperNew = scopeGeneratorFunc => {
 		canStepForward,
 		canStepBackward,
 	} = useNodesNew()
+	const previousIsReset = usePrevious(isReset)
 	const [delayMilliseconds, setDelayMilliseconds] = useState(500)
 	const [isStepping, setIsStepping] = useState(false)
 	const [stepFuncID, setStepFuncID] = useState(null)
 
+	// immediately step once on first start/play
 	useEffect(() => {
-		if (!isReset && canStepForward) {
+		if (!isReset && previousIsReset === true && canStepForward) {
 			stepForward()
 		}
-	}, [isReset, canStepForward, stepForward])
+	}, [isReset, previousIsReset, canStepForward, stepForward])
 
 	const latestCanStepForward = useRef(canStepForward)
 	useEffect(() => {

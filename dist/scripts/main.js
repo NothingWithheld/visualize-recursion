@@ -101031,6 +101031,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _nodes_useNodes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../nodes/useNodes */ "./src/scripts/nodes/useNodes/index.jsx");
 /* harmony import */ var ramda__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ramda */ "./node_modules/ramda/es/index.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../utils */ "./src/scripts/utils/index.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
@@ -101038,6 +101039,7 @@ function _nonIterableRest() { throw new TypeError("Invalid attempt to destructur
 function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -101169,6 +101171,8 @@ var useRecursionStepperNew = function useRecursionStepperNew(scopeGeneratorFunc)
       canStepForward = _useNodesNew.canStepForward,
       canStepBackward = _useNodesNew.canStepBackward;
 
+  var previousIsReset = Object(_utils__WEBPACK_IMPORTED_MODULE_3__["usePrevious"])(isReset);
+
   var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(500),
       _useState12 = _slicedToArray(_useState11, 2),
       delayMilliseconds = _useState12[0],
@@ -101182,13 +101186,14 @@ var useRecursionStepperNew = function useRecursionStepperNew(scopeGeneratorFunc)
   var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null),
       _useState16 = _slicedToArray(_useState15, 2),
       stepFuncID = _useState16[0],
-      setStepFuncID = _useState16[1];
+      setStepFuncID = _useState16[1]; // immediately step once on first start/play
+
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    if (!isReset && canStepForward) {
+    if (!isReset && previousIsReset === true && canStepForward) {
       stepForward();
     }
-  }, [isReset, canStepForward, stepForward]);
+  }, [isReset, previousIsReset, canStepForward, stepForward]);
   var latestCanStepForward = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(canStepForward);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     latestCanStepForward.current = canStepForward;
@@ -103969,6 +103974,29 @@ function preorderGenerator(node) {
     }
   }, _marked, this);
 }
+
+/***/ }),
+
+/***/ "./src/scripts/utils/index.js":
+/*!************************************!*\
+  !*** ./src/scripts/utils/index.js ***!
+  \************************************/
+/*! exports provided: usePrevious */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "usePrevious", function() { return usePrevious; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+var usePrevious = function usePrevious(value) {
+  var ref = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])();
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    ref.current = value;
+  });
+  return ref.current;
+};
 
 /***/ })
 
