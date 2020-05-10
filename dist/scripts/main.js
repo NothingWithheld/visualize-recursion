@@ -103339,6 +103339,8 @@ var functionProgressReducer = function functionProgressReducer(state, action) {
                   return event.childNode;
                 }, updateFunc);
                 return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(unsetLastAction, addChildToParent(event.childNode), updateFunc);
+              } else if (event.isAddVariableDetails) {
+                return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(addVariableDetails(event.variableDetails), updateFunc);
               } else if (event.isAddReturnValue) {
                 return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(addReturnValue(event.returnValue), updateFunc);
               } else if (event.isSetLastAction) {
@@ -103362,6 +103364,8 @@ var functionProgressReducer = function functionProgressReducer(state, action) {
                   return null;
                 }, updateFunc);
                 return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(removeChildFromParent(event.childNode), updateFunc);
+              } else if (event.isAddVariableDetails) {
+                return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(revertVariableDetails(event.variableDetails), updateFunc);
               } else if (event.isAddReturnValue) {
                 return Object(ramda__WEBPACK_IMPORTED_MODULE_0__["compose"])(removeReturnValue, updateFunc);
               } else if (event.isSetLastAction) {
@@ -103761,7 +103765,9 @@ function createFibonacciGenerator(makeNode) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              node = makeNode([argValue]);
+              node = makeNode({
+                argValue: argValue
+              });
               nodeID = node.nodeID;
               _context2.next = 4;
               return _ref = {}, _defineProperty(_ref, parentNode.nodeID, [{
@@ -103821,11 +103827,14 @@ function createFibonacciGenerator(makeNode) {
 /*!*************************************************************************!*\
   !*** ./src/scripts/recursive_modules/longest_common_substring/index.js ***!
   \*************************************************************************/
-/*! exports provided: default */
+/*! exports provided: default, getLongestCommonSubsequenceGenerator */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLongestCommonSubsequenceGenerator", function() { return getLongestCommonSubsequenceGenerator; });
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function scopeLongestCommonSubstringGenerator(makeNode, addChild, addReturnValue) {
   return (
     /*#__PURE__*/
@@ -103928,6 +103937,40 @@ function scopeLongestCommonSubstringGenerator(makeNode, addChild, addReturnValue
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (scopeLongestCommonSubstringGenerator);
+function getLongestCommonSubsequenceGenerator(makeNode, textA, textB) {
+  return (
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function lcsGenerator(parentNode, textAInd, textBInd) {
+      var _ref2;
+
+      var node, nodeID;
+      return regeneratorRuntime.wrap(function lcsGenerator$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              node = makeNode({
+                textAInd: textAInd,
+                textBInd: textBInd
+              });
+              nodeID = node.nodeID;
+              _context3.next = 4;
+              return _ref2 = {}, _defineProperty(_ref2, parentNode.nodeID, [{
+                isAddToParent: true,
+                parentNode: parentNode,
+                childNode: node
+              }]), _defineProperty(_ref2, nodeID, [{
+                isSetLastAction: true
+              }]), _ref2;
+
+            case 4:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, lcsGenerator, this);
+    })
+  );
+}
 
 /***/ }),
 

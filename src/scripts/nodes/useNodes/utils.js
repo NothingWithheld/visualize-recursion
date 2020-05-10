@@ -103,6 +103,11 @@ export const functionProgressReducer = (state, action) => {
 										addChildToParent(event.childNode),
 										updateFunc
 									)
+								} else if (event.isAddVariableDetails) {
+									return compose(
+										addVariableDetails(event.variableDetails),
+										updateFunc
+									)
 								} else if (event.isAddReturnValue) {
 									return compose(addReturnValue(event.returnValue), updateFunc)
 								} else if (event.isSetLastAction) {
@@ -133,6 +138,11 @@ export const functionProgressReducer = (state, action) => {
 
 									return compose(
 										removeChildFromParent(event.childNode),
+										updateFunc
+									)
+								} else if (event.isAddVariableDetails) {
+									return compose(
+										revertVariableDetails(event.variableDetails),
 										updateFunc
 									)
 								} else if (event.isAddReturnValue) {

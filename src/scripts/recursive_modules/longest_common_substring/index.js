@@ -51,3 +51,16 @@ function scopeLongestCommonSubstringGenerator(
 }
 
 export default scopeLongestCommonSubstringGenerator
+
+export function getLongestCommonSubsequenceGenerator(makeNode, textA, textB) {
+	return function* lcsGenerator(parentNode, textAInd, textBInd) {
+		const node = makeNode({ textAInd, textBInd })
+		const { nodeID } = node
+		yield {
+			[parentNode.nodeID]: [
+				{ isAddToParent: true, parentNode, childNode: node },
+			],
+			[nodeID]: [{ isSetLastAction: true }],
+		}
+	}
+}

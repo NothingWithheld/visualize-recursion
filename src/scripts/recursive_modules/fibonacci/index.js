@@ -30,7 +30,7 @@ export default scopeFibonacciGenerator
 
 export function createFibonacciGenerator(makeNode) {
 	return function* fibonacciGenerator(parentNode, argValue) {
-		const node = makeNode([argValue])
+		const node = makeNode({ argValue })
 		const { nodeID } = node
 		yield {
 			[parentNode.nodeID]: [
