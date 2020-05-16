@@ -49,7 +49,7 @@ const CodeController = ({
 	)
 
 	const functionArgs = functionInputDetails.map(
-		inputDetails => inputDetails.value
+		(inputDetails) => inputDetails.value
 	)
 
 	return (
@@ -95,7 +95,7 @@ const CodeController = ({
 							type={type}
 							label={label}
 							value={fromValue ? fromValue(value) : value}
-							onChange={event => {
+							onChange={(event) => {
 								const updatedFunctionInputDetails = functionInputDetails.map(
 									(details, j) =>
 										i === j
@@ -117,7 +117,7 @@ const CodeController = ({
 					type="number"
 					label="Delay (seconds)"
 					value={(delayMilliseconds / 1000).toString()}
-					onChange={event => {
+					onChange={(event) => {
 						setDelayMilliseconds(1000 * event.target.value)
 					}}
 					disabled={isStepping}
@@ -150,7 +150,7 @@ export const CodeControllerNew = ({
 	)
 
 	const functionArgs = functionInputDetails.map(
-		inputDetails => inputDetails.value
+		(inputDetails) => inputDetails.value
 	)
 
 	return (
@@ -203,7 +203,7 @@ export const CodeControllerNew = ({
 							type={type}
 							label={label}
 							value={fromValue ? fromValue(value) : value}
-							onChange={event => {
+							onChange={(event) => {
 								const updatedFunctionInputDetails = functionInputDetails.map(
 									(details, j) =>
 										i === j
@@ -225,7 +225,7 @@ export const CodeControllerNew = ({
 					type="number"
 					label="Delay (seconds)"
 					value={(delayMilliseconds / 1000).toString()}
-					onChange={event => {
+					onChange={(event) => {
 						setDelayMilliseconds(1000 * event.target.value)
 					}}
 					disabled={!isReset}
