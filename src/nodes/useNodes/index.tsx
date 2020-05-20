@@ -1,41 +1,62 @@
-import { useState, useRef, useEffect, useReducer, useCallback } from 'react'
+import { useState, useEffect, useReducer, useCallback } from 'react'
 import drawTree from '../tree_drawing/reingold_tilford'
 import {
 	getMakeNodeFunc,
 	functionProgressReducer,
 	defaultFunctionProgressState,
+	FunctionProgressActions,
+	NodeGeneratorFunc,
+	MakeNodeFunc,
 } from './utils'
+import { map, Option } from 'fp-ts/es6/Option'
+import { FuncNode } from '../types'
 
-export const useNodes = () => {
+interface UseNodesReturn {
+	readonly setupNodes: (generatorFunc: NodeGeneratorFunc, args: any[]) => void
+	readonly stepForward: () => void
+	readonly stepBackward: () => void
+	readonly resetNodes: () => void
+	readonly makeNode: MakeNodeFunc
+	readonly treeRoot: Option<FuncNode>
+	readonly isReset: boolean
+	readonly canStepForward: boolean
+	readonly canStepBackward: boolean
+}
+
+export const useNodes = (): UseNodesReturn => {
 	const [makeNode, setMakeNode] = useState(() => getMakeNodeFunc())
 	const [nodeState, nodeDispatch] = useReducer(
 		functionProgressReducer,
 		defaultFunctionProgressState
 	)
 
-	const { treeRoot, isReset, canStepForward, canStepBackward } = nodeState
-	const [drawnTree, setDrawnTree] = useState(treeRoot && drawTree(treeRoot))
+	const { sentry, isReset, canStepForward, canStepBackward } = nodeState
+	const [drawnTree, setDrawnTree] = useState(map(drawTree)(sentry.tree))
 
-	useEffect(() => setDrawnTree(treeRoot && drawTree(treeRoot)), [treeRoot])
+	useEffect(() => setDrawnTree(map(drawTree)(sentry.tree)), [sentry])
 
 	const setupNodes = useCallback(
-		(generatorFunc, args) =>
-			nodeDispatch({ type: 'setup', generatorFunc, args }),
+		(generatorFunc: NodeGeneratorFunc, args: any[]) =>
+			nodeDispatch({
+				type: FunctionProgressActions.Setup,
+				generatorFunc,
+				args,
+			}),
 		[]
 	)
 
 	const stepForward = useCallback(
-		() => nodeDispatch({ type: 'stepForward' }),
+		() => nodeDispatch({ type: FunctionProgressActions.StepForward }),
 		[]
 	)
 
 	const stepBackward = useCallback(
-		() => nodeDispatch({ type: 'stepBackward' }),
+		() => nodeDispatch({ type: FunctionProgressActions.StepBackward }),
 		[]
 	)
 
 	const resetNodes = useCallback(() => {
-		nodeDispatch({ type: 'reset' })
+		nodeDispatch({ type: FunctionProgressActions.Reset })
 		setMakeNode(() => getMakeNodeFunc())
 	}, [])
 

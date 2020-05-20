@@ -137,13 +137,6 @@ export const defaultFunctionProgressState: FunctionProgressState = {
 	canStepBackward: false,
 }
 
-export enum FunctionProgressActions {
-	Reset = 'RESET',
-	Setup = 'SETUP',
-	StepForward = 'STEP_FORWARD',
-	StepBackward = 'STEP_BACKWARD',
-}
-
 enum FunctionProgressSteps {
 	AddChild = 'ADD_CHILD',
 	LastAction = 'LAST_ACTION',
@@ -217,14 +210,41 @@ export function getAddVariableDetailsStepEvent(
 	}
 }
 
-interface FunctionProgressAction {
-	readonly type: FunctionProgressActions
-	readonly args: any[]
-	readonly generatorFunc: (
-		sentry: SentryNode,
-		...args: any[]
-	) => Iterable<FunctionProgressStepDetails[]>
+export enum FunctionProgressActions {
+	Reset = 'RESET',
+	Setup = 'SETUP',
+	StepForward = 'STEP_FORWARD',
+	StepBackward = 'STEP_BACKWARD',
 }
+
+interface ResetAction {
+	readonly type: FunctionProgressActions.Reset
+}
+
+export type NodeGeneratorFunc = (
+	sentry: SentryNode,
+	...args: any[]
+) => Iterable<FunctionProgressStepDetails[]>
+
+interface SetupAction {
+	readonly type: FunctionProgressActions.Setup
+	readonly args: any[]
+	readonly generatorFunc: NodeGeneratorFunc
+}
+
+interface StepForwardAction {
+	readonly type: FunctionProgressActions.StepForward
+}
+
+interface StepBackwardAction {
+	readonly type: FunctionProgressActions.StepBackward
+}
+
+type FunctionProgressAction =
+	| ResetAction
+	| SetupAction
+	| StepForwardAction
+	| StepBackwardAction
 
 const getForwardUpdateFuncs = (
 	nodeEvents: FunctionProgressStepDetails[]
@@ -424,11 +444,13 @@ export const functionProgressReducer = (
 			}
 		}
 		default:
-			throw new Error('no correct action type specified')
+			assertNever(action)
 	}
 }
 
-export const getMakeNodeFunc = (counter = 0): ((args: any[]) => FuncNode) => {
+export type MakeNodeFunc = (args: any[]) => FuncNode
+
+export const getMakeNodeFunc = (counter = 0): MakeNodeFunc => {
 	return (args: any[]): FuncNode => {
 		const node = {
 			nodeID: counter,
