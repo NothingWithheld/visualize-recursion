@@ -1,94 +1,29 @@
 import { useState, useEffect, useRef } from 'react'
-import useNodes, { useNodesNew } from '../../nodes/useNodes'
+import useNodes from '../../nodes/useNodes'
 import { curry } from 'ramda'
 import { usePrevious } from '../../utils'
+import { MakeNodeFunc, NodeGeneratorFunc } from '../../nodes/useNodes/utils'
+import { Option } from 'fp-ts/es6/Option'
+import { FuncNode } from '../../nodes/types'
 
-const useRecursionStepper = (scopeGeneratorFunc) => {
-	const { nodes, makeNode, resetNodes, addChild, addReturnValue } = useNodes()
-	const generatorFunc = scopeGeneratorFunc(makeNode, addChild, addReturnValue)
-	const [delayMilliseconds, setDelayMilliseconds] = useState(500)
-	const [generator, setGenerator] = useState(null)
-	const [isStepping, setIsStepping] = useState(false)
-	const [isCompleted, setIsCompleted] = useState(false)
-	const [stepFuncID, setStepFuncID] = useState(null)
-
-	const stepOnce = (generatorArg) => {
-		const iteratorRes = generatorArg.next()
-		if (iteratorRes.done) {
-			setIsCompleted(true)
-			setIsStepping(false)
-		}
-	}
-
-	const handleStepOnce = () => {
-		if (isCompleted || !generator) return
-
-		stepOnce(generator)
-	}
-
-	const startGenerator = (startAndStepOnce) => (delay, ...args) => {
-		setDelayMilliseconds(delay)
-		const createdGenerator = generatorFunc(...args)
-		setGenerator(createdGenerator)
-
-		if (startAndStepOnce) {
-			stepOnce(createdGenerator)
-		} else {
-			setIsStepping(true)
-		}
-	}
-
-	const latestIsStepping = useRef(isStepping)
-	useEffect(() => {
-		latestIsStepping.current = isStepping
-
-		const initialClickTimerID = setTimeout(function stepFunc() {
-			if (!latestIsStepping.current) return
-
-			handleStepOnce()
-			const recursiveTimerID = setTimeout(stepFunc, delayMilliseconds)
-			setStepFuncID(recursiveTimerID)
-		}, 0)
-		setStepFuncID(initialClickTimerID)
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isStepping])
-
-	const play = () => {
-		if (!isCompleted) {
-			setIsStepping(true)
-		}
-	}
-
-	const pause = () => {
-		setIsStepping(false)
-	}
-
-	const reset = () => {
-		clearTimeout(stepFuncID)
-		setStepFuncID(null)
-		resetNodes()
-		setGenerator(null)
-		setIsStepping(false)
-		setIsCompleted(false)
-	}
-
-	return {
-		nodes,
-		play,
-		pause,
-		reset,
-		isStepping,
-		isCompleted,
-		isStarted: generator !== null,
-		start: startGenerator(false),
-		startAndStepOnce: startGenerator(true),
-		step: handleStepOnce,
-	}
+interface UseRecursionStepperReturn {
+	readonly treeRoot: Option<FuncNode>
+	readonly play: () => void
+	readonly pause: () => void
+	readonly reset: () => void
+	readonly isStepping: boolean
+	readonly canStepForward: boolean
+	readonly canStepBackward: boolean
+	readonly stepForward: () => void
+	readonly stepBackward: () => void
+	readonly isReset: boolean
+	readonly start: (args: any[], delayMilliseconds: number) => void
+	readonly startAndStepOnce: (args: any[], delayMilliseconds: number) => void
 }
 
-export default useRecursionStepper
-
-export const useRecursionStepperNew = (scopeGeneratorFunc) => {
+export const useRecursionStepper = (
+	scopeGeneratorFunc: (makeNode: MakeNodeFunc) => NodeGeneratorFunc
+): UseRecursionStepperReturn => {
 	const {
 		treeRoot,
 		resetNodes,
@@ -99,11 +34,11 @@ export const useRecursionStepperNew = (scopeGeneratorFunc) => {
 		makeNode,
 		canStepForward,
 		canStepBackward,
-	} = useNodesNew()
+	} = useNodes()
 	const previousIsReset = usePrevious(isReset)
 	const [delayMilliseconds, setDelayMilliseconds] = useState(500)
 	const [isStepping, setIsStepping] = useState(false)
-	const [stepFuncID, setStepFuncID] = useState(null)
+	const [stepFuncID, setStepFuncID] = useState<number | undefined>(undefined)
 
 	// immediately step once on first start/play
 	useEffect(() => {
@@ -142,20 +77,20 @@ export const useRecursionStepperNew = (scopeGeneratorFunc) => {
 		}
 	})
 
-	const play = () => {
+	const play = (): void => {
 		if (canStepForward) {
 			setIsStepping(true)
 		}
 	}
 
-	const pause = () => {
+	const pause = (): void => {
 		setIsStepping(false)
 		clearTimeout(stepFuncID)
 	}
 
-	const reset = () => {
+	const reset = (): void => {
 		clearTimeout(stepFuncID)
-		setStepFuncID(null)
+		setStepFuncID(undefined)
 		resetNodes()
 		setIsStepping(false)
 	}
@@ -175,3 +110,5 @@ export const useRecursionStepperNew = (scopeGeneratorFunc) => {
 		startAndStepOnce: start(false),
 	}
 }
+
+export default useRecursionStepper
