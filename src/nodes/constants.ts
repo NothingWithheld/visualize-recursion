@@ -7,3 +7,5 @@ export const hasNotReturned = undefined
 export const notYetAssigned = undefined
 
 export const sentryID = -1
+
+export const sentryTag = 'SENTRY_NODE'

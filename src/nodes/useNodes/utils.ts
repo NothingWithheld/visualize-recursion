@@ -1,7 +1,8 @@
-import { identity, compose, curry } from 'ramda'
-import { hasNotReturned, notYetAssigned, sentryID } from '../constants'
+import { compose, curry } from 'ramda'
+import { notYetAssigned, sentryID, sentryTag } from '../constants'
 import { FuncNode, eqNode, SentryNode, isSentry } from '../types'
 import { none, some, map } from 'fp-ts/es6/Option'
+import { assertNever } from '../../utils'
 
 const setLastAction = (node: FuncNode): FuncNode => ({
 	...node,
@@ -28,12 +29,12 @@ const updateTree = curry(
 )
 
 type CombinedUpdateFuncs = UpdateFuncs & {
-	[sentryID]?: (node: SentryNode) => SentryNode
+	[sentryTag]?: (node: SentryNode) => SentryNode
 }
 
 const handleTreeUpdates = curry(
 	(updateFuncs: CombinedUpdateFuncs, sentry: SentryNode): SentryNode => {
-		const { [sentryID]: sentryNodeUpdate, ...restUpdateFuncs } = updateFuncs
+		const { [sentryTag]: sentryNodeUpdate, ...restUpdateFuncs } = updateFuncs
 		let updatedSentry = sentry
 		if (sentryNodeUpdate) {
 			updatedSentry = sentryNodeUpdate(sentry)
@@ -48,12 +49,12 @@ const handleTreeUpdates = curry(
 	}
 )
 
-const addChildToSentry = curry(
-	(child: FuncNode, sentry: SentryNode): SentryNode => ({
-		...sentry,
-		tree: some(child),
-	})
-)
+const addChildToSentry = (child: FuncNode) => (
+	sentry: SentryNode
+): SentryNode => ({
+	...sentry,
+	tree: some(child),
+})
 
 const removeChildFromSentry = curry(
 	(sentry: SentryNode): SentryNode => ({
@@ -117,13 +118,13 @@ const revertVariableDetails = curry(
 )
 
 interface FunctionProgressState {
-	forwardUpdateFuncs: Array<CombinedUpdateFuncs>
-	backwardUpdateFuncs: Array<CombinedUpdateFuncs>
-	curIndex: number
-	sentry: SentryNode
-	isReset: boolean
-	canStepForward: boolean
-	canStepBackward: boolean
+	readonly forwardUpdateFuncs: Array<CombinedUpdateFuncs>
+	readonly backwardUpdateFuncs: Array<CombinedUpdateFuncs>
+	readonly curIndex: number
+	readonly sentry: SentryNode
+	readonly isReset: boolean
+	readonly canStepForward: boolean
+	readonly canStepBackward: boolean
 }
 
 export const defaultFunctionProgressState: FunctionProgressState = {
@@ -147,27 +148,37 @@ enum FunctionProgressSteps {
 	AddChild = 'ADD_CHILD',
 	LastAction = 'LAST_ACTION',
 	AddReturnValue = 'ADD_RETURN_VALUE',
+	AddVariableDetails = 'ADD_VARIABLE_DETAILS',
 }
 
 interface AddChildStepDetails {
 	readonly type: FunctionProgressSteps.AddChild
-	readonly parent: SentryNode | FuncNode
+	readonly node: SentryNode | FuncNode
 	readonly child: FuncNode
 }
 
 interface LastActionStepDetails {
 	readonly type: FunctionProgressSteps.LastAction
+	readonly node: FuncNode
 }
 
 interface AddReturnValueStepDetails {
 	readonly type: FunctionProgressSteps.AddReturnValue
+	readonly node: FuncNode
 	readonly returnValue: any
+}
+
+interface AddVariableDetailsStepDetails {
+	readonly type: FunctionProgressSteps.AddVariableDetails
+	readonly node: FuncNode
+	readonly variableDetails: any[]
 }
 
 type FunctionProgressStepDetails =
 	| AddChildStepDetails
 	| LastActionStepDetails
 	| AddReturnValueStepDetails
+	| AddVariableDetailsStepDetails
 
 export function getAddChildStepEvent(
 	parent: SentryNode | FuncNode,
@@ -175,21 +186,34 @@ export function getAddChildStepEvent(
 ): AddChildStepDetails {
 	return {
 		type: FunctionProgressSteps.AddChild,
-		parent,
+		node: parent,
 		child,
 	}
 }
 
-export function getLastActionStepEvent(): LastActionStepDetails {
-	return { type: FunctionProgressSteps.LastAction }
+export function getLastActionStepEvent(node: FuncNode): LastActionStepDetails {
+	return { type: FunctionProgressSteps.LastAction, node }
 }
 
 export function getAddReturnValueStepEvent(
+	node: FuncNode,
 	returnValue: any
 ): AddReturnValueStepDetails {
 	return {
 		type: FunctionProgressSteps.AddReturnValue,
+		node,
 		returnValue,
+	}
+}
+
+export function getAddVariableDetailsStepEvent(
+	node: FuncNode,
+	variableDetails: any[]
+): AddVariableDetailsStepDetails {
+	return {
+		type: FunctionProgressSteps.AddVariableDetails,
+		node,
+		variableDetails,
 	}
 }
 
@@ -199,9 +223,109 @@ interface FunctionProgressAction {
 	readonly generatorFunc: (
 		sentry: SentryNode,
 		...args: any[]
-	) => Iterable<{
-		[propName: number]: FunctionProgressStepDetails[]
-	}>
+	) => Iterable<FunctionProgressStepDetails[]>
+}
+
+const getForwardUpdateFuncs = (
+	nodeEvents: FunctionProgressStepDetails[]
+): CombinedUpdateFuncs => {
+	const sentryNodeEvents = nodeEvents.filter(({ node }) => isSentry(node))
+	const funcNodeEvents = nodeEvents.filter(({ node }) => !isSentry(node))
+
+	const updateFuncs = funcNodeEvents.reduce(
+		(updateFuncs_: UpdateFuncs, event) => {
+			let updateFunc: (node: FuncNode) => FuncNode
+			switch (event.type) {
+				case FunctionProgressSteps.AddChild:
+					updateFunc = compose(unsetLastAction, addChildToParent(event.child))
+					break
+				case FunctionProgressSteps.AddReturnValue:
+					updateFunc = addReturnValue(event.returnValue)
+					break
+				case FunctionProgressSteps.LastAction:
+					updateFunc = setLastAction
+					break
+				case FunctionProgressSteps.AddVariableDetails:
+					updateFunc = addVariableDetails(event.variableDetails)
+					break
+				default:
+					assertNever(event)
+			}
+
+			const nodeID = event.node.nodeID
+			if (nodeID in updateFuncs_) {
+				updateFuncs_[nodeID] = compose(updateFunc, updateFuncs_[nodeID])
+			} else {
+				updateFuncs_[nodeID] = updateFunc
+			}
+
+			return updateFuncs_
+		},
+		{}
+	)
+
+	// only sentry node event should be to add the tree to the sentry
+	if (sentryNodeEvents.length > 0) {
+		const sentryNodeEvent = sentryNodeEvents[0]
+
+		return {
+			...updateFuncs,
+			[sentryTag]: addChildToSentry(
+				(sentryNodeEvent as AddChildStepDetails).child
+			),
+		}
+	}
+
+	return updateFuncs
+}
+
+const getBackwardUpdateFuncs = (
+	nodeEvents: FunctionProgressStepDetails[]
+): CombinedUpdateFuncs => {
+	const sentryNodeEvents = nodeEvents.filter(({ node }) => isSentry(node))
+	const funcNodeEvents = nodeEvents.filter(({ node }) => !isSentry(node))
+
+	const updateFuncs = funcNodeEvents.reduce(
+		(updateFuncs_: UpdateFuncs, event) => {
+			let updateFunc: (node: FuncNode) => FuncNode
+			switch (event.type) {
+				case FunctionProgressSteps.AddChild:
+					updateFunc = removeChildFromParent(event.child)
+					break
+				case FunctionProgressSteps.AddReturnValue:
+					updateFunc = removeReturnValue
+					break
+				case FunctionProgressSteps.LastAction:
+					updateFunc = unsetLastAction
+					break
+				case FunctionProgressSteps.AddVariableDetails:
+					updateFunc = revertVariableDetails(event.variableDetails)
+					break
+				default:
+					assertNever(event)
+			}
+
+			const nodeID = event.node.nodeID
+			if (nodeID in updateFuncs_) {
+				updateFuncs_[nodeID] = compose(updateFunc, updateFuncs_[nodeID])
+			} else {
+				updateFuncs_[nodeID] = updateFunc
+			}
+
+			return updateFuncs_
+		},
+		{}
+	)
+
+	// only sentry node event should be to add the tree to the sentry
+	if (sentryNodeEvents.length > 0) {
+		return {
+			...updateFuncs,
+			[sentryTag]: removeChildFromSentry,
+		}
+	}
+
+	return updateFuncs
 }
 
 export const functionProgressReducer = (
@@ -215,114 +339,46 @@ export const functionProgressReducer = (
 			if (!state.isReset) {
 				throw new Error('should reset before new setup')
 			}
+
 			const { args, generatorFunc } = action
 			const nodeEvents = [...generatorFunc(state.sentry, ...args)]
 
 			const forwardUpdateFuncs = [
 				{},
-				...nodeEvents.map((eventObj) => {
-					const updateFuncsForEvents = Object.entries(eventObj).map(
-						([nodeID, events]) => [
-							nodeID,
-							events.reduce((updateFunc, event) => {
-								switch (event.type) {
-									case FunctionProgressSteps.AddChild:
-										if (isSentry(event.parent)) {
-											return compose(
-												setLastAction,
-												addChildToSentry(event.child),
-												updateFunc
-											)
-										} else {
-											return compose(
-												unsetLastAction,
-												addChildToParent(event.child),
-												updateFunc
-											)
-										}
-									case FunctionProgressSteps.LastAction:
-										return compose(setLastAction, updateFunc)
-									case FunctionProgressSteps.AddReturnValue:
-										return compose(
-											addReturnValue(event.returnValue),
-											updateFunc
-										)
-								}
-
-								// } else if (event.isAddVariableDetails) {
-								// 	return compose(
-								// 		addVariableDetails(event.variableDetails),
-								// 		updateFunc
-								// 	)
-							}, identity),
-						]
-					)
-
-					return Object.fromEntries(updateFuncsForEvents)
-				}),
+				...nodeEvents.map(getForwardUpdateFuncs),
 				{},
 			]
 
 			const backwardUpdateFuncs = [
 				{},
 				{},
-				...nodeEvents.map((eventObj) => {
-					const updateFuncsForEvents = Object.entries(eventObj).map(
-						([nodeID, events]) => [
-							nodeID,
-							events.reduce((updateFunc, event) => {
-								if (event.isAddToParent) {
-									if (nodeID === noParentNode)
-										return compose(() => null, updateFunc)
-
-									return compose(
-										removeChildFromParent(event.childNode),
-										updateFunc
-									)
-								} else if (event.isAddVariableDetails) {
-									return compose(
-										revertVariableDetails(event.variableDetails),
-										updateFunc
-									)
-								} else if (event.isAddReturnValue) {
-									return compose(removeReturnValue, updateFunc)
-								} else if (event.isSetLastAction) {
-									return compose(unsetLastAction, updateFunc)
-								}
-
-								throw new Error('no event type')
-							}, identity),
-						]
-					)
-
-					return Object.fromEntries(updateFuncsForEvents)
-				}),
+				...nodeEvents.map(getBackwardUpdateFuncs),
 			]
 
 			return {
 				forwardUpdateFuncs,
 				backwardUpdateFuncs,
 				curIndex: 1,
-				treeRoot: null,
+				sentry: { nodeID: sentryID, tree: none },
 				isReset: false,
 				canStepForward: forwardUpdateFuncs.length > 2,
 				canStepBackward: false,
 			}
 		}
 		case FunctionProgressActions.StepForward: {
-			const { forwardUpdateFuncs, curIndex, treeRoot } = state
+			const { forwardUpdateFuncs, curIndex, sentry } = state
 			if (curIndex + 1 >= forwardUpdateFuncs.length) {
 				throw new Error('cannot step forward')
 			}
 
 			const updateFuncs = forwardUpdateFuncs[curIndex]
-			const updatedTreeRoot = handleTreeUpdates(updateFuncs, treeRoot)
+			const updatedSentry = handleTreeUpdates(updateFuncs, sentry)
 			const updatedIndex = curIndex + 1
 
 			return {
 				...state,
 				curIndex: updatedIndex,
-				treeRoot: updatedTreeRoot,
+				sentry: updatedSentry,
 				canStepForward: updatedIndex + 1 < forwardUpdateFuncs.length,
 				canStepBackward: true,
 			}
@@ -332,7 +388,7 @@ export const functionProgressReducer = (
 				forwardUpdateFuncs,
 				backwardUpdateFuncs,
 				curIndex,
-				treeRoot,
+				sentry,
 			} = state
 
 			if (
@@ -343,6 +399,8 @@ export const functionProgressReducer = (
 				throw new Error('cannot step backward')
 			}
 
+			// step back twice and forward once
+			// restores 'lastAction'
 			const backwardUpdateFuncsForFirstStepBack = backwardUpdateFuncs[curIndex]
 			const backwardUpdateFuncsForSecondStepBack =
 				backwardUpdateFuncs[curIndex - 1]
@@ -354,13 +412,13 @@ export const functionProgressReducer = (
 				handleTreeUpdates(backwardUpdateFuncsForFirstStepBack)
 			)
 
-			const updatedTreeRoot = resolveUpdatesFunc(treeRoot)
+			const updatedSentry = resolveUpdatesFunc(sentry)
 			const updatedIndex = curIndex - 1
 
 			return {
 				...state,
 				curIndex: updatedIndex,
-				treeRoot: updatedTreeRoot,
+				sentry: updatedSentry,
 				canStepForward: true,
 				canStepBackward: updatedIndex - 2 >= 0,
 			}
