@@ -31,6 +31,15 @@ const SpaceBetweenPaper = withStyles({
 	},
 })(Paper)
 
+export interface FunctionInputObj {
+	readonly value: any
+	readonly label: string
+	// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types
+	readonly type: string
+	readonly toValue?: (from: any) => any
+	readonly fromValue?: (from: any) => any
+}
+
 interface CodeControllerProps {
 	readonly play: () => void
 	readonly pause: () => void
@@ -43,13 +52,7 @@ interface CodeControllerProps {
 	readonly startAndStepOnce: (args: any[], delayMilliseconds: number) => void
 	readonly stepForward: () => void
 	readonly stepBackward: () => void
-	readonly functionInputObjs: Array<{
-		value: any
-		label: any
-		type: any
-		toValue: any
-		fromValue: any
-	}>
+	readonly functionInputObjs: FunctionInputObj[]
 }
 
 export const CodeController = ({
