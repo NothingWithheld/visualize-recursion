@@ -1,16 +1,17 @@
-import { BaseNode } from '../types'
+import { IterableNode } from '../types'
 
-export const preorder = (
-	root: BaseNode,
+export const preorder = <Node>(iterableNode: IterableNode<Node>) => (
+	root: Node,
 	maybePropsForNodeAndChildren?: { [propName: number]: any }
-): Array<[BaseNode, { [propName: number]: any }]> => {
+): Array<[Node, { [propName: number]: any }]> => {
 	const propsForNodeAndChildren = maybePropsForNodeAndChildren || {}
 
 	function* preorderGenerator(
-		node: BaseNode,
+		node: Node,
 		props: { [propName: number]: any }
-	): Iterable<[BaseNode, { [propName: number]: any }]> {
-		const { nodeID, children } = node
+	): Iterable<[Node, { [propName: number]: any }]> {
+		const nodeID = iterableNode.getNodeID(node)
+		const children = iterableNode.getChildren(node)
 		const updatedProps = { ...props, ...propsForNodeAndChildren[nodeID] }
 
 		for (const child of children) {
@@ -23,9 +24,11 @@ export const preorder = (
 	return Array.from(preorderGenerator(root, {}))
 }
 
-export const getEdges = (root: BaseNode): Array<[BaseNode, BaseNode]> => {
-	function* edgeGenerator(node: BaseNode): Iterable<[BaseNode, BaseNode]> {
-		const { children } = node
+export const getEdges = <Node>(iterableNode: IterableNode<Node>) => (
+	root: Node
+): Array<[Node, Node]> => {
+	function* edgeGenerator(node: Node): Iterable<[Node, Node]> {
+		const children = iterableNode.getChildren(node)
 
 		for (const child of children) {
 			yield [node, child]

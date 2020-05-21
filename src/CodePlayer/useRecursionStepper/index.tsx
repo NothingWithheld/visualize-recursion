@@ -4,10 +4,10 @@ import { curry } from 'ramda'
 import { usePrevious } from '../../utils'
 import { MakeNodeFunc, NodeGeneratorFunc } from '../../nodes/useNodes/utils'
 import { Option } from 'fp-ts/es6/Option'
-import { FuncNode } from '../../nodes/types'
+import { FuncNode, PlacedNode } from '../../nodes/types'
 
 interface UseRecursionStepperReturn {
-	readonly treeRoot: Option<FuncNode>
+	readonly treeRoot: Option<PlacedNode<FuncNode>>
 	readonly play: () => void
 	readonly pause: () => void
 	readonly reset: () => void

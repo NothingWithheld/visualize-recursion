@@ -6,7 +6,10 @@ export interface NodeBase<Node> {
 	readonly children: Node[]
 }
 
-export type BaseNode = NodeBase<BaseNode>
+export interface IterableNode<Node> {
+	readonly getNodeID: (node: Node) => number
+	readonly getChildren: (node: Node) => Node[]
+}
 
 export type SentryNode = {
 	readonly nodeID: number
@@ -26,10 +29,24 @@ interface FuncNodeData {
 
 export type FuncNode = FuncNodeData & NodeBase<FuncNode>
 
+export const iterableFuncNode: IterableNode<FuncNode> = {
+	getNodeID: (node: FuncNode) => node.nodeID,
+	getChildren: (node: FuncNode) => node.children,
+}
+
 interface PlacedNodeData {
 	readonly x: number
 	readonly y: number
 }
+
+export type PlacedNode<Node> = Omit<Node, 'children'> &
+	PlacedNodeData &
+	NodeBase<PlacedNode<Node>>
+
+export const iterablePlacedNode = <Node>(): IterableNode<PlacedNode<Node>> => ({
+	getNodeID: (node: PlacedNode<Node>) => node.nodeID,
+	getChildren: (node: PlacedNode<Node>) => node.children,
+})
 
 interface PlacingNodeData<Node> {
 	readonly x: number
@@ -37,10 +54,6 @@ interface PlacingNodeData<Node> {
 	offset: number
 	thread: Option<Node>
 }
-
-export type PlacedNode<Node> = Omit<Node, 'children'> &
-	PlacedNodeData &
-	NodeBase<PlacedNode<Node>>
 
 export type PlacingNode<Node> = Omit<Node, 'children'> &
 	PlacingNodeData<PlacingNode<Node>> &

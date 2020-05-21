@@ -9,7 +9,7 @@ import {
 	MakeNodeFunc,
 } from './utils'
 import { map, Option } from 'fp-ts/es6/Option'
-import { FuncNode } from '../types'
+import { FuncNode, PlacedNode } from '../types'
 
 interface UseNodesReturn {
 	readonly setupNodes: (generatorFunc: NodeGeneratorFunc, args: any[]) => void
@@ -17,7 +17,7 @@ interface UseNodesReturn {
 	readonly stepBackward: () => void
 	readonly resetNodes: () => void
 	readonly makeNode: MakeNodeFunc
-	readonly treeRoot: Option<FuncNode>
+	readonly treeRoot: Option<PlacedNode<FuncNode>>
 	readonly isReset: boolean
 	readonly canStepForward: boolean
 	readonly canStepBackward: boolean

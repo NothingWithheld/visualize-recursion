@@ -9,7 +9,7 @@ interface FunctionCallNodeProps {
 	readonly x: number
 	readonly y: number
 	readonly returnValue: any
-	readonly funcName: string
+	readonly funcName?: string
 	readonly args: Array<[string, any]>
 	readonly lastAction: boolean
 	readonly setLayerPosition: (x: number, y: number) => void

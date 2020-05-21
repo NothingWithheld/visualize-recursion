@@ -5,16 +5,56 @@ import FunctionCallArrow from './FunctionCallArrow'
 import CallNodeExtraDetails from './CallNodeExtraDetails'
 import Box from '@material-ui/core/Box'
 import { preorder, getEdges } from '../../nodes/useNodes/traversals'
+import { FuncNode, PlacedNode, iterablePlacedNode } from '../../nodes/types'
+import { Option, map, getOrElse } from 'fp-ts/es6/Option'
+import R from 'ramda'
+import { pipe } from 'fp-ts/es6/pipeable'
 
-export const RecursionCanvas = ({ treeRoot }) => {
+interface RecursionCanvasProps {
+	readonly treeRoot: Option<PlacedNode<FuncNode>>
+}
+
+export const RecursionCanvas = ({ treeRoot }: RecursionCanvasProps) => {
 	const [layerX, setLayerX] = useState(0)
 	const [layerY, setLayerY] = useState(0)
-	const [nodeExtraDetailPositions, setNodeExtraDetailPositions] = useState([])
+	const [nodeExtraDetailPositions, setNodeExtraDetailPositions] = useState<
+		Array<PlacedNode<FuncNode>>
+	>([])
 
-	const setLayerPosition = (x, y) => {
+	const setLayerPosition = (x: number, y: number) => {
 		setLayerX(x)
 		setLayerY(y)
 	}
+
+	const setFunctionCallNode = (
+		[node]: [PlacedNode<FuncNode>, unknown],
+		i: number
+	) => (
+		<FunctionCallNode
+			{...node}
+			setLayerPosition={setLayerPosition}
+			openExtraDetails={(x, y) =>
+				setNodeExtraDetailPositions([
+					...nodeExtraDetailPositions,
+					{ ...node, x, y },
+				])
+			}
+			key={i}
+		/>
+	)
+
+	const setFunctionCallArrow = ([parent, child]: [
+		PlacedNode<FuncNode>,
+		PlacedNode<FuncNode>
+	]) => (
+		<FunctionCallArrow
+			startX={parent.x}
+			startY={parent.y}
+			endX={child.x}
+			endY={child.y}
+			key={child.nodeID}
+		/>
+	)
 
 	return (
 		<Box
@@ -33,28 +73,18 @@ export const RecursionCanvas = ({ treeRoot }) => {
 					x={layerX + window.innerWidth / 2}
 					y={layerY + window.innerHeight / 3}
 				>
-					{preorder(treeRoot).map(([node, _], i) => (
-						<FunctionCallNode
-							{...node}
-							setLayerPosition={setLayerPosition}
-							openExtraDetails={(x, y) =>
-								setNodeExtraDetailPositions([
-									...nodeExtraDetailPositions,
-									{ ...node, x, y },
-								])
-							}
-							key={i}
-						/>
-					))}
-					{getEdges(treeRoot).map(([parent, child]) => (
-						<FunctionCallArrow
-							startX={parent.x}
-							startY={parent.y}
-							endX={child.x}
-							endY={child.y}
-							key={child.nodeID}
-						/>
-					))}
+					{pipe(
+						treeRoot,
+						map(preorder(iterablePlacedNode<FuncNode>())),
+						map((nodeList) => nodeList.map(setFunctionCallNode)),
+						getOrElse<JSX.Element[] | null>(() => null)
+					)}
+					{pipe(
+						treeRoot,
+						map(getEdges(iterablePlacedNode<FuncNode>())),
+						map(R.map(setFunctionCallArrow)),
+						getOrElse<JSX.Element[] | null>(() => null)
+					)}
 				</Layer>
 			</Stage>
 			{nodeExtraDetailPositions.map((positionProps, i) => (
