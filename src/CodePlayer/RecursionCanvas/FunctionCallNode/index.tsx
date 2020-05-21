@@ -3,6 +3,18 @@ import { Group, Circle, Text, Line } from 'react-konva'
 import { nodeRadius } from '../../../nodes/constants'
 import useKonvaTextWidth from '../../../Konva/useKonvaTextWidth'
 import { hasNotReturned } from '../../../nodes/constants'
+import Konva from 'konva'
+
+interface FunctionCallNodeProps {
+	readonly x: number
+	readonly y: number
+	readonly returnValue: any
+	readonly funcName: string
+	readonly args: Array<[string, any]>
+	readonly lastAction: boolean
+	readonly setLayerPosition: (x: number, y: number) => void
+	readonly openExtraDetails: (x: number, y: number) => void
+}
 
 const FunctionCallNode = ({
 	x,
@@ -13,7 +25,7 @@ const FunctionCallNode = ({
 	lastAction,
 	setLayerPosition,
 	openExtraDetails,
-}) => {
+}: FunctionCallNodeProps) => {
 	const [funcNameWidth, funcNameWidthCallback] = useKonvaTextWidth()
 	const [returnValueWidth, returnValueWidthCallback] = useKonvaTextWidth()
 
@@ -21,10 +33,13 @@ const FunctionCallNode = ({
 		setLayerPosition(-x, -y)
 	}
 
-	const circleRef = useRef(null)
+	const circleRef = useRef<Konva.Circle>(null)
 	const handleClick = () => {
-		const { x, y } = circleRef.current.absolutePosition()
-		openExtraDetails(x, y)
+		if (circleRef.current !== null) {
+			const { x, y } = circleRef.current.getAbsolutePosition()
+
+			openExtraDetails(x, y)
+		}
 	}
 
 	const functionHasNotReturned = returnValue === hasNotReturned

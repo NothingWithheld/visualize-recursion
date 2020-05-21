@@ -3,7 +3,19 @@ import { Arrow } from 'react-konva'
 import { nodeRadius } from '../../../nodes/constants'
 import { calculatePerimeterPositions } from '../../../nodes/utils'
 
-const FunctionCallArrow = ({ startX, startY, endX, endY }) => {
+interface FunctionCallArrowProps {
+	readonly startX: number
+	readonly startY: number
+	readonly endX: number
+	readonly endY: number
+}
+
+const FunctionCallArrow = ({
+	startX,
+	startY,
+	endX,
+	endY,
+}: FunctionCallArrowProps) => {
 	const {
 		startX: arrowStartX,
 		startY: arrowStartY,

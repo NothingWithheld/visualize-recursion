@@ -3,11 +3,16 @@ import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles, withStyles } from '@material-ui/core/styles'
 
+interface StyleProps {
+	readonly x: number
+	readonly y: number
+}
+
 const useStyles = makeStyles({
 	root: {
 		position: 'absolute',
-		left: props => props.x,
-		top: props => props.y,
+		left: (props: StyleProps) => props.x,
+		top: (props: StyleProps) => props.y,
 		transform: 'translate(-50%, -50%)',
 	},
 })
@@ -19,7 +24,21 @@ const CodeText = withStyles({
 	},
 })(Typography)
 
-const CallNodeExtraDetails = ({ x, y, args, variableDetails, returnVal }) => {
+interface CallNodeExtraDetailsProps {
+	readonly x: number
+	readonly y: number
+	readonly args: Array<[string, any]>
+	readonly variableDetails: Array<[string, any]>
+	readonly returnValue: any
+}
+
+const CallNodeExtraDetails = ({
+	x,
+	y,
+	args,
+	variableDetails,
+	returnValue,
+}: CallNodeExtraDetailsProps) => {
 	const classes = useStyles({ x, y })
 
 	return (
