@@ -92,27 +92,43 @@ const removeReturnValue = (node: FuncNode): FuncNode => ({
 })
 
 const addVariableDetails = curry(
-	(variableDetails: any[], node: FuncNode): FuncNode => ({
-		...node,
-		variableDetails: { ...node.variableDetails, ...variableDetails },
-	})
-)
+	(variableDetails: Array<[string, any]>, node: FuncNode): FuncNode => {
+		const updatedVariableDetails = variableDetails.reduce(
+			(acc, [variableName, value]) => {
+				const [variable] = acc.filter(
+					([variableName_]) => variableName === variableName_
+				)
 
-const revertVariableDetails = curry(
-	(variableDetails: any[], node: FuncNode): FuncNode => {
-		const notYetAssignedVariableDetails = Object.fromEntries(
-			Object.keys(variableDetails).map((variableName) => [
-				variableName,
-				notYetAssigned,
-			])
+				variable.push(value)
+				return acc
+			},
+			node.variableDetails
 		)
 
 		return {
 			...node,
-			variableDetails: {
-				...node.variableDetails,
-				...notYetAssignedVariableDetails,
+			variableDetails: updatedVariableDetails,
+		}
+	}
+)
+
+const revertVariableDetails = curry(
+	(variableDetails: Array<[string, any]>, node: FuncNode): FuncNode => {
+		const updatedVariableDetails = variableDetails.reduce(
+			(acc, [variableName]) => {
+				const [variable] = acc.filter(
+					([variableName_]) => variableName === variableName_
+				)
+
+				variable.pop()
+				return acc
 			},
+			node.variableDetails
+		)
+
+		return {
+			...node,
+			variableDetails: updatedVariableDetails,
 		}
 	}
 )
@@ -164,10 +180,10 @@ interface AddReturnValueStepDetails {
 interface AddVariableDetailsStepDetails {
 	readonly type: FunctionProgressSteps.AddVariableDetails
 	readonly node: FuncNode
-	readonly variableDetails: any[]
+	readonly variableDetails: Array<[string, any]>
 }
 
-type FunctionProgressStepDetails =
+export type FunctionProgressStepDetails =
 	| AddChildStepDetails
 	| LastActionStepDetails
 	| AddReturnValueStepDetails
@@ -201,7 +217,7 @@ export function getAddReturnValueStepEvent(
 
 export function getAddVariableDetailsStepEvent(
 	node: FuncNode,
-	variableDetails: any[]
+	variableDetails: Array<[string, any]>
 ): AddVariableDetailsStepDetails {
 	return {
 		type: FunctionProgressSteps.AddVariableDetails,
@@ -223,12 +239,12 @@ interface ResetAction {
 
 export type NodeGeneratorFunc = (
 	sentry: SentryNode,
-	...args: any[]
+	...argValues: any[]
 ) => Iterable<FunctionProgressStepDetails[]>
 
 interface SetupAction {
 	readonly type: FunctionProgressActions.Setup
-	readonly args: any[]
+	readonly argValues: any[]
 	readonly generatorFunc: NodeGeneratorFunc
 }
 
@@ -360,8 +376,8 @@ export const functionProgressReducer = (
 				throw new Error('should reset before new setup')
 			}
 
-			const { args, generatorFunc } = action
-			const nodeEvents = [...generatorFunc(state.sentry, ...args)]
+			const { argValues, generatorFunc } = action
+			const nodeEvents = [...generatorFunc(state.sentry, ...argValues)]
 
 			const forwardUpdateFuncs = [
 				{},
@@ -448,10 +464,10 @@ export const functionProgressReducer = (
 	}
 }
 
-export type MakeNodeFunc = (args: any[]) => FuncNode
+export type MakeNodeFunc = (args: Array<[string, any]>) => FuncNode
 
 export const getMakeNodeFunc = (counter = 0): MakeNodeFunc => {
-	return (args: any[]): FuncNode => {
+	return (args: Array<[string, any]>): FuncNode => {
 		const node = {
 			nodeID: counter,
 			args,

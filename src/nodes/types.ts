@@ -21,9 +21,9 @@ export function isSentry(node: SentryNode | FuncNode): node is SentryNode {
 }
 
 interface FuncNodeData {
-	readonly args: any[]
+	readonly args: Array<[string, any]>
 	readonly returnValue: Option<any>
-	readonly variableDetails: any[]
+	readonly variableDetails: Array<[string, any[]]>
 	readonly lastAction: boolean
 }
 

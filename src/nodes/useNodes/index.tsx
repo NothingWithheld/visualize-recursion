@@ -36,11 +36,11 @@ export const useNodes = (): UseNodesReturn => {
 	useEffect(() => setDrawnTree(map(drawTree)(sentry.tree)), [sentry])
 
 	const setupNodes = useCallback(
-		(generatorFunc: NodeGeneratorFunc, args: any[]) =>
+		(generatorFunc: NodeGeneratorFunc, argValues: any[]) =>
 			nodeDispatch({
 				type: FunctionProgressActions.Setup,
 				generatorFunc,
-				args,
+				argValues,
 			}),
 		[]
 	)
