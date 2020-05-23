@@ -14,5 +14,6 @@
 		"jsx": "react",
 		"esModuleInterop": true,
 		"lib": ["ES2020", "DOM"]
-	}
+	},
+	"include": ["src/"]
 }

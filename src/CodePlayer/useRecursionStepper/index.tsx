@@ -56,14 +56,14 @@ export const useRecursionStepper = (
 	useEffect(() => {
 		latestIsStepping.current = isStepping
 
-		const initialClickTimerID = setTimeout(function stepFunc() {
+		const initialClickTimerID = window.setTimeout(function stepFunc() {
 			if (!latestIsStepping.current || !latestCanStepForward.current) {
 				setIsStepping(false)
 				return
 			}
 
 			stepForward()
-			const recursiveTimerID = setTimeout(stepFunc, delayMilliseconds)
+			const recursiveTimerID = window.setTimeout(stepFunc, delayMilliseconds)
 			setStepFuncID(recursiveTimerID)
 		}, delayMilliseconds)
 		setStepFuncID(initialClickTimerID)

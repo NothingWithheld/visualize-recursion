@@ -7,7 +7,7 @@ import Box from '@material-ui/core/Box'
 import { preorder, getEdges } from '../../nodes/useNodes/traversals'
 import { FuncNode, PlacedNode, iterablePlacedNode } from '../../nodes/types'
 import { Option, map, getOrElse } from 'fp-ts/es6/Option'
-import R from 'ramda'
+import * as R from 'ramda'
 import { pipe } from 'fp-ts/es6/pipeable'
 
 interface RecursionCanvasProps {
