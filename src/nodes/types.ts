@@ -20,10 +20,12 @@ export function isSentry(node: SentryNode | FuncNode): node is SentryNode {
 	return (node as SentryNode).tree !== undefined
 }
 
+// [string, string] -> [argName, argVal]
+// everything as a string -> store as you want it to be displayed
 interface FuncNodeData {
-	readonly args: Array<[string, any]>
-	readonly returnValue: Option<any>
-	readonly variableDetails: Array<[string, any[]]>
+	readonly args: Array<[string, string]>
+	readonly returnValue: Option<string>
+	readonly variableDetails: Array<[string, string[]]>
 	readonly lastAction: boolean
 }
 
@@ -44,8 +46,8 @@ export type PlacedNode<Node> = Omit<Node, 'children'> &
 	NodeBase<PlacedNode<Node>>
 
 export const iterablePlacedNode = <Node>(): IterableNode<PlacedNode<Node>> => ({
-	getNodeID: (node: PlacedNode<Node>) => node.nodeID,
-	getChildren: (node: PlacedNode<Node>) => node.children,
+	getNodeID: (node: PlacedNode<Node>): number => node.nodeID,
+	getChildren: (node: PlacedNode<Node>): PlacedNode<Node>[] => node.children,
 })
 
 interface PlacingNodeData<Node> {

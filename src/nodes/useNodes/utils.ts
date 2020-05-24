@@ -80,7 +80,7 @@ const removeChildFromParent = curry(
 )
 
 const addReturnValue = curry(
-	(returnValue: any, node: FuncNode): FuncNode => ({
+	(returnValue: string, node: FuncNode): FuncNode => ({
 		...node,
 		returnValue: some(returnValue),
 	})
@@ -92,7 +92,7 @@ const removeReturnValue = (node: FuncNode): FuncNode => ({
 })
 
 const addVariableDetails = curry(
-	(variableDetails: Array<[string, any]>, node: FuncNode): FuncNode => {
+	(variableDetails: Array<[string, string]>, node: FuncNode): FuncNode => {
 		const updatedVariableDetails = variableDetails.reduce(
 			(acc, [variableName, value]) => {
 				const [variable] = acc.filter(
@@ -113,7 +113,7 @@ const addVariableDetails = curry(
 )
 
 const revertVariableDetails = curry(
-	(variableDetails: Array<[string, any]>, node: FuncNode): FuncNode => {
+	(variableDetails: Array<[string, string]>, node: FuncNode): FuncNode => {
 		const updatedVariableDetails = variableDetails.reduce(
 			(acc, [variableName]) => {
 				const [variable] = acc.filter(
@@ -206,7 +206,7 @@ export function getLastActionStepEvent(node: FuncNode): LastActionStepDetails {
 
 export function getAddReturnValueStepEvent(
 	node: FuncNode,
-	returnValue: any
+	returnValue: string
 ): AddReturnValueStepDetails {
 	return {
 		type: FunctionProgressSteps.AddReturnValue,
@@ -217,7 +217,7 @@ export function getAddReturnValueStepEvent(
 
 export function getAddVariableDetailsStepEvent(
 	node: FuncNode,
-	variableDetails: Array<[string, any]>
+	variableDetails: Array<[string, string]>
 ): AddVariableDetailsStepDetails {
 	return {
 		type: FunctionProgressSteps.AddVariableDetails,
@@ -464,10 +464,10 @@ export const functionProgressReducer = (
 	}
 }
 
-export type MakeNodeFunc = (args: Array<[string, any]>) => FuncNode
+export type MakeNodeFunc = (args: Array<[string, string]>) => FuncNode
 
 export const getMakeNodeFunc = (counter = 0): MakeNodeFunc => {
-	return (args: Array<[string, any]>): FuncNode => {
+	return (args: Array<[string, string]>): FuncNode => {
 		const node = {
 			nodeID: counter,
 			args,

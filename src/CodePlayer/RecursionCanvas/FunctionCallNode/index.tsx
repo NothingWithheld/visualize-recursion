@@ -4,13 +4,15 @@ import { nodeRadius } from '../../../nodes/constants'
 import useKonvaTextWidth from '../../../Konva/useKonvaTextWidth'
 import { hasNotReturned } from '../../../nodes/constants'
 import Konva from 'konva'
+import { Option, isNone, getOrElse } from 'fp-ts/es6/Option'
+import { pipe } from 'fp-ts/es6/pipeable'
 
 interface FunctionCallNodeProps {
 	readonly x: number
 	readonly y: number
-	readonly returnValue: any
+	readonly returnValue: Option<string>
 	readonly funcName?: string
-	readonly args: Array<[string, any]>
+	readonly args: Array<[string, string]>
 	readonly lastAction: boolean
 	readonly setLayerPosition: (x: number, y: number) => void
 	readonly openExtraDetails: (x: number, y: number) => void
@@ -25,7 +27,7 @@ const FunctionCallNode = ({
 	lastAction,
 	setLayerPosition,
 	openExtraDetails,
-}: FunctionCallNodeProps) => {
+}: FunctionCallNodeProps): JSX.Element => {
 	const [funcNameWidth, funcNameWidthCallback] = useKonvaTextWidth()
 	const [returnValueWidth, returnValueWidthCallback] = useKonvaTextWidth()
 
@@ -42,7 +44,7 @@ const FunctionCallNode = ({
 		}
 	}
 
-	const functionHasNotReturned = returnValue === hasNotReturned
+	const functionHasNotReturned = isNone(returnValue)
 
 	return (
 		<Group x={x} y={y}>
@@ -61,7 +63,7 @@ const FunctionCallNode = ({
 				onClick={handleClick}
 			/>
 			<Text
-				text={Object.values(args).join(', ')}
+				text={args.map(([, argValue]) => argValue).join(', ')}
 				x={-funcNameWidth / 2}
 				y={-24}
 				fontStyle="bold"
@@ -71,7 +73,7 @@ const FunctionCallNode = ({
 			/>
 			<Line points={[-10, 0, 10, 0]} stroke="#BCCCDC" width={1} />
 			<Text
-				text={functionHasNotReturned ? 'waiting' : returnValue.toString()}
+				text={getOrElse(() => 'waiting')(returnValue)}
 				x={-returnValueWidth / 2}
 				y={12}
 				fontStyle="bold"

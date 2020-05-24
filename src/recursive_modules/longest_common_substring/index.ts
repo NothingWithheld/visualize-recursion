@@ -20,8 +20,8 @@ function scopeLongestCommonSubstringGenerator(makeNode: MakeNodeFunc) {
 			textBInd = 0
 		): Iterable<FunctionProgressStepDetails[]> {
 			const node = makeNode([
-				['textAInd', textAInd],
-				['textBInd', textBInd],
+				['textAInd', textAInd.toString()],
+				['textBInd', textBInd.toString()],
 			])
 			yield [
 				getAddChildStepEvent(parentNode, node),
@@ -57,7 +57,7 @@ function scopeLongestCommonSubstringGenerator(makeNode: MakeNodeFunc) {
 			}
 
 			yield [
-				getAddReturnValueStepEvent(node, returnValue),
+				getAddReturnValueStepEvent(node, returnValue.toString()),
 				getLastActionStepEvent(node),
 			]
 			return returnValue

@@ -13,7 +13,7 @@ export function scopeFibonacciGenerator(makeNode: MakeNodeFunc) {
 		parentNode: SentryNode | FuncNode,
 		fibNumber: number
 	): Iterable<FunctionProgressStepDetails[]> {
-		const node = makeNode([['fibNumber', fibNumber]])
+		const node = makeNode([['fibNumber', fibNumber.toString()]])
 		yield [getAddChildStepEvent(parentNode, node), getLastActionStepEvent(node)]
 
 		let returnValue
@@ -33,7 +33,7 @@ export function scopeFibonacciGenerator(makeNode: MakeNodeFunc) {
 		}
 
 		yield [
-			getAddReturnValueStepEvent(node, returnValue),
+			getAddReturnValueStepEvent(node, returnValue.toString()),
 			getLastActionStepEvent(node),
 		]
 
