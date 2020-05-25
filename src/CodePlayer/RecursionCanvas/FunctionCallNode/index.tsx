@@ -11,7 +11,6 @@ interface FunctionCallNodeProps {
 	readonly x: number
 	readonly y: number
 	readonly returnValue: Option<string>
-	readonly funcName?: string
 	readonly args: Array<[string, string]>
 	readonly lastAction: boolean
 	readonly setLayerPosition: (x: number, y: number) => void
@@ -22,7 +21,6 @@ const FunctionCallNode = ({
 	x,
 	y,
 	returnValue,
-	funcName,
 	args,
 	lastAction,
 	setLayerPosition,
