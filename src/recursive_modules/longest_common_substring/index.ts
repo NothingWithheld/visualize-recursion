@@ -13,12 +13,12 @@ function scopeLongestCommonSubstringGenerator(makeNode: MakeNodeFunc) {
 		sentry: SentryNode,
 		textA: string,
 		textB: string
-	): Iterable<FunctionProgressStepDetails[]> {
+	): Generator<FunctionProgressStepDetails[]> {
 		function* recursiveGenerator(
 			parentNode: SentryNode | FuncNode,
 			textAInd = 0,
 			textBInd = 0
-		): Iterable<FunctionProgressStepDetails[]> {
+		): Generator<FunctionProgressStepDetails[]> {
 			const node = makeNode([
 				['textAInd', textAInd.toString()],
 				['textBInd', textBInd.toString()],

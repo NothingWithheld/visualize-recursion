@@ -1,7 +1,7 @@
 import { compose, curry } from 'ramda'
 import { notYetAssigned, sentryID, sentryTag } from '../constants'
 import { FuncNode, eqNode, SentryNode, isSentry } from '../types'
-import { none, some, map } from 'fp-ts/es6/Option'
+import { none, some, map, Option, getOrElse } from 'fp-ts/es6/Option'
 import { assertNever } from '../../utils'
 
 const setLastAction = (node: FuncNode): FuncNode => ({
@@ -134,6 +134,7 @@ const revertVariableDetails = curry(
 )
 
 interface FunctionProgressState {
+	readonly generator: Option<Generator<FunctionProgressStepDetails[]>>
 	readonly forwardUpdateFuncs: Array<CombinedUpdateFuncs>
 	readonly backwardUpdateFuncs: Array<CombinedUpdateFuncs>
 	readonly curIndex: number
@@ -144,9 +145,10 @@ interface FunctionProgressState {
 }
 
 export const defaultFunctionProgressState: FunctionProgressState = {
-	forwardUpdateFuncs: [],
-	backwardUpdateFuncs: [],
-	curIndex: 0,
+	generator: none,
+	forwardUpdateFuncs: [{}],
+	backwardUpdateFuncs: [{}, {}],
+	curIndex: 1,
 	sentry: { nodeID: sentryID, tree: none },
 	isReset: true,
 	canStepForward: false,
@@ -240,7 +242,7 @@ interface ResetAction {
 export type NodeGeneratorFunc = (
 	sentry: SentryNode,
 	...argValues: any[]
-) => Iterable<FunctionProgressStepDetails[]>
+) => Generator<FunctionProgressStepDetails[]>
 
 interface SetupAction {
 	readonly type: FunctionProgressActions.Setup
@@ -368,6 +370,30 @@ export const functionProgressReducer = (
 	state: FunctionProgressState,
 	action: FunctionProgressAction
 ): FunctionProgressState => {
+	const callGeneratorStepForward = (
+		generator: Generator<FunctionProgressStepDetails[]>
+	) => {
+		const { forwardUpdateFuncs, backwardUpdateFuncs } = state
+
+		const { done, value } = generator.next()
+		if (done) {
+			return {
+				generator: none,
+				forwardUpdateFuncs,
+				backwardUpdateFuncs,
+			}
+		}
+
+		return {
+			generator: some(generator),
+			forwardUpdateFuncs: [...forwardUpdateFuncs, getForwardUpdateFuncs(value)],
+			backwardUpdateFuncs: [
+				...backwardUpdateFuncs,
+				getBackwardUpdateFuncs(value),
+			],
+		}
+	}
+
 	switch (action.type) {
 		case FunctionProgressActions.Reset:
 			return defaultFunctionProgressState
@@ -377,33 +403,35 @@ export const functionProgressReducer = (
 			}
 
 			const { argValues, generatorFunc } = action
-			const nodeEvents = [...generatorFunc(state.sentry, ...argValues)]
 
-			const forwardUpdateFuncs = [
-				{},
-				...nodeEvents.map(getForwardUpdateFuncs),
-				{},
-			]
-
-			const backwardUpdateFuncs = [
-				{},
-				{},
-				...nodeEvents.map(getBackwardUpdateFuncs),
-			]
+			const {
+				generator,
+				forwardUpdateFuncs,
+				backwardUpdateFuncs,
+			} = callGeneratorStepForward(generatorFunc(state.sentry, ...argValues))
 
 			return {
+				generator,
 				forwardUpdateFuncs,
 				backwardUpdateFuncs,
 				curIndex: 1,
 				sentry: { nodeID: sentryID, tree: none },
 				isReset: false,
-				canStepForward: forwardUpdateFuncs.length > 2,
+				canStepForward: forwardUpdateFuncs.length > 1,
 				canStepBackward: false,
 			}
 		}
 		case FunctionProgressActions.StepForward: {
-			const { forwardUpdateFuncs, curIndex, sentry } = state
-			if (curIndex + 1 >= forwardUpdateFuncs.length) {
+			const { generator, forwardUpdateFuncs, backwardUpdateFuncs } = getOrElse(
+				() => ({
+					generator: state.generator,
+					forwardUpdateFuncs: state.forwardUpdateFuncs,
+					backwardUpdateFuncs: state.backwardUpdateFuncs,
+				})
+			)(map(callGeneratorStepForward)(state.generator))
+
+			const { curIndex, sentry } = state
+			if (curIndex >= forwardUpdateFuncs.length) {
 				throw new Error('cannot step forward')
 			}
 
@@ -413,9 +441,12 @@ export const functionProgressReducer = (
 
 			return {
 				...state,
+				generator,
+				forwardUpdateFuncs,
+				backwardUpdateFuncs,
 				curIndex: updatedIndex,
 				sentry: updatedSentry,
-				canStepForward: updatedIndex + 1 < forwardUpdateFuncs.length,
+				canStepForward: updatedIndex < forwardUpdateFuncs.length,
 				canStepBackward: true,
 			}
 		}

@@ -12,7 +12,7 @@ export function scopeFibonacciGenerator(makeNode: MakeNodeFunc) {
 	return function* fibonacciGenerator(
 		parentNode: SentryNode | FuncNode,
 		fibNumber: number
-	): Iterable<FunctionProgressStepDetails[]> {
+	): Generator<FunctionProgressStepDetails[]> {
 		const node = makeNode([['fibNumber', fibNumber.toString()]])
 		yield [getAddChildStepEvent(parentNode, node), getLastActionStepEvent(node)]
 
