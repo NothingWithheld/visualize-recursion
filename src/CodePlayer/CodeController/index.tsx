@@ -68,7 +68,7 @@ export const CodeController = ({
 	start,
 	startAndStepOnce,
 	functionInputObjs,
-}: CodeControllerProps) => {
+}: CodeControllerProps): JSX.Element => {
 	const [delayMilliseconds, setDelayMilliseconds] = useState(500)
 	const [functionInputDetails, setFunctionInputDetails] = useState(
 		functionInputObjs
@@ -113,7 +113,7 @@ export const CodeController = ({
 					disabled={isStepping || !canStepBackward}
 				>
 					STEP BACKWARD
-					<ForwardIcon />
+					<ForwardIcon style={{ transform: 'rotate(180deg)' }} />
 				</MinWidthButton>
 				<MinWidthButton onClick={reset} disabled={isStepping || isReset}>
 					RESET
