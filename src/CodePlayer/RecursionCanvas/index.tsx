@@ -104,9 +104,12 @@ export const RecursionCanvas = ({
 				))}
 			</Box>
 			{getOrElse<JSX.Element | null>(() => null)(
-				map((node: PlacedNode<FuncNode>) => <VariablesWindow {...node} />)(
-					openVariablesNode
-				)
+				map((node: PlacedNode<FuncNode>) => (
+					<VariablesWindow
+						{...node}
+						closeWindow={() => setOpenVariablesNode(none)}
+					/>
+				))(openVariablesNode)
 			)}
 		</>
 	)
