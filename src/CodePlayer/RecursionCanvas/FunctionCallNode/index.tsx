@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, memo } from 'react'
 import { Group, Circle, Text, Line } from 'react-konva'
 import { nodeRadius } from '../../../nodes/constants'
 import useKonvaTextWidth from '../../../Konva/useKonvaTextWidth'
@@ -10,37 +10,40 @@ import { pipe } from 'fp-ts/es6/pipeable'
 interface FunctionCallNodeProps {
 	readonly x: number
 	readonly y: number
-	readonly returnValue: Option<string>
 	readonly args: Array<[string, string]>
+	readonly returnValue: Option<string>
 	readonly lastAction: boolean
+	readonly isViewingVariables: boolean
 	readonly setLayerPosition: (x: number, y: number) => void
-	readonly openExtraDetails: (x: number, y: number) => void
+	readonly viewVariables: () => void
 }
 
 const FunctionCallNode = ({
 	x,
 	y,
-	returnValue,
 	args,
+	returnValue,
 	lastAction,
+	isViewingVariables,
 	setLayerPosition,
-	openExtraDetails,
+	viewVariables,
 }: FunctionCallNodeProps): JSX.Element => {
 	const [funcNameWidth, funcNameWidthCallback] = useKonvaTextWidth()
 	const [returnValueWidth, returnValueWidthCallback] = useKonvaTextWidth()
 
+	console.log('hi', { args, isViewingVariables })
 	if (lastAction) {
 		setLayerPosition(-x, -y)
 	}
 
 	const circleRef = useRef<Konva.Circle>(null)
-	const handleClick = () => {
-		if (circleRef.current !== null) {
-			const { x, y } = circleRef.current.getAbsolutePosition()
+	// const handleClick = () => {
+	// 	if (circleRef.current !== null) {
+	// 		const { x, y } = circleRef.current.getAbsolutePosition()
 
-			openExtraDetails(x, y)
-		}
-	}
+	// 		openExtraDetails(x, y)
+	// 	}
+	// }
 
 	const functionHasNotReturned = isNone(returnValue)
 
@@ -58,7 +61,7 @@ const FunctionCallNode = ({
 				}
 				strokeWidth={5}
 				ref={circleRef}
-				onClick={handleClick}
+				onClick={viewVariables}
 			/>
 			<Text
 				text={args.map(([, argValue]) => argValue).join(', ')}
@@ -83,4 +86,15 @@ const FunctionCallNode = ({
 	)
 }
 
-export default FunctionCallNode
+const areEqual = (
+	prevProps: FunctionCallNodeProps,
+	nextProps: FunctionCallNodeProps
+): boolean =>
+	prevProps.x === nextProps.x &&
+	prevProps.y === nextProps.y &&
+	prevProps.args === nextProps.args &&
+	prevProps.returnValue === nextProps.returnValue &&
+	prevProps.lastAction === nextProps.lastAction &&
+	prevProps.isViewingVariables === nextProps.isViewingVariables
+
+export default memo(FunctionCallNode, areEqual)

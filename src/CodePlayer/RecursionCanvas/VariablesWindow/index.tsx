@@ -27,7 +27,7 @@ const VariablesWindow = ({
 	)
 
 	return (
-		<Box display="flex" margin="14px 8px" padding="20px">
+		<Box display="flex" flexDirection="column" margin="14px 8px" padding="20px">
 			<Typography>Arguments</Typography>
 			{args.map(([name, val], i) => (
 				<CodeText key={i}>{`${name} = ${val}`}</CodeText>
