@@ -4,7 +4,13 @@ import { nodeRadius } from '../../../nodes/constants'
 import useKonvaTextWidth from '../../../Konva/useKonvaTextWidth'
 import Konva from 'konva'
 import { Option, isNone, getOrElse } from 'fp-ts/es6/Option'
-import { pipe } from 'fp-ts/es6/pipeable'
+import {
+	nodeBackgroundColor,
+	nodeOutlineColor,
+	nodeHighlightColor,
+	waitingColor,
+	inspectingColor,
+} from '../../../constants'
 
 interface FunctionCallNodeProps {
 	readonly x: number
@@ -54,13 +60,15 @@ const FunctionCallNode = ({
 		>
 			<Circle
 				radius={nodeRadius}
-				fill="#F0F4F8"
+				fill={nodeBackgroundColor}
 				stroke={
-					lastAction
-						? '#B990FF'
+					isViewingVariables
+						? inspectingColor
+						: lastAction
+						? nodeHighlightColor
 						: functionHasNotReturned
-						? '#FADB5F'
-						: '#BCCCDC'
+						? waitingColor
+						: nodeOutlineColor
 				}
 				strokeWidth={5}
 				ref={circleRef}
@@ -74,7 +82,7 @@ const FunctionCallNode = ({
 				fontSize={18}
 				ref={funcNameWidthCallback}
 			/>
-			<Line points={[-10, 0, 10, 0]} stroke="#BCCCDC" width={1} />
+			<Line points={[-10, 0, 10, 0]} stroke={nodeOutlineColor} width={1} />
 			<Text
 				text={getOrElse(() => 'waiting')(returnValue)}
 				x={-returnValueWidth / 2}

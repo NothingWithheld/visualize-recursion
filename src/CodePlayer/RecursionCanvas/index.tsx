@@ -24,16 +24,18 @@ export const RecursionCanvas = ({
 }: RecursionCanvasProps): JSX.Element => {
 	const [layerX, setLayerX] = useState(0)
 	const [layerY, setLayerY] = useState(0)
+	const [draggedX, setDraggedX] = useState(0)
+	const [draggedY, setDraggedY] = useState(0)
 	const [openVariablesNode, setOpenVariablesNode] = useState<
 		Option<PlacedNode<FuncNode>>
 	>(none)
 
 	const isEqualToVariableNode = useCallback(
 		(node: PlacedNode<FuncNode>): boolean =>
-			getOrElse(() => false)(
-				map((varNode: PlacedNode<FuncNode>) => eqNode.equals(varNode, node))(
-					openVariablesNode
-				)
+			pipe(
+				openVariablesNode,
+				map((varNode: PlacedNode<FuncNode>) => eqNode.equals(varNode, node)),
+				getOrElse<boolean>(() => false)
 			),
 		[openVariablesNode]
 	)
@@ -48,10 +50,10 @@ export const RecursionCanvas = ({
 		)
 
 		if (possibleMatch !== undefined) {
-			const isSameObject = getOrElse(() => false)(
-				map((node: PlacedNode<FuncNode>) => node === possibleMatch)(
-					openVariablesNode
-				)
+			const isSameObject = pipe(
+				openVariablesNode,
+				map((node: PlacedNode<FuncNode>) => node === possibleMatch),
+				getOrElse<boolean>(() => false)
 			)
 
 			if (!isSameObject) {
@@ -63,8 +65,8 @@ export const RecursionCanvas = ({
 	}, [treeRoot, isEqualToVariableNode, openVariablesNode])
 
 	const setLayerPosition = (x: number, y: number) => {
-		setLayerX(x)
-		setLayerY(y)
+		setLayerX(x - draggedX)
+		setLayerY(y - draggedY)
 	}
 
 	const setFunctionCallNode = (
@@ -106,6 +108,11 @@ export const RecursionCanvas = ({
 					width={window.innerWidth - 100}
 					height={(2 * window.innerHeight) / 3}
 					draggable
+					onDragEnd={(event) => {
+						const { x, y } = event.target.position()
+						setDraggedX(x)
+						setDraggedY(y)
+					}}
 				>
 					<Layer
 						x={layerX + window.innerWidth / 2}
