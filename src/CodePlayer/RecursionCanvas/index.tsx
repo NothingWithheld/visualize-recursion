@@ -11,7 +11,7 @@ import {
 	iterablePlacedNode,
 	eqNode,
 } from '../../nodes/types'
-import { Option, map, getOrElse, none, some } from 'fp-ts/es6/Option'
+import { Option, map, getOrElse, none, some, isNone } from 'fp-ts/es6/Option'
 import * as R from 'ramda'
 import { pipe } from 'fp-ts/es6/pipeable'
 
@@ -48,9 +48,19 @@ export const RecursionCanvas = ({
 		)
 
 		if (possibleMatch !== undefined) {
-			setOpenVariablesNode(some(possibleMatch))
+			const isSameObject = getOrElse(() => false)(
+				map((node: PlacedNode<FuncNode>) => node === possibleMatch)(
+					openVariablesNode
+				)
+			)
+
+			if (!isSameObject) {
+				setOpenVariablesNode(some(possibleMatch))
+			}
+		} else if (!isNone(openVariablesNode)) {
+			setOpenVariablesNode(none)
 		}
-	}, [treeRoot, isEqualToVariableNode])
+	}, [treeRoot, isEqualToVariableNode, openVariablesNode])
 
 	const setLayerPosition = (x: number, y: number) => {
 		setLayerX(x)
