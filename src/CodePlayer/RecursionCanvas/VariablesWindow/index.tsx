@@ -48,7 +48,7 @@ const VariablesWindow = ({
 			padding="14px 12px"
 			position="relative"
 		>
-			<TopLeftButton onClick={closeWindow}>
+			<TopLeftButton onClick={closeWindow} aria-label="close">
 				<CloseIcon />
 			</TopLeftButton>
 			<CodeText># Arguments</CodeText>

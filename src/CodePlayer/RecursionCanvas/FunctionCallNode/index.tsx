@@ -2,7 +2,6 @@ import React, { useRef, memo } from 'react'
 import { Group, Circle, Text, Line } from 'react-konva'
 import { nodeRadius } from '../../../nodes/constants'
 import useKonvaTextWidth from '../../../Konva/useKonvaTextWidth'
-import { hasNotReturned } from '../../../nodes/constants'
 import Konva from 'konva'
 import { Option, isNone, getOrElse } from 'fp-ts/es6/Option'
 import { pipe } from 'fp-ts/es6/pipeable'
@@ -37,18 +36,23 @@ const FunctionCallNode = ({
 	}
 
 	const circleRef = useRef<Konva.Circle>(null)
-	// const handleClick = () => {
-	// 	if (circleRef.current !== null) {
-	// 		const { x, y } = circleRef.current.getAbsolutePosition()
-
-	// 		openExtraDetails(x, y)
-	// 	}
-	// }
 
 	const functionHasNotReturned = isNone(returnValue)
 
 	return (
-		<Group x={x} y={y}>
+		<Group
+			x={x}
+			y={y}
+			onClick={viewVariables}
+			onMouseEnter={(event) => {
+				const container = (event.target as Konva.Stage).getStage().container()
+				container.style.cursor = 'pointer'
+			}}
+			onMouseLeave={(event) => {
+				const container = (event.target as Konva.Stage).getStage().container()
+				container.style.cursor = 'default'
+			}}
+		>
 			<Circle
 				radius={nodeRadius}
 				fill="#F0F4F8"
@@ -61,7 +65,6 @@ const FunctionCallNode = ({
 				}
 				strokeWidth={5}
 				ref={circleRef}
-				onClick={viewVariables}
 			/>
 			<Text
 				text={args.map(([, argValue]) => argValue).join(', ')}
