@@ -14,11 +14,10 @@ export const preorder = <Node>(iterableNode: IterableNode<Node>) => (
 		const children = iterableNode.getChildren(node)
 		const updatedProps = { ...props, ...propsForNodeAndChildren[nodeID] }
 
+		yield [node, updatedProps]
 		for (const child of children) {
 			yield* preorderGenerator(child, updatedProps)
 		}
-
-		yield [node, updatedProps]
 	}
 
 	return Array.from(preorderGenerator(root, {}))

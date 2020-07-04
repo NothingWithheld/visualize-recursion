@@ -1,5 +1,5 @@
 import { Eq, getStructEq, eqNumber } from 'fp-ts/es6/Eq'
-import { Option, none } from 'fp-ts/es6/Option'
+import { Option } from 'fp-ts/es6/Option'
 
 export interface NodeBase<Node> {
 	readonly nodeID: number
@@ -62,3 +62,20 @@ export type PlacingNode<Node> = Omit<Node, 'children'> &
 	NodeBase<PlacingNode<Node>>
 
 export const eqNode: Eq<NodeBase<any>> = getStructEq({ nodeID: eqNumber })
+
+// Binary Node
+
+interface BinaryNodeBase<Node> {
+	readonly nodeID: number
+	readonly left: Option<Node>
+	readonly right: Option<Node>
+	readonly properties: { [propName: string]: any }
+	readonly propertyOrder: string[]
+}
+
+export type BinaryNode = BinaryNodeBase<BinaryNode>
+
+export type PlacingBinaryNode = PlacingNodeData<PlacingBinaryNode> &
+	BinaryNodeBase<PlacingBinaryNode>
+
+export type PlacedBinaryNode = PlacedNodeData & BinaryNodeBase<PlacedBinaryNode>
