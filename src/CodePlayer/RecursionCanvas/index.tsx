@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Stage, Layer } from 'react-konva'
 import FunctionCallNode from './FunctionCallNode'
 import FunctionCallArrow from './FunctionCallArrow'
-import CallNodeExtraDetails from './CallNodeExtraDetails'
 import VariablesWindow from './VariablesWindow'
 import Box from '@material-ui/core/Box'
 import { preorder, getEdges } from '../../nodes/useNodes/traversals'
@@ -25,12 +24,33 @@ export const RecursionCanvas = ({
 }: RecursionCanvasProps): JSX.Element => {
 	const [layerX, setLayerX] = useState(0)
 	const [layerY, setLayerY] = useState(0)
-	const [nodeExtraDetailPositions, setNodeExtraDetailPositions] = useState<
-		Array<PlacedNode<FuncNode>>
-	>([])
 	const [openVariablesNode, setOpenVariablesNode] = useState<
 		Option<PlacedNode<FuncNode>>
 	>(none)
+
+	const isEqualToVariableNode = useCallback(
+		(node: PlacedNode<FuncNode>): boolean =>
+			getOrElse(() => false)(
+				map((varNode: PlacedNode<FuncNode>) => eqNode.equals(varNode, node))(
+					openVariablesNode
+				)
+			),
+		[openVariablesNode]
+	)
+
+	useEffect(() => {
+		const [possibleMatch] = pipe(
+			treeRoot,
+			map(preorder(iterablePlacedNode<FuncNode>())),
+			map((nodeList) => nodeList.map(([node]) => node)),
+			map((nodeList) => nodeList.filter(isEqualToVariableNode)),
+			getOrElse<PlacedNode<FuncNode>[]>(() => [])
+		)
+
+		if (possibleMatch !== undefined) {
+			setOpenVariablesNode(some(possibleMatch))
+		}
+	}, [treeRoot, isEqualToVariableNode])
 
 	const setLayerPosition = (x: number, y: number) => {
 		setLayerX(x)
@@ -43,11 +63,7 @@ export const RecursionCanvas = ({
 	) => (
 		<FunctionCallNode
 			{...node}
-			isViewingVariables={getOrElse(() => false)(
-				map((varNode: PlacedNode<FuncNode>) => eqNode.equals(varNode, node))(
-					openVariablesNode
-				)
-			)}
+			isViewingVariables={isEqualToVariableNode(node)}
 			setLayerPosition={setLayerPosition}
 			viewVariables={() => setOpenVariablesNode(some(node))}
 			key={i}
@@ -99,9 +115,6 @@ export const RecursionCanvas = ({
 						)}
 					</Layer>
 				</Stage>
-				{nodeExtraDetailPositions.map((positionProps, i) => (
-					<CallNodeExtraDetails {...positionProps} key={i} />
-				))}
 			</Box>
 			{getOrElse<JSX.Element | null>(() => null)(
 				map((node: PlacedNode<FuncNode>) => (

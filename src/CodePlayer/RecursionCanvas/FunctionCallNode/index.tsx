@@ -30,7 +30,6 @@ const FunctionCallNode = ({
 	const [funcNameWidth, funcNameWidthCallback] = useKonvaTextWidth()
 	const [returnValueWidth, returnValueWidthCallback] = useKonvaTextWidth()
 
-	console.log('hi', { args, isViewingVariables })
 	if (lastAction) {
 		setLayerPosition(-x, -y)
 	}
