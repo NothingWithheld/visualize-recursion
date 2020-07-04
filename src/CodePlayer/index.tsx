@@ -12,7 +12,7 @@ interface CodePlayerProps {
 export const CodePlayer = ({
 	scopeGeneratorFunc,
 	functionInputObjs,
-}: CodePlayerProps) => {
+}: CodePlayerProps): JSX.Element => {
 	const { treeRoot, ...codeControllerProps } = useRecursionStepper(
 		scopeGeneratorFunc
 	)

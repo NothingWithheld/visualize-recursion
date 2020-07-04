@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Arrow } from 'react-konva'
 import { nodeRadius } from '../../../nodes/constants'
 import { calculatePerimeterPositions } from '../../../nodes/utils'
+import { edgeColor } from '../../../constants'
 
 interface FunctionCallArrowProps {
 	readonly startX: number
@@ -15,7 +16,7 @@ const FunctionCallArrow = ({
 	startY,
 	endX,
 	endY,
-}: FunctionCallArrowProps) => {
+}: FunctionCallArrowProps): JSX.Element => {
 	const {
 		startX: arrowStartX,
 		startY: arrowStartY,
@@ -26,11 +27,11 @@ const FunctionCallArrow = ({
 	return (
 		<Arrow
 			points={[arrowStartX, arrowStartY, arrowEndX, arrowEndY]}
-			fill="#486581"
-			stroke="#486581"
+			fill={edgeColor}
+			stroke={edgeColor}
 			strokeWidth={3}
 		/>
 	)
 }
 
-export default FunctionCallArrow
+export default memo(FunctionCallArrow)
