@@ -79,3 +79,7 @@ export type PlacingBinaryNode = PlacingNodeData<PlacingBinaryNode> &
 	BinaryNodeBase<PlacingBinaryNode>
 
 export type PlacedBinaryNode = PlacedNodeData & BinaryNodeBase<PlacedBinaryNode>
+
+export const eqBinaryNode: Eq<BinaryNodeBase<any>> = getStructEq({
+	nodeID: eqNumber,
+})
