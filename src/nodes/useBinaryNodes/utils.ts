@@ -11,9 +11,11 @@ import {
 } from 'fp-ts/es6/Option'
 import { pipe } from 'fp-ts/es6/pipeable'
 
+export type BinaryTreeArray = [number, boolean][][]
+
 export const buildBinaryTreeFromArraySpec = (
 	makeNode: MakeNodeFunc,
-	nodeArrays: [number, boolean][][]
+	nodeArrays: BinaryTreeArray
 ): Option<BinaryNode> => {
 	let treeRoot: Option<BinaryNode> = none
 
@@ -85,47 +87,48 @@ const findParentOf = curry(
 	}
 )
 
-export const addNodeToTree = (
-	treeRoot: BinaryNode,
-	child: BinaryNode,
-	isLeftChild: boolean,
-	parent: BinaryNode
-): BinaryNode => {
-	const attachChild = (_: BinaryNode): BinaryNode =>
-		isLeftChild
-			? { ...parent, left: some(child) }
-			: { ...parent, right: some(child) }
+export const addNodeToTree = curry(
+	(
+		child: BinaryNode,
+		isLeftChild: boolean,
+		treeRoot: BinaryNode,
+		parent: BinaryNode
+	): BinaryNode => {
+		const attachChild = (_: BinaryNode): BinaryNode =>
+			isLeftChild
+				? { ...parent, left: some(child) }
+				: { ...parent, right: some(child) }
 
-	return updateTree({ [parent.nodeID]: attachChild }, treeRoot)
-}
+		return updateTree({ [parent.nodeID]: attachChild }, treeRoot)
+	}
+)
 
-export const deleteNodeFromTree = (
-	treeRoot: BinaryNode,
-	nodeToDelete: BinaryNode
-): BinaryNode => {
-	const possibleParent = findParentOf(nodeToDelete, treeRoot)
+export const deleteNodeFromTree = curry(
+	(nodeToDelete: BinaryNode, treeRoot: BinaryNode): BinaryNode => {
+		const possibleParent = findParentOf(nodeToDelete, treeRoot)
 
-	const removeChildFromParent = (parent: BinaryNode): BinaryNode => {
-		const removeChildFunc = (_: BinaryNode): BinaryNode => {
-			const { left, right } = parent
+		const removeChildFromParent = (parent: BinaryNode): BinaryNode => {
+			const removeChildFunc = (_: BinaryNode): BinaryNode => {
+				const { left, right } = parent
 
-			return {
-				...parent,
-				left: isSameAsChild(nodeToDelete, left) ? none : left,
-				right: isSameAsChild(nodeToDelete, left) ? none : right,
+				return {
+					...parent,
+					left: isSameAsChild(nodeToDelete, left) ? none : left,
+					right: isSameAsChild(nodeToDelete, right) ? none : right,
+				}
 			}
+
+			return updateTree(
+				{
+					[parent.nodeID]: removeChildFunc,
+				},
+				treeRoot
+			)
 		}
 
-		return updateTree(
-			{
-				[parent.nodeID]: removeChildFunc,
-			},
-			treeRoot
-		)
+		return getOrElse(() => treeRoot)(map(removeChildFromParent)(possibleParent))
 	}
-
-	return getOrElse(() => treeRoot)(map(removeChildFromParent)(possibleParent))
-}
+)
 
 export type MakeNodeFunc = () => BinaryNode
 
