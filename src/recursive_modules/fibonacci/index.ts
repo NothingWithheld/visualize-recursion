@@ -8,7 +8,7 @@ import {
 } from '../../nodes/useNodes/utils'
 import { SentryNode, FuncNode } from '../../nodes/types'
 
-export function scopeFibonacciGenerator(makeNode: MakeNodeFunc) {
+function scopeFibonacciGenerator(makeNode: MakeNodeFunc) {
 	return function* fibonacciGenerator(
 		parentNode: SentryNode | FuncNode,
 		fibNumber: number
