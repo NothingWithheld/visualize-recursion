@@ -31,7 +31,7 @@ export const useNodes = (): UseNodesReturn => {
 	)
 
 	const { sentry, isReset, canStepForward, canStepBackward } = nodeState
-	const [drawnTree, setDrawnTree] = useState(map(drawTree)(sentry.tree))
+	const [drawnTree, setDrawnTree] = useState(() => map(drawTree)(sentry.tree))
 
 	useEffect(() => setDrawnTree(map(drawTree)(sentry.tree)), [sentry])
 

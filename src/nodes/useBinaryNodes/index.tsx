@@ -27,7 +27,9 @@ const useBinaryNodes = (
 	const [treeRoot, setTreeRoot] = useState(() =>
 		buildBinaryTreeFromArraySpec(makeNode, startingNodes)
 	)
-	const [drawnTree, setDrawnTree] = useState(map(drawBinaryTree)(treeRoot))
+	const [drawnTree, setDrawnTree] = useState(() =>
+		map(drawBinaryTree)(treeRoot)
+	)
 
 	useEffect(() => setDrawnTree(map(drawBinaryTree)(treeRoot)), [treeRoot])
 
