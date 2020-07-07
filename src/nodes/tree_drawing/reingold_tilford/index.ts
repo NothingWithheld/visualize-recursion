@@ -1,10 +1,5 @@
 import { nodeRadius } from '../../constants'
-import {
-	hasChildren,
-	getLeftChild,
-	getRightChild,
-	getRightmostChild,
-} from '../helpers'
+import { hasChildren, getLeftChild, getRightmostChild } from '../helpers'
 import { PlacingNode, PlacedNode } from '../../types'
 import {
 	Option,
@@ -47,62 +42,40 @@ function getPlacedNode<Node>(
 	node: PlacingNode<Node>,
 	depth = 0
 ): PlacingNode<Node> {
-	const placeWithBothChildren = (leftChild: PlacingNode<Node>) => (
-		rightChild: PlacingNode<Node>
-	): PlacingNode<Node> => {
-		const placedLeftChild = getPlacedNode<Node>(leftChild, depth + 1)
-		const placedRightChild = getPlacedNode<Node>(rightChild, depth + 1)
-		const adjustedRightChild = getAdjustedRightSubtree<Node>(
-			placedLeftChild,
-			placedRightChild
-		)
+	const placedChildren: PlacingNode<Node>[] = []
 
-		return {
-			...node,
-			x: (placedLeftChild.x + adjustedRightChild.x) / 2,
-			y: depth * minYDistanceBetweenNodes,
-			children: [placedLeftChild, adjustedRightChild],
-			offset: 0,
-			thread: none,
-		}
-	}
-
-	const placeWithOneChild = (child: PlacingNode<Node>): PlacingNode<Node> => {
+	for (const child of node.children) {
 		const placedChild = getPlacedNode<Node>(child, depth + 1)
+		if (placedChildren.length > 0) {
+			const adjustedPlacedChild = getAdjustedRightSubtree<Node>(
+				placedChildren[placedChildren.length - 1],
+				placedChild
+			)
 
+			placedChildren.push(adjustedPlacedChild)
+		} else {
+			placedChildren.push(placedChild)
+		}
+	}
+
+	if (placedChildren.length === 0) {
 		return {
 			...node,
-			x: placedChild.x,
+			x: 0,
 			y: depth * minYDistanceBetweenNodes,
-			children: [placedChild],
 			offset: 0,
 			thread: none,
 		}
 	}
 
-	const handlePlaceWithAtleastOneChild = (
-		child: PlacingNode<Node>
-	): PlacingNode<Node> => {
-		return pipe(
-			getRightChild<PlacingNode<Node>>(node),
-			map(placeWithBothChildren(child)),
-			getOrElse(() => placeWithOneChild(child))
-		)
-	}
-
-	const placedLeafNode: PlacingNode<Node> = {
+	return {
 		...node,
-		x: 0,
+		x: (placedChildren[0].x + placedChildren[placedChildren.length - 1].x) / 2,
 		y: depth * minYDistanceBetweenNodes,
+		children: placedChildren,
 		offset: 0,
 		thread: none,
 	}
-
-	return pipe(
-		getLeftChild<PlacingNode<Node>>(node),
-		map(handlePlaceWithAtleastOneChild),
-		getOrElse(() => placedLeafNode)
-	)
 }
 
 // MUTATES deep child node to place thread
