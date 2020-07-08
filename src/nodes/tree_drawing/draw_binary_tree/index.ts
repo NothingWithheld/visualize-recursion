@@ -130,25 +130,26 @@ function getAdjustedRightSubtree(
 		leftmostOnLeftAtShortestHeight,
 		rightmostOnRightAtShortestHeight,
 		maxGap,
-		offset,
+		combOffset,
 	} = getContourData(leftTree, rightTree, leftTree, rightTree)
 
 	const amountToSlideRightTreeOverBy = maxGap + minXDistanceBetweenNodes
 
-	const placeThread = (toUpdate: PlacingBinaryNode) => (
+	const placeThread = (toUpdate: PlacingBinaryNode, crossingLeft: boolean) => (
 		threadTo: PlacingBinaryNode
 	): void => {
 		toUpdate.thread = some(threadTo)
-		toUpdate.offset = offset - amountToSlideRightTreeOverBy
+		const treeOffsetDiff = combOffset + amountToSlideRightTreeOverBy
+		toUpdate.offset = crossingLeft ? treeOffsetDiff : -treeOffsetDiff
 	}
 
 	// if one subtree is taller than the other, attach a thread when combining the trees
 	if (isNone(leftmostOnRightAtShortestHeightPlusOne)) {
-		map(placeThread(rightmostOnRightAtShortestHeight))(
+		map(placeThread(rightmostOnRightAtShortestHeight, false))(
 			rightmostOnLeftAtShortestHeightPlusOne
 		)
 	} else if (isNone(rightmostOnLeftAtShortestHeightPlusOne)) {
-		map(placeThread(leftmostOnLeftAtShortestHeight))(
+		map(placeThread(leftmostOnLeftAtShortestHeight, true))(
 			leftmostOnRightAtShortestHeightPlusOne
 		)
 	}
@@ -166,7 +167,7 @@ type GetCountourDataReturn = {
 	leftmostOnLeftAtShortestHeight: PlacingBinaryNode
 	rightmostOnRightAtShortestHeight: PlacingBinaryNode
 	maxGap: number
-	offset: number
+	combOffset: number
 }
 
 function getContourData(
@@ -174,12 +175,12 @@ function getContourData(
 	leftmostOnRightTree: PlacingBinaryNode,
 	leftmostOnLeftTree: PlacingBinaryNode,
 	rightmostOnRightTree: PlacingBinaryNode,
-	curMaxGap = 0,
-	curOffset = 0
+	curMaxGap = -Number.MAX_SAFE_INTEGER,
+	curCombOffset = 0
 ): GetCountourDataReturn {
 	const maxGap = Math.max(
 		curMaxGap,
-		rightmostOnLeftTree.x + curOffset - leftmostOnRightTree.x
+		rightmostOnLeftTree.x + curCombOffset - leftmostOnRightTree.x
 	)
 
 	const nextRightmostOnLeftTree = getNextRightInTree(rightmostOnLeftTree)
@@ -193,7 +194,7 @@ function getContourData(
 		nextRightOnRightTree: PlacingBinaryNode
 	): GetCountourDataReturn => {
 		const offset =
-			curOffset + rightmostOnLeftTree.offset - leftmostOnRightTree.offset
+			curCombOffset + rightmostOnLeftTree.offset - leftmostOnRightTree.offset
 		return getContourData(
 			nextRightOnLeftTree,
 			nextLeftOnRightTree,
@@ -218,7 +219,7 @@ function getContourData(
 		leftmostOnLeftAtShortestHeight: leftmostOnLeftTree,
 		rightmostOnRightAtShortestHeight: rightmostOnRightTree,
 		maxGap,
-		offset: curOffset,
+		combOffset: curCombOffset,
 	}
 
 	return pipe(

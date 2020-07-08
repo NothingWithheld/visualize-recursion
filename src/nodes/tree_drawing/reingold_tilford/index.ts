@@ -89,25 +89,26 @@ function getAdjustedRightSubtree<Node>(
 		leftmostOnLeftAtShortestHeight,
 		rightmostOnRightAtShortestHeight,
 		maxGap,
-		offset,
+		combOffset,
 	} = getContourData<Node>(leftTree, rightTree, leftTree, rightTree)
 
 	const amountToSlideRightTreeOverBy = maxGap + minXDistanceBetweenNodes
 
-	const placeThread = (toUpdate: PlacingNode<Node>) => (
+	const placeThread = (toUpdate: PlacingNode<Node>, crossingLeft: boolean) => (
 		threadTo: PlacingNode<Node>
 	): void => {
 		toUpdate.thread = some(threadTo)
-		toUpdate.offset = offset - amountToSlideRightTreeOverBy
+		const treeOffsetDiff = combOffset + amountToSlideRightTreeOverBy
+		toUpdate.offset = crossingLeft ? treeOffsetDiff : -treeOffsetDiff
 	}
 
 	// if one subtree is taller than the other, attach a thread when combining the trees
 	if (isNone(leftmostOnRightAtShortestHeightPlusOne)) {
-		map(placeThread(rightmostOnRightAtShortestHeight))(
+		map(placeThread(rightmostOnRightAtShortestHeight, false))(
 			rightmostOnLeftAtShortestHeightPlusOne
 		)
 	} else if (isNone(rightmostOnLeftAtShortestHeightPlusOne)) {
-		map(placeThread(leftmostOnLeftAtShortestHeight))(
+		map(placeThread(leftmostOnLeftAtShortestHeight, true))(
 			leftmostOnRightAtShortestHeightPlusOne
 		)
 	}
@@ -125,7 +126,7 @@ type GetCountourDataReturn<Node> = {
 	leftmostOnLeftAtShortestHeight: PlacingNode<Node>
 	rightmostOnRightAtShortestHeight: PlacingNode<Node>
 	maxGap: number
-	offset: number
+	combOffset: number
 }
 
 function getContourData<Node>(
@@ -133,12 +134,12 @@ function getContourData<Node>(
 	leftmostOnRightTree: PlacingNode<Node>,
 	leftmostOnLeftTree: PlacingNode<Node>,
 	rightmostOnRightTree: PlacingNode<Node>,
-	curMaxGap = 0,
-	curOffset = 0
+	curMaxGap = -Number.MAX_SAFE_INTEGER,
+	curCombOffset = 0
 ): GetCountourDataReturn<Node> {
 	const maxGap = Math.max(
 		curMaxGap,
-		rightmostOnLeftTree.x + curOffset - leftmostOnRightTree.x
+		rightmostOnLeftTree.x + curCombOffset - leftmostOnRightTree.x
 	)
 
 	const nextRightmostOnLeftTree = getNextRightInTree<Node>(rightmostOnLeftTree)
@@ -154,7 +155,7 @@ function getContourData<Node>(
 		nextRightOnRightTree: PlacingNode<Node>
 	): GetCountourDataReturn<Node> => {
 		const offset =
-			curOffset + rightmostOnLeftTree.offset - leftmostOnRightTree.offset
+			curCombOffset + rightmostOnLeftTree.offset - leftmostOnRightTree.offset
 		return getContourData<Node>(
 			nextRightOnLeftTree,
 			nextLeftOnRightTree,
@@ -179,7 +180,7 @@ function getContourData<Node>(
 		leftmostOnLeftAtShortestHeight: leftmostOnLeftTree,
 		rightmostOnRightAtShortestHeight: rightmostOnRightTree,
 		maxGap,
-		offset: curOffset,
+		combOffset: curCombOffset,
 	}
 
 	return pipe(
