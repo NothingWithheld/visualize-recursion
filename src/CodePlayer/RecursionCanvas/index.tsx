@@ -120,14 +120,14 @@ export const RecursionCanvas = ({
 					>
 						{pipe(
 							treeRoot,
-							map(preorder(iterablePlacedNode<FuncNode>())),
-							map((nodeList) => nodeList.map(setFunctionCallNode)),
+							map(getEdges(iterablePlacedNode<FuncNode>())),
+							map(R.map(setFunctionCallArrow)),
 							getOrElse<JSX.Element[] | null>(() => null)
 						)}
 						{pipe(
 							treeRoot,
-							map(getEdges(iterablePlacedNode<FuncNode>())),
-							map(R.map(setFunctionCallArrow)),
+							map(preorder(iterablePlacedNode<FuncNode>())),
+							map((nodeList) => nodeList.map(setFunctionCallNode)),
 							getOrElse<JSX.Element[] | null>(() => null)
 						)}
 					</Layer>

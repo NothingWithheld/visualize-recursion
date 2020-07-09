@@ -15,8 +15,8 @@ function scopeEditDistSliceGenerator(makeNode: MakeNodeFunc) {
 		toMatch: string
 	): Generator<FunctionProgressStepDetails[]> {
 		const node = makeNode([
-			['to_change', `"${toChange}"`],
-			['to_match', `"${toMatch}"`],
+			['to_change', `'${toChange}'`],
+			['to_match', `'${toMatch}'`],
 		])
 		yield [getAddChildStepEvent(parentNode, node), getLastActionStepEvent(node)]
 
