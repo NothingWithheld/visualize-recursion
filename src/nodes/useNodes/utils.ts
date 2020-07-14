@@ -99,7 +99,12 @@ const addVariableDetails = curry(
 					([variableName_]) => variableName === variableName_
 				)
 
-				variable.push(value)
+				if (variable !== undefined) {
+					variable[1].push(value)
+				} else {
+					acc.push([variableName, [value]])
+				}
+
 				return acc
 			},
 			node.variableDetails
@@ -120,7 +125,7 @@ const revertVariableDetails = curry(
 					([variableName_]) => variableName === variableName_
 				)
 
-				variable.pop()
+				variable[1].pop()
 				return acc
 			},
 			node.variableDetails
