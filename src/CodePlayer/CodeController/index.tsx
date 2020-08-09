@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import Button from '@material-ui/core/Button'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
-import ArrowForwardIcon from '@material-ui/icons/ArrowForwardRounded'
 import PlayArrowIcon from '@material-ui/icons/PlayArrowRounded'
 import PauseIcon from '@material-ui/icons/PauseRounded'
 import RefreshIcon from '@material-ui/icons/Refresh'
@@ -9,7 +8,6 @@ import TextField from '@material-ui/core/TextField'
 import Box from '@material-ui/core/Box'
 import { withStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
-import FilledInput from '@material-ui/core/FilledInput'
 import ForwardIcon from '@material-ui/icons/Forward'
 
 const MinWidthButton = withStyles({
@@ -148,12 +146,12 @@ export const CodeController = ({
 				})}
 				<TextField
 					type="number"
-					label="Delay (seconds)"
-					value={(delayMilliseconds / 1000).toString()}
+					label="Delay (milliseconds)"
+					value={delayMilliseconds.toString()}
 					onChange={(event) => {
-						const maybeInputVal = parseFloat(event.target.value)
+						const maybeInputVal = parseInt(event.target.value)
 						if (!Number.isNaN(maybeInputVal)) {
-							setDelayMilliseconds(1000 * maybeInputVal)
+							setDelayMilliseconds(maybeInputVal)
 						}
 					}}
 					disabled={!isReset}

@@ -61,7 +61,7 @@ const scopeDistinctSubsequencesGenerator = (makeNode: MakeNodeFunc) => {
 
 			const notUsingVariableDetails: [string, string][] = [
 				['to_use_char', toUseChar.toString()],
-				['target_char', target.toString()],
+				['target_char', targetChar.toString()],
 				['ways_from_not_using_char', waysFromNotUsingChar.toString()],
 			]
 
