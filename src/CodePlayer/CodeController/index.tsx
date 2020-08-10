@@ -5,10 +5,10 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrowRounded'
 import PauseIcon from '@material-ui/icons/PauseRounded'
 import RefreshIcon from '@material-ui/icons/Refresh'
 import TextField from '@material-ui/core/TextField'
-import Box from '@material-ui/core/Box'
 import { withStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import ForwardIcon from '@material-ui/icons/Forward'
+import { defaultDelayMilliseconds } from '../constants'
 
 const MinWidthButton = withStyles({
 	root: {
@@ -46,10 +46,11 @@ interface CodeControllerProps {
 	readonly isReset: boolean
 	readonly canStepForward: boolean
 	readonly canStepBackward: boolean
-	readonly start: (args: any[], delayMilliseconds: number) => void
-	readonly startAndStepOnce: (args: any[], delayMilliseconds: number) => void
+	readonly start: (args: any[]) => void
+	readonly startAndStepOnce: (args: any[]) => void
 	readonly stepForward: () => void
 	readonly stepBackward: () => void
+	readonly setDelay: (delay: number) => void
 	readonly functionInputObjs: FunctionInputObj[]
 }
 
@@ -65,9 +66,12 @@ export const CodeController = ({
 	stepBackward,
 	start,
 	startAndStepOnce,
+	setDelay,
 	functionInputObjs,
 }: CodeControllerProps): JSX.Element => {
-	const [delayMilliseconds, setDelayMilliseconds] = useState(500)
+	const [delayMilliseconds, setDelayMilliseconds] = useState(
+		defaultDelayMilliseconds
+	)
 	const [functionInputDetails, setFunctionInputDetails] = useState(
 		functionInputObjs
 	)
@@ -87,9 +91,7 @@ export const CodeController = ({
 				) : (
 					<MinWidthButton
 						disabled={!isReset && !canStepForward}
-						onClick={
-							!isReset ? play : () => start(functionArgs, delayMilliseconds)
-						}
+						onClick={!isReset ? play : () => start(functionArgs)}
 					>
 						PLAY
 						<PlayArrowIcon />
@@ -97,9 +99,7 @@ export const CodeController = ({
 				)}
 				<MinWidthButton
 					onClick={
-						!isReset
-							? stepForward
-							: () => startAndStepOnce(functionArgs, delayMilliseconds)
+						!isReset ? stepForward : () => startAndStepOnce(functionArgs)
 					}
 					disabled={!isReset && (isStepping || !canStepForward)}
 				>
@@ -152,9 +152,10 @@ export const CodeController = ({
 						const maybeInputVal = parseInt(event.target.value)
 						if (!Number.isNaN(maybeInputVal)) {
 							setDelayMilliseconds(maybeInputVal)
+							setDelay(maybeInputVal)
 						}
 					}}
-					disabled={!isReset}
+					disabled={isStepping}
 					variant="filled"
 				/>
 			</span>

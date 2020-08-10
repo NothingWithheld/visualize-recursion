@@ -5,6 +5,7 @@ import { usePrevious } from '../../utils'
 import { MakeNodeFunc, NodeGeneratorFunc } from '../../nodes/useNodes/utils'
 import { Option } from 'fp-ts/es6/Option'
 import { FuncNode, PlacedNode } from '../../nodes/types'
+import { defaultDelayMilliseconds } from '../constants'
 
 interface UseRecursionStepperReturn {
 	readonly treeRoot: Option<PlacedNode<FuncNode>>
@@ -17,8 +18,9 @@ interface UseRecursionStepperReturn {
 	readonly stepForward: () => void
 	readonly stepBackward: () => void
 	readonly isReset: boolean
-	readonly start: (args: any[], delayMilliseconds: number) => void
-	readonly startAndStepOnce: (args: any[], delayMilliseconds: number) => void
+	readonly start: (args: any[]) => void
+	readonly startAndStepOnce: (args: any[]) => void
+	readonly setDelay: (delay: number) => void
 }
 
 export const useRecursionStepper = (
@@ -36,9 +38,9 @@ export const useRecursionStepper = (
 		canStepBackward,
 	} = useNodes()
 	const previousIsReset = usePrevious(isReset)
-	const [delayMilliseconds, setDelayMilliseconds] = useState(500)
+	const delayMilliseconds = useRef(defaultDelayMilliseconds)
 	const [isStepping, setIsStepping] = useState(false)
-	const [stepFuncID, setStepFuncID] = useState<number | undefined>(undefined)
+	const stepFuncTimerId = useRef<number | undefined>(undefined)
 
 	// immediately step once on first start/play
 	useEffect(() => {
@@ -56,22 +58,25 @@ export const useRecursionStepper = (
 	useEffect(() => {
 		latestIsStepping.current = isStepping
 
-		const initialClickTimerID = window.setTimeout(function stepFunc() {
+		stepFuncTimerId.current = window.setTimeout(function stepFunc() {
 			if (!latestIsStepping.current || !latestCanStepForward.current) {
 				setIsStepping(false)
 				return
 			}
 
 			stepForward()
-			const recursiveTimerID = window.setTimeout(stepFunc, delayMilliseconds)
-			setStepFuncID(recursiveTimerID)
-		}, delayMilliseconds)
-		setStepFuncID(initialClickTimerID)
-	}, [isStepping, delayMilliseconds, stepForward])
+			stepFuncTimerId.current = window.setTimeout(
+				stepFunc,
+				delayMilliseconds.current
+			)
+		}, delayMilliseconds.current)
 
-	const start = curry((andStartStepping, args, delayMilliseconds) => {
+		return () => clearTimeout(stepFuncTimerId.current)
+	}, [isStepping, stepForward])
+
+	const start = curry((andStartStepping, args) => {
 		setupNodes(scopeGeneratorFunc(makeNode), args)
-		setDelayMilliseconds(delayMilliseconds)
+
 		if (andStartStepping) {
 			setIsStepping(true)
 		}
@@ -85,14 +90,17 @@ export const useRecursionStepper = (
 
 	const pause = (): void => {
 		setIsStepping(false)
-		clearTimeout(stepFuncID)
+		clearTimeout(stepFuncTimerId.current)
 	}
 
 	const reset = (): void => {
-		clearTimeout(stepFuncID)
-		setStepFuncID(undefined)
+		clearTimeout(stepFuncTimerId.current)
 		resetNodes()
 		setIsStepping(false)
+	}
+
+	const setDelay = (delay: number): void => {
+		delayMilliseconds.current = delay
 	}
 
 	return {
@@ -108,6 +116,7 @@ export const useRecursionStepper = (
 		isReset,
 		start: start(true),
 		startAndStepOnce: start(false),
+		setDelay,
 	}
 }
 
