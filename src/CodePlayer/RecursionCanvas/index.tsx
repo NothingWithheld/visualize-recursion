@@ -14,6 +14,7 @@ import {
 import { Option, map, getOrElse, none, some, isNone } from 'fp-ts/es6/Option'
 import * as R from 'ramda'
 import { pipe } from 'fp-ts/es6/pipeable'
+import useRefreshLayerOnFontLoad from '../../Konva/useRefreshLayerOnFontLoad'
 
 interface RecursionCanvasProps {
 	readonly treeRoot: Option<PlacedNode<FuncNode>>
@@ -29,6 +30,8 @@ export const RecursionCanvas = ({
 	const [openVariablesNode, setOpenVariablesNode] = useState<
 		Option<PlacedNode<FuncNode>>
 	>(none)
+
+	const layerRef = useRefreshLayerOnFontLoad(treeRoot)
 
 	const isEqualToVariableNode = useCallback(
 		(node: PlacedNode<FuncNode>): boolean =>
@@ -117,6 +120,7 @@ export const RecursionCanvas = ({
 					<Layer
 						x={layerX + window.innerWidth / 2}
 						y={layerY + window.innerHeight / 3}
+						ref={layerRef}
 					>
 						{pipe(
 							treeRoot,
