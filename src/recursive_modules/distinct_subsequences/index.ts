@@ -25,7 +25,7 @@ const scopeDistinctSubsequencesGenerator = (makeNode: MakeNodeFunc) => {
 			])
 
 			const substringVariableDetails: [string, string][] = [
-				['toUse', toUse.substring(toUseInd)],
+				['to_use', toUse.substring(toUseInd)],
 				['target', target.substring(targetInd)],
 			]
 

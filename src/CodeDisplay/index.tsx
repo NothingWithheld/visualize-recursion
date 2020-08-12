@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import React, { useState } from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
-import draculaTheme from 'prism-react-renderer/themes/oceanicNext'
+import oceanicNextTheme from 'prism-react-renderer/themes/oceanicNext'
 import Box from '@material-ui/core/Box'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -41,7 +41,7 @@ const CodeDisplay = ({ pythonCode }: CodeDisplayProps): JSX.Element => {
 				{...defaultProps}
 				code={pythonCode.trim()}
 				language="python"
-				theme={draculaTheme}
+				theme={oceanicNextTheme}
 			>
 				{({ className, style, tokens, getLineProps, getTokenProps }) => (
 					<pre

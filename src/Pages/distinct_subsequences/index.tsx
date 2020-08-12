@@ -1,8 +1,11 @@
 import React from 'react'
-import scopeDistinctSubsequences from '../recursive_modules/distinct_subsequences'
-import CodeDisplay from '../CodeDisplay'
-import CodePlayer from '../CodePlayer'
-import Box from '@material-ui/core/Box'
+import scopeDistinctSubsequences from '../../recursive_modules/distinct_subsequences'
+import CodeDisplay from '../../CodeDisplay'
+import CodePlayer from '../../CodePlayer'
+import { TextWrapper } from './../components'
+import Typography from '@material-ui/core/Typography'
+import Link from '@material-ui/core/Link'
+import Writing from './Writing'
 
 const pythonCode = `
 def solve_distinct_subsequences(to_use, target):
@@ -29,14 +32,19 @@ def solve_distinct_subsequences(to_use, target):
 const Page = (): JSX.Element => {
 	return (
 		<>
-			<Box
-				display="flex"
-				flexDirection="column"
-				maxWidth="900px"
-				margin="0 auto"
-			>
+			<TextWrapper>
+				<Typography component="h1" variant="h4" paragraph={true}>
+					<Link
+						href="https://leetcode.com/problems/distinct-subsequences/"
+						target="_blank"
+						rel="noopener"
+					>
+						115. Distinct Subsequences
+					</Link>
+				</Typography>
+				<Writing />
 				<CodeDisplay pythonCode={pythonCode} />
-			</Box>
+			</TextWrapper>
 			<CodePlayer
 				scopeGeneratorFunc={scopeDistinctSubsequences}
 				functionInputObjs={[
