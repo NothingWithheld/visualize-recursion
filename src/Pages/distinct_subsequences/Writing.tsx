@@ -46,11 +46,16 @@ const Writing = (): JSX.Element => {
 				Continuing with our example, the number subsequences from choosing to
 				use the first <InlineCode code="a" /> will be the number of subsequences
 				from the subproblem with <InlineCode code={'toUse = "ab"'} /> and{' '}
-				<InlineCode code={'target = "b"'} />. We move both strings "up a
-				character." The number of subsequences from choosing not to use the
-				first <InlineCode code="a" /> will be the number of subsequences from
-				the subproblem with <InlineCode code={'toUse = "ab"'} /> and{' '}
-				<InlineCode code={'target = "ab"'} />. Here, we only move{' '}
+				<InlineCode code={'target = "b"'} />. We use the first character from{' '}
+				<InlineCode code="toUse" /> to fill the spot of the first character of{' '}
+				<InlineCode code="target" />. We move both strings "up a character."
+			</Typography>
+			<Typography variant="body1" paragraph={true}>
+				The number of subsequences from choosing not to use the first{' '}
+				<InlineCode code="a" /> will be the number of subsequences from the
+				subproblem with <InlineCode code={'toUse = "ab"'} /> and{' '}
+				<InlineCode code={'target = "ab"'} />. We skip the first character of{' '}
+				<InlineCode code="toUse" /> to not use it. Here, we only move{' '}
 				<InlineCode code="toUse" /> "up a character."
 			</Typography>
 			<Typography variant="body1" paragraph={true}>
