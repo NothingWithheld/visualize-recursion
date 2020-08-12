@@ -23,6 +23,7 @@
 		"@babel/core": "^7.11.1",
 		"@babel/preset-env": "^7.11.0",
 		"@babel/preset-react": "^7.10.4",
+		"@types/ramda": "^0.27.14",
 		"@types/react": "^16.9.45",
 		"@types/react-dom": "^16.9.8",
 		"@typescript-eslint/eslint-plugin": "^3.8.0",
@@ -57,7 +58,6 @@
 	"dependencies": {
 		"@material-ui/core": "^4.11.0",
 		"@material-ui/icons": "^4.9.1",
-		"@types/ramda": "^0.27.14",
 		"fp-ts": "^2.8.1",
 		"konva": "^7.0.5",
 		"prism-react-renderer": "^1.1.1",

@@ -1,5 +1,5 @@
 import { compose, curry } from 'ramda'
-import { notYetAssigned, sentryID, sentryTag } from '../constants'
+import { sentryID, sentryTag } from '../constants'
 import { FuncNode, eqNode, SentryNode, isSentry } from '../types'
 import { none, some, map, Option, getOrElse } from 'fp-ts/es6/Option'
 import { assertNever } from '../../utils'
@@ -16,38 +16,36 @@ const unsetLastAction = (node: FuncNode): FuncNode => ({
 
 type UpdateFuncs = { [propName: number]: (node: FuncNode) => FuncNode }
 
-const updateTree = curry(
-	(updateFuncs: UpdateFuncs, node: FuncNode): FuncNode => {
-		const updateFunc = updateFuncs[node.nodeID] || unsetLastAction
-		const updatedNode = updateFunc(node)
-		const updatedChildren = updatedNode.children.map((child) =>
-			updateTree(updateFuncs, child)
-		)
+const updateTree = (updateFuncs: UpdateFuncs) => (node: FuncNode): FuncNode => {
+	const updateFunc = updateFuncs[node.nodeID] || unsetLastAction
+	const updatedNode = updateFunc(node)
+	const updatedChildren = updatedNode.children.map((child) =>
+		updateTree(updateFuncs)(child)
+	)
 
-		return { ...updatedNode, children: updatedChildren }
-	}
-)
+	return { ...updatedNode, children: updatedChildren }
+}
 
 type CombinedUpdateFuncs = UpdateFuncs & {
 	[sentryTag]?: (node: SentryNode) => SentryNode
 }
 
-const handleTreeUpdates = curry(
-	(updateFuncs: CombinedUpdateFuncs, sentry: SentryNode): SentryNode => {
-		const { [sentryTag]: sentryNodeUpdate, ...restUpdateFuncs } = updateFuncs
-		let updatedSentry = sentry
-		if (sentryNodeUpdate) {
-			updatedSentry = sentryNodeUpdate(sentry)
-		}
-
-		const updatedTreeRoot = map(updateTree(restUpdateFuncs))(updatedSentry.tree)
-
-		return {
-			...updatedSentry,
-			tree: updatedTreeRoot,
-		}
+const handleTreeUpdates = (updateFuncs: CombinedUpdateFuncs) => (
+	sentry: SentryNode
+): SentryNode => {
+	const { [sentryTag]: sentryNodeUpdate, ...restUpdateFuncs } = updateFuncs
+	let updatedSentry = sentry
+	if (sentryNodeUpdate) {
+		updatedSentry = sentryNodeUpdate(sentry)
 	}
-)
+
+	const updatedTreeRoot = map(updateTree(restUpdateFuncs))(updatedSentry.tree)
+
+	return {
+		...updatedSentry,
+		tree: updatedTreeRoot,
+	}
+}
 
 const addChildToSentry = (child: FuncNode) => (
 	sentry: SentryNode
@@ -63,12 +61,10 @@ const removeChildFromSentry = curry(
 	})
 )
 
-const addChildToParent = curry(
-	(child: FuncNode, parent: FuncNode): FuncNode => ({
-		...parent,
-		children: [...parent.children, child],
-	})
-)
+const addChildToParent = (child: FuncNode) => (parent: FuncNode): FuncNode => ({
+	...parent,
+	children: [...parent.children, child],
+})
 
 const removeChildFromParent = curry(
 	(childToRemove: FuncNode, parent: FuncNode): FuncNode => ({
@@ -441,7 +437,7 @@ export const functionProgressReducer = (
 			}
 
 			const updateFuncs = forwardUpdateFuncs[curIndex]
-			const updatedSentry = handleTreeUpdates(updateFuncs, sentry)
+			const updatedSentry = handleTreeUpdates(updateFuncs)(sentry)
 			const updatedIndex = curIndex + 1
 
 			return {

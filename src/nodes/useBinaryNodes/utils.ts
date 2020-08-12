@@ -103,32 +103,32 @@ export const addNodeToTree = curry(
 	}
 )
 
-export const deleteNodeFromTree = curry(
-	(nodeToDelete: BinaryNode, treeRoot: BinaryNode): BinaryNode => {
-		const possibleParent = findParentOf(nodeToDelete, treeRoot)
+export const deleteNodeFromTree = (nodeToDelete: BinaryNode) => (
+	treeRoot: BinaryNode
+): BinaryNode => {
+	const possibleParent = findParentOf(nodeToDelete, treeRoot)
 
-		const removeChildFromParent = (parent: BinaryNode): BinaryNode => {
-			const removeChildFunc = (_: BinaryNode): BinaryNode => {
-				const { left, right } = parent
+	const removeChildFromParent = (parent: BinaryNode): BinaryNode => {
+		const removeChildFunc = (_: BinaryNode): BinaryNode => {
+			const { left, right } = parent
 
-				return {
-					...parent,
-					left: isSameAsChild(nodeToDelete, left) ? none : left,
-					right: isSameAsChild(nodeToDelete, right) ? none : right,
-				}
+			return {
+				...parent,
+				left: isSameAsChild(nodeToDelete, left) ? none : left,
+				right: isSameAsChild(nodeToDelete, right) ? none : right,
 			}
-
-			return updateTree(
-				{
-					[parent.nodeID]: removeChildFunc,
-				},
-				treeRoot
-			)
 		}
 
-		return getOrElse(() => treeRoot)(map(removeChildFromParent)(possibleParent))
+		return updateTree(
+			{
+				[parent.nodeID]: removeChildFunc,
+			},
+			treeRoot
+		)
 	}
-)
+
+	return getOrElse(() => treeRoot)(map(removeChildFromParent)(possibleParent))
+}
 
 export type MakeNodeFunc = () => BinaryNode
 
