@@ -1,4 +1,4 @@
 node_modules/
 mocks/
 legacy/
-dist/
+dist/bundle.js
